@@ -127,7 +127,7 @@ class MansionLevel6_BattleRoom {
             id: 'Reaper',
             greeting: "You feel a dark presence...",
             src: sprite_src_enemy,
-            SCALE_FACTOR: 10,
+            SCALE_FACTOR: 4,
             ANIMATION_RATE: 50,
             pixels: {height: 300, width: 300},
             INIT_POSITION: {x: width / 2, y: height / 2},
