@@ -358,7 +358,19 @@ class MansionLevel6 {
                 ]);
             }
         }
-        
+        const sprite_src_chair = path + "/images/mansionGame/invisDoorCollisionSprite.png";
+        const sprite_data_chair = {
+            id: 'Chair',
+            greeting: sprite_greet_chair,
+            src: sprite_src_chair,
+            SCALE_FACTOR: 6,
+            ANIMATION_RATE: 100,
+            pixels: {width: 2029, height: 2025},
+            INIT_POSITION: {x: (width * 37 / 80), y: (height / 8)},
+            orientation: {rows: 1, columns: 1},
+            down: {row: 0, start: 0, columns: 1},
+            hitbox: {widthPercentage: 0.1, heightPercentage: 0.2}
+        }
 
         // This is every sprite we want the game engine to render, and with whatever data
         this.classes = [
