@@ -25,4 +25,25 @@ This intro chamber is mostly empty, on having torches and chairs in the backgrou
 
 ![]("{{site.baseurl}}/images/MansionGameBlog/IntroChamberWithStuff.png")
 
-As you can see in the image, the room is mostly barren, as that is a trend we noticed right before a boss fight. There is also an arrow pointing towards the door in case the player missed that somehow. 
+As you can see in the image, the room is mostly barren, as that is a trend we noticed right before a boss fight. There is also an arrow pointing towards the door in case the player missed that somehow. this room has no fights, as it would be unfair to hurt the player before the big boss fight. 
+
+### Zombie NPC
+
+In the image, you can see a zombie NPC in the room. This NPC doesn't attack. However, when you go up to him and click "e", he gives dialogues trying to demotivize you. 
+
+![]("{{site.baseurl}}/images/MansionGameBlog/ZombieDialogueBlog.png")
+
+The zombie has a selection of dialogue to say:
+
+"I heard the boss is waiting for you...",  
+"Enter if you dare... he's waiting for you...",  
+"I heard the Reaper himself was in there.",  
+"The Reaper'll get you good.",  
+"You have no chance... his power is unstopable...",  
+"No one has survived a battle against the Reaper.",  
+"Haha? You want to battle my boss? You'll die within the first minute...",  
+"Go ahead. I aint stoppin' you, the Reaper'll finish you clean.",  
+"You are a fool to challenge the Reaper.",  
+"You will end up like me once you face the Reaper.",  
+"Are you the next opponent for my master? That's unfortunate for you.",  
+"Why I won't attack you? Well, my master will finish you off soon enough."  
