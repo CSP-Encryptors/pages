@@ -23,7 +23,7 @@ This level has 2 rooms: an intro chamber and the boss room.
 This intro chamber is mostly empty, on having torches and chairs in the background. However, it does have a zombie that will speak if "e" is clicked. 
 
 
-![]("{{site.baseurl}}/images/MansionGameBlog/IntroChamberWithStuff.png")
+![]({{site.baseurl}}/images/MansionGameBlog/IntroChamberWithStuff.png)
 
 As you can see in the image, the room is mostly barren, as that is a trend we noticed right before a boss fight. There is also an arrow pointing towards the door in case the player missed that somehow. this room has no fights, as it would be unfair to hurt the player before the big boss fight. 
 
@@ -52,4 +52,4 @@ The zombie has a selection of dialogue to say:
 
 When the player walks up to the door and clicks "e", a prompt show up asking the player if they are sure that they want to go through. If they click "Not ready", the prompt closes. However, if they click "Enter the doors", a small cutscene shows up, in which the words "YOUR FATE HAS BEEN SEALED" get written on the screen and then are deleted.
 
-![]("{{site.baseurl}}/images/MansionGameBlog/CutsceneToBoss.png")
+![]({{site.baseurl}}/images/MansionGameBlog/CutsceneToBoss.png)
