@@ -130,7 +130,7 @@ class MansionLevel6_BattleRoom {
             SCALE_FACTOR: 10,
             ANIMATION_RATE: 50,
             pixels: {height: 1504, width: 574},
-            INIT_POSITION: { x: width / 2, y: height / 4 },
+            INIT_POSITION: {x: width / 2, y: height / 2},
             orientation: {rows: 1, columns: 1},
             down: {row: 0, start: 0, columns: 1},
             hitbox: { widthPercentage: 0.4, heightPercentage: 0.4 },
@@ -166,7 +166,7 @@ class MansionLevel6_BattleRoom {
                 }
 
                 // Move towards nearest player
-                const speed = 1.5; // Adjust speed as needed
+                const speed = 0.5; // Adjust speed as needed
                 const dx = nearest.position.x - this.position.x;
                 const dy = nearest.position.y - this.position.y;
                 const angle = Math.atan2(dy, dx);
