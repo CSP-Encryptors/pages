@@ -61,7 +61,7 @@ class Boss extends Enemy {
             hasWeapon: true
         }, gameEnv);
 
-        this.arms = [this.leftArm, this.rightArm];
+        //this.arms = [this.leftArm, this.rightArm];
 
         this.isThrowingScythe = false;
     }
@@ -103,7 +103,7 @@ class Boss extends Enemy {
         }
 
         // Update arms to follow the boss
-        this.arms.forEach(arm => arm.update(this.position.x, this.position.y));
+        //this.arms.forEach(arm => arm.update(this.position.x, this.position.y));
 
         // Attack logic
         const now = Date.now();
