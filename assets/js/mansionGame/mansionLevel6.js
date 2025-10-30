@@ -379,6 +379,7 @@ class MansionLevel6 {
             {class: Player, data: sprite_data_mc},
             {class: Npc, data: sprite_data_zombie},
             {class: Npc, data: sprite_data_bossdoor},
+            {class: Npc, data: sprite_data_chair}
         ];
 
     };
