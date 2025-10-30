@@ -222,6 +222,12 @@ class MansionLevel6 {
                                 requestAnimationFrame(() => {
                                     fadeOverlay.style.opacity = '1';
 
+                                    // Mark that the battle-room fade-complete flag is not yet set.
+                                    // This flag will be set to true once the overlay is fully removed
+                                    // so enemies in the battle room can wait for the screen to finish
+                                    // fading before they begin moving/attacking.
+                                    try { window.__battleRoomFadeComplete = false; } catch(e) {}
+
                                     // Create a centered transition text that will type itself
                                     const transitionText = document.createElement('div');
                                     const fullText = 'YOUR FATE HAS BEEN SEALED';
@@ -322,6 +328,9 @@ class MansionLevel6 {
                                                     setTimeout(() => {
                                                         try { document.body.removeChild(fadeOverlay); } catch (e) {}
                                                         try { document.body.removeChild(transitionText); } catch (e) {}
+                                                        // Now the battle room visuals have finished fading in for the player.
+                                                        // Signal to in-level enemies that it's OK to start moving.
+                                                        try { window.__battleRoomFadeComplete = true; } catch (e) {}
                                                     }, fadeOutMs + 150);
                                                 }
                                             }, untypeSpeed);
