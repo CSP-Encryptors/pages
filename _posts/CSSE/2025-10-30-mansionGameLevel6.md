@@ -31,7 +31,7 @@ As you can see in the image, the room is mostly barren, as that is a trend we no
 
 In the image, you can see a zombie NPC in the room. This NPC doesn't attack. However, when you go up to him and click "e", he gives dialogues trying to demotivize you. 
 
-![]("{{site.baseurl}}/images/MansionGameBlog/ZombieDialogueBlog.png")
+![]({{site.baseurl}}/images/MansionGameBlog/ZombieDialogueBlog.png)
 
 The zombie has a selection of dialogue to say:
 
