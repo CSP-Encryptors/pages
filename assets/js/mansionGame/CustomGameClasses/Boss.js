@@ -67,6 +67,12 @@ class Boss extends Enemy {
     }
 
     update() {
+        // If boss health is 0 or less, do nothing for now.
+        // Placeholder: keep the object intact; we'll add death animation/behavior later.
+        if (this.healthPoints <= 0) {
+            return;
+        }
+
         this.draw();
 
         // Update stage & attack speed
