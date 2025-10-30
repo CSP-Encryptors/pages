@@ -57,6 +57,7 @@ class Projectile extends Character {
             this.position.y < 0 || this.position.y > this.gameEnv.innerHeight
         ) {
             this.revComplete = true;
+            this.destroy();
         }
 
         this.draw();
