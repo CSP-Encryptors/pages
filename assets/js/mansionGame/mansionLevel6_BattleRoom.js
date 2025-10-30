@@ -122,18 +122,18 @@ class MansionLevel6_BattleRoom {
         };
 
         // Test data -- bring the Enderman into our game
-        const sprite_src_enemy = path + "/images/gamify/enderman.png";
+        const sprite_src_enemy = path + "/images/mansionGame/ReaperMainBody.png";
         const sprite_data_enemy = {
-            id: 'Enderman',
+            id: 'Reaper',
             greeting: "You feel a dark presence...",
             src: sprite_src_enemy,
             SCALE_FACTOR: 10,
             ANIMATION_RATE: 50,
-            pixels: {height: 1504, width: 574},
+            pixels: {height: 300, width: 300},
             INIT_POSITION: {x: width / 2, y: height / 2},
             orientation: {rows: 1, columns: 1},
             down: {row: 0, start: 0, columns: 1},
-            hitbox: { widthPercentage: 0.4, heightPercentage: 0.4 },
+            hitbox: {widthPercentage: 0.4, heightPercentage: 0.4},
             zIndex: 10,
             isKilling: false, // Flag to prevent multiple kills
             
