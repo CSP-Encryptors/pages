@@ -323,7 +323,7 @@ class MansionLevel6_BattleRoom {
             // {class: Arm, data: leftArmData},
             // {class: Arm, data: rightArmData},
             //{class: Enemy, data: sprite_reaper_data},
-            {class: Enemy, data: sprite_data_enemy},
+            {class: Boss, data: sprite_data_enemy},
             {class: Character, data: sprite_scythe_data},
         ];
     }
