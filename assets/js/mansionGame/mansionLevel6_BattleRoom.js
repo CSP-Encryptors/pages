@@ -133,8 +133,8 @@ class MansionLevel6_BattleRoom {
             ANIMATION_RATE: 30,
             INIT_POSITION: {x: width / 2, y: height / 2},
             pixels: {height: 256, width: 256},
-            orientation: {rows:1, columns:1},
-            hitbox: {widthPercentage: 0.4, heightPercentage: 0.2},
+            orientation: {rows: 2, columns: 2},
+            hitbox: {widthPercentage: 0, heightPercentage: 0},
             down: {row: 0, start: 0, columns: 1},
             // This method will update the scythe
             update: function() {
