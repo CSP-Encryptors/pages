@@ -24,3 +24,5 @@ This intro chamber is mostly empty, on having torches and chairs in the backgrou
 
 
 ![]("{{site.baseurl}}/images/MansionGameBlog/IntroChamberWithStuff.png")
+
+As you can see in the image, the room is mostly barren, as that is a trend we noticed right before a boss fight. There is also an arrow pointing towards the door in case the player missed that somehow. 
