@@ -3,6 +3,7 @@ import Player from "./GameEngine/Player.js";
 import Boss from './CustomGameClasses/Boss.js';
 import Arm from './CustomGameClasses/Arm.js';
 import Enemy from './GameEngine/Enemy.js';
+import Character from './GameEngine/Character.js';
 
 class MansionLevel6_BattleRoom {
     constructor(gameEnv) {
@@ -121,7 +122,27 @@ class MansionLevel6_BattleRoom {
             weaponSrc: sprite_arm_right_scythe
         };
 
-        // Test data -- bring the Enderman into our game
+        // Test -- add a projectile
+        const SCYTHE_SCALE_FACTOR = 4;
+        const sprite_scythe_src = path + "/images/mansionGame/fireball.png";
+        const sprite_scythe_data = {
+            id: 'Scythe',
+            src: sprite_scythe_src,
+            greeting: "I'm the weapon of the enemy...",
+            SCALE_FACTOR: SCYTHE_SCALE_FACTOR,
+            ANIMATION_RATE: 30,
+            INIT_POSITION: {x: width / 2, y: height / 2},
+            pixels: {height: 256, width: 256},
+            orientation: {rows:1, columns:1},
+            hitbox: {widthPercentage: 0.4, heightPercentage: 0.2},
+            down: {row: 0, start: 0, columns: 1},
+            // This method will update the scythe
+            update: function() {
+                // Leave it blank for now
+            }
+        };
+
+        // Add the Reaper
         const sprite_src_enemy = path + "/images/mansionGame/Reaper.png";
         const sprite_data_enemy = {
             id: 'Reaper',
@@ -303,6 +324,7 @@ class MansionLevel6_BattleRoom {
             // {class: Arm, data: rightArmData},
             //{class: Enemy, data: sprite_reaper_data},
             {class: Enemy, data: sprite_data_enemy},
+            {class: Character, data: sprite_scythe_data},
         ];
     }
 }
