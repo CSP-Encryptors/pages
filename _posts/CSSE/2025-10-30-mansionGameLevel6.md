@@ -47,3 +47,9 @@ The zombie has a selection of dialogue to say:
 "You will end up like me once you face the Reaper.",  
 "Are you the next opponent for my master? That's unfortunate for you.",  
 "Why I won't attack you? Well, my master will finish you off soon enough."  
+
+### Cutscene into boss room
+
+When the player walks up to the door and clicks "e", a prompt show up asking the player if they are sure that they want to go through. If they click "Not ready", the prompt closes. However, if they click "Enter the doors", a small cutscene shows up, in which the words "YOUR FATE HAS BEEN SEALED" get written on the screen and then are deleted.
+
+![]("{{site.baseurl}}/images/MansionGameBlog/CutsceneToBoss.png")
