@@ -23,3 +23,4 @@ This level has 2 rooms: an intro chamber and the boss room.
 This intro chamber is mostly empty, on having torches and chairs in the background. However, it does have a zombie that will speak if "e" is clicked. 
 
 
+![]("{{site.baseurl}}/images/MansionGameBlog/IntroChamberWithStuff.png")
