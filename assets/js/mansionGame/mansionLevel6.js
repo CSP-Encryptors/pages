@@ -170,6 +170,8 @@ class MansionLevel6 {
                                 const fadeOverlay = document.createElement('div');
                                 const fadeInMs = 2000; // longer fade in
                                 const fadeOutMs = 1200; // fade out duration
+                                // Reset the battle room fade flag
+                                window.__battleRoomFadeComplete = false;
                                 Object.assign(fadeOverlay.style, {
                                     position: 'fixed',
                                     top: '0',

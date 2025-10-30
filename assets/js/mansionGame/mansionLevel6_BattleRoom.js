@@ -136,11 +136,6 @@ class MansionLevel6_BattleRoom {
             hitbox: {widthPercentage: 0.4, heightPercentage: 0.4},
             zIndex: 10,
             isKilling: false, // Flag to prevent multiple kills
-            // Delay movement until the battle-room fade fully completes and the
-            // player has a short reaction window.
-            initDelayMs: 800, // ms to wait after fade completes before moving
-            canMove: false,
-            _initTimeSet: false,
             
             // The update method with all functionality inline
             update: function() {
@@ -148,35 +143,12 @@ class MansionLevel6_BattleRoom {
                 if (this.isKilling) {
                     return;
                 }
-
-                // --- Delayed-start logic ---
-                // On first update record a start time and prevent movement until
-                // both the global fade-complete flag is true and the initial
-                // delay has elapsed. This gives the player time to react when the
-                // battle room is revealed.
-                if (!this._initTimeSet) {
-                    this._initTimeSet = true;
-                    this._initialDelayStart = Date.now();
-                    this.canMove = false;
-                }
-
-                if (!this.canMove) {
-                    const elapsed = Date.now() - (this._initialDelayStart || 0);
-                    const fadeComplete = (typeof window !== 'undefined' && window.__battleRoomFadeComplete === true);
-
-                    // Wait for the fade to complete and the initial delay to pass.
-                    if (fadeComplete && elapsed >= (this.initDelayMs || 800)) {
-                        this.canMove = true;
-                    } else if (!fadeComplete && elapsed >= 4000) {
-                        // Safety fallback: if the flag never appears (older builds,
-                        // or something removed the overlay), start moving after 4s.
-                        this.canMove = true;
-                    } else {
-                        // Still waiting — stand still this tick
-                        return;
-                    }
-                }
                 
+                // Don't move until battle room fade is complete
+                if (!window.__battleRoomFadeComplete) {
+                    return;
+                }
+
                 // Find all player objects
                 const players = this.gameEnv.gameObjects.filter(obj => 
                     obj.constructor.name === 'Player'
