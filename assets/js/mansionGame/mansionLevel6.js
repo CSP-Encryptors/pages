@@ -134,7 +134,7 @@ class MansionLevel6 {
                 // Don't show any reaction dialogue - this prevents the first alert
                 // The interact function will handle all dialogue instead
             },
-            // Ask the player wether they want to enter the doors-- if they do, move to the battle room
+            // Ask the player whether they want to enter the doors-- if they do, move to the battle room
             interact: function() {
                 // Clear any existing dialogue first to prevent duplicates
                 if (this.dialogueSystem && this.dialogueSystem.isDialogueOpen()) {
