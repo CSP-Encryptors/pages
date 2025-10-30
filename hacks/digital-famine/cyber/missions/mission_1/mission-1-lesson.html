@@ -16,10 +16,10 @@ date: 2025-10-26
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mission 1: Build the Base Database</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://sql.js.org/dist/sql-wasm.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
     <style>
         body {
-            background: linear-gradient(to bottom right, #0f172a, #581c87, #0f172a);
+            background: linear-gradient(to bottom right, #0f172a, #1b032d, #0f172a);
             min-height: 100vh;
         }
         .pulse {
@@ -177,8 +177,11 @@ date: 2025-10-26
                     <h2 class="text-3xl font-bold mb-6">🛡️ Build the Agents Table</h2>
                     <div class="bg-blue-900/20 border border-blue-500/30 rounded-lg p-6">
                         <h3 class="text-xl font-semibold text-blue-300 mb-3">🎯 Your Mission</h3>
-                        <p class="mb-4">Click to create the Agents table with all required columns:</p>
-                        <button id="create-agents-btn" onclick="createAgentsTable()" class="w-full py-3 rounded-lg font-semibold bg-blue-600 hover:bg-blue-700">Create Agents Table</button>
+                        <p class="mb-4">Write the SQL to create the <b>Agents</b> table below. When ready, click <b>Run SQL</b> to build your table.</p>
+                        <textarea id="agents-sql" class="w-full text-white bg-slate-900 p-3 rounded-lg font-mono mb-2" rows="4" placeholder="CREATE TABLE Agents (agent_id INTEGER PRIMARY KEY, codename TEXT UNIQUE, clearance_level INTEGER, location TEXT, status TEXT);" disabled></textarea>
+                        <button id="run-agents-sql" onclick="runAgentsSQL()" class="w-full py-3 rounded-lg font-semibold bg-blue-600 hover:bg-blue-700 mb-2" disabled>Run SQL</button>
+                        <div id="agents-sql-loading" class="text-blue-300 font-semibold mb-2">Loading database...</div>
+                        <div id="agents-sql-feedback" class="text-red-400 font-semibold mb-2"></div>
                     </div>
                     <div id="agents-result" class="section-hidden">
                         <div class="bg-green-900/20 border border-green-500/30 rounded-lg p-6">
@@ -257,9 +260,18 @@ date: 2025-10-26
         let db = null;
         async function initDatabase() {
             try {
-                const SQL = await initSqlJs({ locateFile: file => 'https://sql.js.org/dist/' + file });
+                const SQL = await initSqlJs({
+                    locateFile: file => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/${file}`
+                });
                 db = new SQL.Database();
-            } catch (e) { console.error(e); }
+                // Enable SQL input/button and hide loading
+                document.getElementById('agents-sql').disabled = false;
+                document.getElementById('run-agents-sql').disabled = false;
+                document.getElementById('agents-sql-loading').style.display = 'none';
+            } catch (e) {
+                console.error(e);
+                document.getElementById('agents-sql-loading').textContent = 'Failed to load database.';
+            }
         }
         function goToSection(n) {
             document.querySelectorAll('.mission-section').forEach(s => s.classList.add('section-hidden'));
@@ -268,16 +280,42 @@ date: 2025-10-26
             document.querySelector('.nav-btn[data-section="' + n + '"]').classList.add('bg-purple-600');
             window.scrollTo(0, 0);
         }
-        function createAgentsTable() {
-            if (!db) return;
-            db.run('CREATE TABLE Agents (agent_id INTEGER PRIMARY KEY, codename TEXT UNIQUE, clearance_level INTEGER, location TEXT, status TEXT)');
-            [['Shadow',9,'New York','active'],['Phoenix',7,'Tokyo','active'],['Cipher',8,'Berlin','active'],['Ghost',10,'Classified','standby'],['Radar',6,'London','compromised']].forEach(a => db.run('INSERT INTO Agents VALUES (?,?,?,?,?)', [null].concat(a)));
-            const r = db.exec('SELECT * FROM Agents')[0].values;
-            const tb = document.getElementById('agents-tbody');
-            r.forEach(row => { const tr = document.createElement('tr'); tr.innerHTML = '<td class="py-2 px-3">' + row[0] + '</td><td class="py-2 px-3">' + row[1] + '</td><td class="py-2 px-3">' + row[2] + '</td><td class="py-2 px-3">' + row[3] + '</td><td class="py-2 px-3">' + row[4] + '</td>'; tb.appendChild(tr); });
-            document.getElementById('agents-result').classList.remove('section-hidden');
-            document.getElementById('continue-to-sightings').classList.remove('section-hidden');
-            document.getElementById('create-agents-btn').disabled = true;
+        function runAgentsSQL() {
+            const sql = document.getElementById('agents-sql').value.trim();
+            const feedback = document.getElementById('agents-sql-feedback');
+            feedback.textContent = '';
+            if (!db) { feedback.textContent = 'Database not initialized.'; return; }
+            // Basic validation: must start with CREATE TABLE Agents and have all columns
+            const required = [
+                /CREATE\s+TABLE\s+Agents/i,
+                /agent_id\s+INTEGER\s+PRIMARY\s+KEY/i,
+                /codename\s+TEXT\s+UNIQUE/i,
+                /clearance_level\s+INTEGER/i,
+                /location\s+TEXT/i,
+                /status\s+TEXT/i
+            ];
+            let valid = true;
+            for (const r of required) if (!r.test(sql)) valid = false;
+            if (!valid) {
+                feedback.textContent = 'Your SQL must create the Agents table with all required columns and types.';
+                return;
+            }
+            try {
+                db.run(sql);
+                // Insert starter data
+                [['Shadow',9,'New York','active'],['Phoenix',7,'Tokyo','active'],['Cipher',8,'Berlin','active'],['Ghost',10,'Classified','standby'],['Radar',6,'London','compromised']].forEach(a => db.run('INSERT INTO Agents VALUES (?,?,?,?,?)', [null].concat(a)));
+                const r = db.exec('SELECT * FROM Agents')[0].values;
+                const tb = document.getElementById('agents-tbody');
+                tb.innerHTML = '';
+                r.forEach(row => { const tr = document.createElement('tr'); tr.innerHTML = '<td class="py-2 px-3">' + row[0] + '</td><td class="py-2 px-3">' + row[1] + '</td><td class="py-2 px-3">' + row[2] + '</td><td class="py-2 px-3">' + row[3] + '</td><td class="py-2 px-3">' + row[4] + '</td>'; tb.appendChild(tr); });
+                document.getElementById('agents-result').classList.remove('section-hidden');
+                document.getElementById('continue-to-sightings').classList.remove('section-hidden');
+                document.getElementById('run-agents-sql').disabled = true;
+                document.getElementById('agents-sql').disabled = true;
+                feedback.textContent = '';
+            } catch (e) {
+                feedback.textContent = 'SQL Error: ' + e.message;
+            }
         }
         function createSightingsTable() {
             if (!db) return;
