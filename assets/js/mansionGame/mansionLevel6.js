@@ -83,7 +83,8 @@ class MansionLevel6 {
                 "Go ahead. I aint stoppin' you, the Reaper'll finish you clean.",
                 "You are a fool to challenge the Reaper.",
                 "You will end up like me once you face the Reaper.",
-                "Are you the next opponent for my master? That's unfortunate for you."
+                "Are you the next opponent for my master? That's unfortunate for you.",
+                "Why I won't attack you? Well, my master will finish you off soon enough."
             ],
             reaction: function() {
                 // Don't do anything on touch
