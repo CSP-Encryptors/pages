@@ -114,10 +114,12 @@ class Boss extends Enemy {
         }
 
         // Movement toward nearest player if not throwing scythe
+        /*
         if (!this.isThrowingScythe) {
             const target = this.findNearestPlayer();
             if (target) this.moveToward(target, 0.25);
         }
+        */
     }
 
     findNearestPlayer() {
