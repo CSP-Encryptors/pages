@@ -73,6 +73,8 @@ class Boss extends Enemy {
             return;
         }
 
+        // Update the position and draw the boss
+        this.spriteData.update.call(this);
         this.draw();
 
         // Update stage & attack speed
