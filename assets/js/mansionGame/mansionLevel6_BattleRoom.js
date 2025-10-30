@@ -260,7 +260,7 @@ class MansionLevel6_BattleRoom {
                         deathMessage.style.width = '400px';
                         deathMessage.innerHTML = `
                             <div style="margin-bottom: 20px;">☠️ YOU DIED ☠️</div>
-                            <div style="font-size: 16px; margin-bottom: 20px;">The Enderman got you!</div>
+                            <div style="font-size: 16px; margin-bottom: 20px;">The Reaper has Defeated you!</div>
                             <div style="font-size: 14px;">Respawning in 2 seconds...</div>
                         `;
                         
