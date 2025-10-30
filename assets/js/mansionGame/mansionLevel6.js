@@ -209,6 +209,7 @@ class MansionLevel6 {
                                     }
                                 } catch (e) { console.warn('Failed to stop level music:', e); }
 
+                                // Start the music for the battle room
                                 console.log("Starting battle music...");
                                 const audio = new Audio(path + "/assets/sounds/mansionGame/SkeletonLord.mp3");
                                 audio.loop = true;
@@ -225,7 +226,7 @@ class MansionLevel6 {
                                     const transitionText = document.createElement('div');
                                     const fullText = 'YOUR FATE HAS BEEN SEALED';
                                     transitionText.textContent = '';
-                                    const typingSpeed = 80; // ms per char
+                                    const typingSpeed = 20; // ms per char -- CHANGE TO 80 WHEN FINISHED THE SLOW SPEED IS FOR DEVELOPMENT
                                     Object.assign(transitionText.style, {
                                         position: 'fixed',
                                         top: '50%',
@@ -268,7 +269,7 @@ class MansionLevel6 {
 
                                     // Compute when to perform the level transition: wait until both fadeIn and typing complete
                                     const typingDuration = fullText.length * typingSpeed;
-                                    const waitMs = Math.max(fadeInMs, typingDuration) + 800; // small hold after
+                                    const waitMs = Math.max(fadeInMs, typingDuration) + 200; // small hold after -- CHANGE TO 800 WHEN FINISHED THE SLOW SPEED IS FOR DEVELOPMENT
 
                                     setTimeout(() => {
                                         // Clean up current level properly
