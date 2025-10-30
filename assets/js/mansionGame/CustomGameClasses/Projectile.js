@@ -23,14 +23,14 @@ class Projectile extends Character {
         // Load sprite/image based on type
         if (type === "ARROW") {
             this.spriteSheet = new Image();
-            this.spriteSheet.src = "/images/mansionGame/arrow.png";
+            this.spriteSheet.src = "../../images/mansionGame/arrow.png";
             this.frameIndex = 0;
             this.frameCount = 1; // single frame
             this.width = 60; // scale down if needed
             this.height = 25;
         } else if (type === "FIREBALL") {
             this.spriteSheet = new Image();
-            this.spriteSheet.src = "/images/mansionGame/fireball.png";
+            this.spriteSheet.src = "../../images/mansionGame/fireball.png";
             this.frameIndex = 0;
             this.frameCount = 4; // 2x2 grid
             this.frameCols = 2;
