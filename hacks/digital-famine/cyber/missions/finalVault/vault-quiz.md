@@ -137,6 +137,28 @@ let currentQuestion = 0;
 let score = 0;
 let retryMode = false;
 
+function saveProgress() {
+  const progress = {
+    currentQuestion,
+    score,
+    retryMode
+  };
+  localStorage.setItem('vaultQuizProgress', JSON.stringify(progress));
+}
+
+function loadProgress() {
+  const saved = JSON.parse(localStorage.getItem('vaultQuizProgress'));
+  if (saved) {
+    currentQuestion = saved.currentQuestion || 0;
+    score = saved.score || 0;
+    retryMode = saved.retryMode || false;
+  }
+}
+
+function clearProgress() {
+  localStorage.removeItem('vaultQuizProgress');
+}
+
 function showQuestion() {
   const q = questions[currentQuestion];
   document.getElementById("progress").textContent = `Question ${currentQuestion + 1} of ${questions.length} | Score: ${score}`;
@@ -176,11 +198,14 @@ function checkAnswer(selected) {
       document.getElementById("next-btn").style.display = "inline-block";
     }
   }
+  saveProgress();
+
 }
 
 document.getElementById("next-btn").onclick = () => {
   retryMode = false;
   currentQuestion++;
+  saveProgress();
   if (currentQuestion < questions.length) {
     showQuestion();
   } else {
@@ -225,5 +250,14 @@ function restartQuiz() {
   showQuestion();
 }
 
-showQuestion();
+loadProgress();
+
+// If user already finished all questions, show results immediately
+if (currentQuestion >= questions.length) {
+  finishQuiz();
+} else {
+  showQuestion();
+}
+
+
 </script>
