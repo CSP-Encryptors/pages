@@ -66,8 +66,17 @@ In this room, there is the actual boss fight. This boss fight is designed to be 
 
 The boss of this level is the skeleton reaper. 
 
-![]({{site.baseurl}}/images/MansionGameBlog/Reaper.png)
+![]({{site.baseurl}}/images/MansionGame/Reaper.png)
 
+As you can see in the image, the boss is a hooded skeleton with 4 floating arms around him. In the game, he chases you around and if he collides with you, you will die. 
 
+#### Attacks
+
+The boss uses 3 long range weapons in this fight. Arrows, fireballs, and a scythe. 
+
+![]({{site.baseurl}}/images/MansionGame/arrow.png)
+![]({{site.baseurl}}/images/MansionGame/fireball.png)
 
 ## Our team's challenges
+
+Our team's challenges are to beat the reaper in a boss fight and unlock the final thing to successfully escape the mansion. 
