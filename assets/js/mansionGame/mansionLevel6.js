@@ -375,13 +375,13 @@ class MansionLevel6 {
 
         const sprite_src_chair2 = path + "/images/mansionGame/invisDoorCollisionSprite.png";
         const sprite_data_chair2 = {
-            id: 'Chair2',
+            id: 'Chair 2',
             greeting: "Don't sit on me!",
             src: sprite_src_chair2,
             SCALE_FACTOR: 6,
             ANIMATION_RATE: 100,
             pixels: {width: 2029, height: 2025},
-            INIT_POSITION: {x: (width * 72 / 80), y: (height * 1 / 4)},
+            INIT_POSITION: {x: (width * 71 / 80), y: (height * 9 / 40)},
             orientation: {rows: 1, columns: 1},
             down: {row: 0, start: 0, columns: 1},
             hitbox: {widthPercentage: 0.1, heightPercentage: 0.2}
