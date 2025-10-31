@@ -192,7 +192,6 @@ footer:
         <h1>THE NEXUS CHAMBER</h1>
         <h2>Stage 1: Fragment Authentication</h2>
         <p>Enter the codes from your completed missions</p>
-
         <div class="terminals">
             <div class="terminal" id="terminal-alpha">
                 <h3>ALPHA TERMINAL</h3>
@@ -200,14 +199,12 @@ footer:
                 <button onclick="authenticateFragment('alpha')">Authenticate</button>
                 <div class="status" id="alpha-status"></div>
             </div>
-
             <div class="terminal" id="terminal-bravo">
                 <h3>BRAVO TERMINAL</h3>
                 <input type="text" id="bravo-input" placeholder="BRAVO-XXXX">
                 <button onclick="authenticateFragment('bravo')">Authenticate</button>
                 <div class="status" id="bravo-status"></div>
             </div>
-
             <div class="terminal" id="terminal-charlie">
                 <h3>CHARLIE TERMINAL</h3>
                 <input type="text" id="charlie-input" placeholder="CHARLIE-XXXX">
@@ -215,19 +212,15 @@ footer:
                 <div class="status" id="charlie-status"></div>
             </div>
         </div>
-
         <div id="stage1-error" class="error hidden"></div>
-
         <button id="proceed-stage2" class="proceed-btn hidden" onclick="showStage(2)">
             Proceed to Code Synthesis →
         </button>
     </div>
-
     <!-- Stage 2: Code Synthesis -->
     <div id="stage2" class="container hidden">
         <h1>CODE SYNTHESIS</h1>
         <h2>Stage 2: Extract Master Code</h2>
-
         <div class="code-display">
             <p>Fragment Alpha: ALPHA-<span class="suffix">7X9K</span></p>
         </div>
@@ -237,37 +230,29 @@ footer:
         <div class="code-display">
             <p>Fragment Charlie: CHARLIE-<span class="suffix">9R5T</span></p>
         </div>
-
         <div style="background-color: #2a2a4a; padding: 20px; border-radius: 5px; margin: 20px 0; text-align: center;">
             <p><strong>SYNTHESIS RULE:</strong> Extract the suffix from each fragment and combine in order</p>
             <p style="color: #aaa;">Format: XXXX-XXXX-XXXX</p>
         </div>
-
         <button class="hint-btn" onclick="toggleHint()">Need a hint?</button>
         <div id="hint-box" class="hint-box hidden">
             <strong>Hint:</strong> Remove the mission prefixes (ALPHA-, BRAVO-, CHARLIE-) and join the remaining codes with hyphens
         </div>
-
         <button class="proceed-btn" onclick="showStage(3)">
             Proceed to Master Lock →
         </button>
     </div>
-
     <!-- Stage 3: Master Lock -->
     <div id="stage3" class="container hidden">
         <h1>MASTER LOCK</h1>
         <h2>Stage 3: Final Authentication</h2>
-
         <div class="attempts" id="attempts">ATTEMPTS REMAINING: 3</div>
-
         <div style="text-align: center; margin: 30px 0;">
             <p style="font-size: 18px;">Enter Master Code</p>
             <input type="text" id="master-input" class="master-input" placeholder="XXXX-XXXX-XXXX">
             <button onclick="checkMasterCode()" style="margin-top: 20px;">UNLOCK VAULT</button>
         </div>
-
         <div id="stage3-error" class="error hidden"></div>
-
         <div class="code-vault">
             <h4>CODE VAULT - Your Fragments:</h4>
             <p style="font-family: monospace; color: #4caf50; font-size: 12px;">
@@ -275,45 +260,36 @@ footer:
             </p>
         </div>
     </div>
-
     <!-- Success: Sacred Page -->
     <div id="success" class="container success hidden">
         <h1>VAULT UNLOCKED</h1>
         <p style="font-size: 24px; color: #4caf50;">The Sacred Page Has Been Retrieved</p>
-
         <div style="border: 2px solid #4caf50; background-color: #1a1a1a; padding: 30px; margin: 30px 0; border-radius: 5px;">
             <h2 style="color: #4caf50; text-align: center;">EARTH DEFENSE GRID: RESTORED</h2>
-
             <div class="mission-summary">
                 <div class="mission-item">
                     <strong>MISSION ALPHA: Phishing Defense ✓</strong>
                     <p style="font-family: monospace; color: #4caf50; margin: 5px 0;">CODE: ALPHA-7X9K</p>
                 </div>
-
                 <div class="mission-item">
                     <strong>MISSION BRAVO: Password Security ✓</strong>
                     <p style="font-family: monospace; color: #4caf50; margin: 5px 0;">CODE: BRAVO-4M2P</p>
                 </div>
-
                 <div class="mission-item">
                     <strong>MISSION CHARLIE: Encryption Mastery ✓</strong>
                     <p style="font-family: monospace; color: #4caf50; margin: 5px 0;">CODE: CHARLIE-9R5T</p>
                 </div>
-
                 <div style="background-color: #1a3a1a; border: 2px solid #4caf50; padding: 15px; margin: 20px 0; border-radius: 5px;">
                     <strong>MASTER UNLOCK CODE:</strong>
                     <p style="font-family: monospace; font-size: 20px; color: #4caf50;">7X9K-4M2P-9R5T</p>
                 </div>
-
                 <div style="background-color: #1a2a3a; border: 1px solid #4a9eff; padding: 15px; border-radius: 5px;">
                     <strong>SENTINEL STATUS:</strong>
                     <p style="font-size: 24px; color: #4caf50;">✓ CERTIFIED</p>
                 </div>
             </div>
-
             <p style="font-style: italic; color: #4caf50; font-size: 18px; margin-top: 30px;">"Cyber vigilance is eternal."</p>
         </div>
-
         <button onclick="resetGame()">Reset Simulation</button>
     </div>
 </div>
