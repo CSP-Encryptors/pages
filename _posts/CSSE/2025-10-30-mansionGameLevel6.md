@@ -60,4 +60,14 @@ After the words disappear, you are transported into the second room. This is the
 
 #### Boss Room
 
+In this room, there is the actual boss fight. This boss fight is designed to be hard to the point that the player takes multiple attempts to beat it. 
+
+#### The Reaper
+
+The boss of this level is the skeleton reaper. 
+
+![]({{site.baseurl}}/images/MansionGameBlog/Reaper.png)
+
+
+
 ## Our team's challenges
