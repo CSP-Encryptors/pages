@@ -198,6 +198,26 @@ function restartQuiz() {
   currentQuestion = 0;
   score = 0;
   retryMode = false;
+
+  // Restore original quiz HTML
+  document.getElementById("quiz-content").innerHTML = `
+    <div class="question" id="question"></div>
+    <div class="options" id="options"></div>
+    <div id="feedback" class="feedback"></div>
+    <button class="next-btn" id="next-btn" style="display:none;">Next Question</button>
+  `;
+
+  // Reattach event listener for Next button
+  document.getElementById("next-btn").onclick = () => {
+    retryMode = false;
+    currentQuestion++;
+    if (currentQuestion < questions.length) {
+      showQuestion();
+    } else {
+      finishQuiz();
+    }
+  };
+
   showQuestion();
 }
 
