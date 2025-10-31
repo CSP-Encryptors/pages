@@ -356,7 +356,7 @@ function createPlayerHealthBar() {
     Object.assign(container.style, {
         position: 'absolute',
         bottom: '20px',
-        left: '20px',
+        right: '20px',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'flex-start',
