@@ -135,6 +135,7 @@ class Projectile extends Character {
             this.revComplete = true;
             this.destroy();
             nearest.data.health -= DAMAGE_DEALT;
+            console.log("Player Health:", nearest.player.health);
             if (nearest.data.health <= 0) {
                 // Only log to the console for now
                 console.log("Game over -- the player has been defeated!");
