@@ -278,10 +278,10 @@ function showCheatMenu(gameInstance) {
   
   // Planet buttons
   const planets = [
-    { key: 'microblog', name: 'Microblogging Planet', icon: '✍️' },
-    { key: 'medialit', name: 'Media Literacy Planet', icon: '🎓' },
-    { key: 'ai', name: 'AI Planet', icon: '🧠' },
-    { key: 'cyber', name: 'Cybersecurity Planet', icon: '🛡️' }
+    { key: 'microblog', name: 'Microblogging Planet' },
+    { key: 'medialit', name: 'Media Literacy Planet' },
+    { key: 'ai', name: 'AI Planet' },
+    { key: 'cyber', name: 'Cybersecurity Planet'}
   ];
   
   planets.forEach(planet => {
@@ -320,7 +320,7 @@ function showCheatMenu(gameInstance) {
   
   // Complete All button
   const completeAllBtn = document.createElement('button');
-  completeAllBtn.innerHTML = '🌟 COMPLETE ALL PLANETS';
+  completeAllBtn.innerHTML = 'COMPLETE ALL PLANETS';
   completeAllBtn.style.cssText = `
     width: 100%;
     background: linear-gradient(135deg, #a855f7 0%, #7c3aed 100%);
