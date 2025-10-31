@@ -168,7 +168,7 @@ class GameLevelHomePage {
         SCALE_FACTOR: 9,
         STEP_FACTOR: 1000,
         ANIMATION_RATE: 10,
-        INIT_POSITION: playerInitPosition, // Use saved position
+        INIT_POSITION: { x: 0, y: 275 - (275/CHILLGUY_SCALE_FACTOR) }, 
         pixels: {height: 512, width: 256},
         orientation: {rows: 4, columns: 2},
         right: {row: 3, start: 0, columns: 2},
@@ -456,7 +456,7 @@ class GameLevelHomePage {
           const allComplete = this.progression.microblog && 
                              this.progression.medialit && 
                              this.progression.ai && 
-                                                         this.progression.cyber;
+                             this.progression.cyber;
           this.isLocked = !allComplete;
           
           if (this.isLocked) {
@@ -1409,6 +1409,13 @@ class GameLevelHomePage {
   initialize() {
     // Clear any lingering dialogues from previous page loads
     this.dialogueSystem.closeDialogue();
+
+    // Add global function to reopen splash screen BEFORE anything else (for planetNavigation to use)
+    window.reopenSplashScreen = () => {
+      // Remove the flag so it shows again
+      sessionStorage.removeItem('splashShown');
+      this.createSplashScreen();
+    };
 
     // Show splash screen only once per session
     if (!sessionStorage.getItem('splashShown')) {
