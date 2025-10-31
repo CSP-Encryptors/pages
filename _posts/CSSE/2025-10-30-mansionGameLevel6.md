@@ -74,8 +74,8 @@ As you can see in the image, the boss is a hooded skeleton with 4 floating arms 
 
 The boss uses 3 long range weapons in this fight. Arrows, fireballs, and a scythe. 
 
-![]({{site.baseurl}}/images/MansionGame/arrow.png)
-![]({{site.baseurl}}/images/MansionGame/fireball.png)
+![]({{site.baseurl}}/images/mansionGame/arrow.png)
+![]({{site.baseurl}}/images/mansionGame/fireball.png)
 ![]({{site.baseurl}}/images/MansionGameBlog/ScytheForBlog.jpg)
 
 ## Our team's challenges
