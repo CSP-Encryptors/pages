@@ -66,6 +66,7 @@ class Boss extends Enemy {
         this.isThrowingScythe = false;
     }
 
+    // Update function for the Boss
     update() {
         // If boss health is 0 or less, do nothing for now.
         // Placeholder: keep the object intact; we'll add death animation/behavior later.
@@ -122,6 +123,7 @@ class Boss extends Enemy {
         */
     }
 
+    // Locate the nearest player
     findNearestPlayer() {
         const players = this.gameEnv.gameObjects.filter(obj => obj.constructor.name === 'Player');
         if (players.length === 0) return null;
@@ -142,6 +144,7 @@ class Boss extends Enemy {
         return nearest;
     }
 
+    // Randomize attack chances
     performAttack(target) {
         const rand = Math.random();
 
@@ -154,6 +157,7 @@ class Boss extends Enemy {
         }
     }
 
+    // Move towards a certian location
     moveToward(target, speed) {
         const dx = target.position.x - this.position.x;
         const dy = target.position.y - this.position.y;
@@ -162,30 +166,33 @@ class Boss extends Enemy {
         this.position.y += Math.sin(angle) * speed;
     }
 
+    // Disable the explode method
     explode(x, y) {
         throw new Error("Reapers cannot explode! (yet :})");
     }
 
     scytheAttack(target) {
         // Use left arm to throw scythe
-        this.leftArm.removeWeapon();
+        //this.leftArm.removeWeapon();
         this.scythes.push(new Boomerang(this.gameEnv, target.position.x, target.position.y, this.position.x, this.position.y));
         this.isThrowingScythe = true;
     }
 
     fireballAttack(target) {
-        this.rightArm.shoot();
+        //this.rightArm.shoot();
         this.fireballs.push(new Projectile(this.gameEnv, target.position.x, target.position.y, this.position.x, this.position.y, "FIREBALL"));
     }
 
     arrowAttack(target) {
-        this.rightArm.shoot();
+        //this.rightArm.shoot();
         this.arrows.push(new Projectile(this.gameEnv, target.position.x, target.position.y, this.position.x, this.position.y, "ARROW"));
     }
 
+    /*
     addArm(arm) {
         this.arms.push(arm);
     }
+    */
 
     /* Debug/cheat destroy override - uncomment with key handler above
     // Ensure we clean up the key listener when the boss is destroyed
