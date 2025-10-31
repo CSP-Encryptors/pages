@@ -62,6 +62,8 @@ After the words disappear, you are transported into the second room. This is the
 
 In this room, there is the actual boss fight. This boss fight is designed to be hard to the point that the player takes multiple attempts to beat it. 
 
+ADD BOSS ROOM IMAGE HERE WHEN FINISHED
+
 #### The Reaper
 
 The boss of this level is the skeleton reaper. 
@@ -82,4 +84,8 @@ The arrow and fireball just move straight towards where the player was when it w
 
 ## Our team's challenges
 
-There were a lot of challenges that we faced throughout the creation of this level. One challenge that we faced was the boss creating bugs and issues. We had several issues with the boss fight such as projectiles not appearing, and the boss and player not moving.
+There were a lot of challenges that we faced throughout the creation of this level. 
+One challenge that we faced was the boss creating bugs and issues which stopped the whole code from working. 
+We had several issues with the boss fight such as projectiles not appearing, which made it so you could be hit with invisible fireballs. 
+Also, the player would sometimes not be able to move when spawned into the boss room. 
+Once, a single typo cause the whole level to crash and not do anything. 
