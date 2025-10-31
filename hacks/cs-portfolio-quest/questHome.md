@@ -61,6 +61,7 @@ lxdData:
       Description: "Analytics and Mastery Certificate"
       Categories: ["Certificate", "Integration", "Achievement"]
       Lessons: "/cs-portfolio-quest/analytics/"
+      Image: "/images/cs-portfolio-quest/analytics/analytics.svg"
       Image: "/images/cs-portfolio-quest/analytics/analytics_main.png"
       Alt: "CS Portfolio Quest Mastery Certificate"
 ---
