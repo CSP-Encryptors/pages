@@ -26,13 +26,21 @@ class Projectile extends Character {
         // Load sprite/image based on type
         if (type === "ARROW") {
             this.spriteSheet = new Image();
-            this.spriteSheet.src = path + "/images/mansionGame/arrow.png";
             this.frameIndex = 0;
             this.frameCount = 1; // single frame
             this.width = 60; // scale down if needed
             this.height = 25;
+            this.spriteSheet.onload = () => this.imageLoaded = true;
+            this.spriteSheet.src = path + "/images/mansionGame/arrow.png";
         } else if (type === "FIREBALL") {
             this.spriteSheet = new Image();
+            this.frameIndex = 0;
+            this.frameCount = 4; // 2x2 grid
+            this.frameCols = 2;
+            this.frameRows = 2;
+            this.width = 64;
+            this.height = 64;
+            this.spriteSheet.onload = () => this.imageLoaded = true;
             this.spriteSheet.src = path + "/images/mansionGame/fireball.png";
             this.frameIndex = 0;
             this.frameCount = 4; // 2x2 grid
@@ -70,6 +78,10 @@ class Projectile extends Character {
     draw() {
         const ctx = this.ctx;
         this.clearCanvas();
+
+        if (!this.imageLoaded) {
+            return;  // Don't try to draw until image is loaded
+        }
 
         if (this.type === "FIREBALL" && this.spriteSheet.complete) {
             // Animate 2x2 sprite sheet
@@ -127,7 +139,7 @@ class Projectile extends Character {
         const distanceFromPlayer = Math.sqrt(xDiff * xDiff + yDiff * yDiff);
 
         // If the player is too close...
-        const PLAYER_HIT_DISTANCE = 100;
+        const PLAYER_HIT_DISTANCE = 50;
         const ARROW_DAMAGE = 10;
         const FIREBALL_DAMAGE = 15;
         const DAMAGE_DEALT = this.type == "FIREBALL" ? FIREBALL_DAMAGE : ARROW_DAMAGE;
@@ -138,9 +150,47 @@ class Projectile extends Character {
             nearest.data.health -= DAMAGE_DEALT;
             console.log("Player Health:", nearest.data.health);
             if (nearest.data.health <= 0) {
-                // Only log to the console for now
                 console.log("Game over -- the player has been defeated!");
-                this.die();
+                
+                // Create death effect
+                const deathEffect = document.createElement('div');
+                deathEffect.style.position = 'fixed';
+                deathEffect.style.top = '0';
+                deathEffect.style.left = '0';
+                deathEffect.style.width = '100%';
+                deathEffect.style.height = '100%';
+                deathEffect.style.backgroundColor = 'rgba(255, 0, 0, 0.3)';
+                deathEffect.style.zIndex = '9999';
+                document.body.appendChild(deathEffect);
+
+                // Create death message
+                const deathMessage = document.createElement('div');
+                deathMessage.style.position = 'fixed';
+                deathMessage.style.top = '50%';
+                deathMessage.style.left = '50%';
+                deathMessage.style.transform = 'translate(-50%, -50%)';
+                deathMessage.style.color = '#FF0000';
+                deathMessage.style.fontSize = '48px';
+                deathMessage.style.fontWeight = 'bold';
+                deathMessage.style.textAlign = 'center';
+                deathMessage.style.zIndex = '10000';
+                deathMessage.innerHTML = 'YOU DIED';
+                document.body.appendChild(deathMessage);
+
+                // Destroy the player
+                nearest.destroy();
+
+                // End the current level
+                if (this.gameEnv.gameControl && this.gameEnv.gameControl.currentLevel) {
+                    this.gameEnv.gameControl.currentLevel.continue = false;
+                }
+
+                // Clean up and reload after a delay
+                setTimeout(() => {
+                    deathEffect.remove();
+                    deathMessage.remove();
+                    location.reload();
+                }, 2000);
             }
         }
     }
