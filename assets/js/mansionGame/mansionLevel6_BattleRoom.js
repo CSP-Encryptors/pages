@@ -4,7 +4,7 @@ import Boss from './CustomGameClasses/Boss.js';
 import Arm from './CustomGameClasses/Arm.js';
 import Enemy from './GameEngine/Enemy.js';
 import Character from './GameEngine/Character.js';
-import showDeathScreen from './ConstomGameClasses/DeathScreen.js';
+import showDeathScreen from './CustomGameClasses/DeathScreen.js';
 
 class MansionLevel6_BattleRoom {
     constructor(gameEnv) {
