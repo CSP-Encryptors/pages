@@ -159,46 +159,8 @@ class Projectile extends Character {
             console.log("Player Health:", nearest.data.health);
             if (nearest.data.health <= 0) {
                 console.log("Game over -- the player has been defeated!");
-                
-                // Create death effect
-                const deathEffect = document.createElement('div');
-                deathEffect.style.position = 'fixed';
-                deathEffect.style.top = '0';
-                deathEffect.style.left = '0';
-                deathEffect.style.width = '100%';
-                deathEffect.style.height = '100%';
-                deathEffect.style.backgroundColor = 'rgba(255, 0, 0, 0.3)';
-                deathEffect.style.zIndex = '9999';
-                document.body.appendChild(deathEffect);
-
-                // Create death message
-                const deathMessage = document.createElement('div');
-                deathMessage.style.position = 'fixed';
-                deathMessage.style.top = '50%';
-                deathMessage.style.left = '50%';
-                deathMessage.style.transform = 'translate(-50%, -50%)';
-                deathMessage.style.color = '#FF0000';
-                deathMessage.style.fontSize = '48px';
-                deathMessage.style.fontWeight = 'bold';
-                deathMessage.style.textAlign = 'center';
-                deathMessage.style.zIndex = '10000';
-                deathMessage.innerHTML = 'YOU DIED';
-                document.body.appendChild(deathMessage);
-
-                // Destroy the player
-                nearest.destroy();
-
-                // End the current level
-                if (this.gameEnv.gameControl && this.gameEnv.gameControl.currentLevel) {
-                    this.gameEnv.gameControl.currentLevel.continue = false;
-                }
-
-                // Clean up and reload after a delay
-                setTimeout(() => {
-                    deathEffect.remove();
-                    deathMessage.remove();
-                    location.reload();
-                }, 2000);
+                // Show death screen
+                showDeathScreen(nearest);
             }
         }
     }
