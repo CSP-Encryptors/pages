@@ -76,7 +76,7 @@ The boss uses 3 long range weapons in this fight. Arrows, fireballs, and a scyth
 
 ![]({{site.baseurl}}/images/MansionGame/arrow.png)
 ![]({{site.baseurl}}/images/MansionGame/fireball.png)
-
+![]({{site.baseurl}}/images/MansionGameBlog/ScytheForBlog.jpg)
 ## Our team's challenges
 
 There were a lot of challenges that we faced throughout the creation of this level. One challenge that we faced was the boss creating bugs and issues. We had several issues with the boss fight such as projectiles not appearing, and the boss and player not moving.
