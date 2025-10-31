@@ -222,6 +222,33 @@ class MansionLevel6_BattleRoom {
                     if (distance < collisionThreshold) {
                         // Set killing flag to prevent repeated kills
                         this.isKilling = true;
+                        // Disable player input/movement without modifying the engine:
+                        try {
+                            // 'player' is the local variable in this loop
+                            if (!player._inputDisabled) {
+                                player._inputDisabled = true;
+
+                                // Clear any pressed keys and update velocity
+                                try { player.pressedKeys = {}; } catch (e) {}
+                                try { if (typeof player.updateVelocityAndDirection === 'function') player.updateVelocityAndDirection(); } catch (e) {}
+                                try { if (player.velocity) { player.velocity.x = 0; player.velocity.y = 0; } } catch (e) {}
+
+                                // Replace key handlers with no-ops so bound listeners do nothing
+                                try {
+                                    if (player.handleKeyDown && !player._origHandleKeyDown) {
+                                        player._origHandleKeyDown = player.handleKeyDown;
+                                        player.handleKeyDown = function(){};
+                                    }
+                                    if (player.handleKeyUp && !player._origHandleKeyUp) {
+                                        player._origHandleKeyUp = player.handleKeyUp;
+                                        player.handleKeyUp = function(){};
+                                    }
+                                } catch (e) {}
+
+                                // Hide touch controls if present
+                                try { if (player.touchControls && typeof player.touchControls.hide === 'function') player.touchControls.hide(); } catch (e) {}
+                            }
+                        } catch (e) { /* ignore */ }
                         
                         // Execute the death
                         showDeathScreen(nearest);
