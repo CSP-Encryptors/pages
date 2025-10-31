@@ -44,7 +44,8 @@ class MansionLevel6_BattleRoom {
             upLeft: {row: 0, start: 0, columns: 3, rotate: Math.PI/16},
             upRight: {row: 1, start: 0, columns: 3, rotate: -Math.PI/16},
             hitbox: {widthPercentage: 0.45, heightPercentage: 0.2},
-            keypress: {up: 87, left: 65, down: 83, right: 68} // W, A, S, D
+            keypress: {up: 87, left: 65, down: 83, right: 68}, // W, A, S, D
+            health: 100  // We define the health here
         };
 
         // --- Reaper Boss ---

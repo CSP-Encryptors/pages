@@ -60,7 +60,11 @@ class Projectile extends Character {
             this.destroy();
         }
 
+        // Draw
         this.draw();
+
+        // Check if we are close enouph to the player
+        this.execDamage();
     }
 
     draw() {
@@ -85,13 +89,60 @@ class Projectile extends Character {
 
         } else if (this.spriteSheet.complete) {
             // Draw arrow or any single-image projectile
-            ctx.drawImage(this.spriteSheet, 0, 0, this.width, this.height);
+            /*
+            ctx.drawImage(
+                this.spriteSheet,
+                0, 0, this.spriteSheet.naturalWidth, this.spriteSheet.naturalHeight,
+                0, 0, this.width, this.height
+            );
+            */
+           ctx.drawImage(this.spriteSheet, 0, 0, this.width, this.height);
         }
 
         // Draw to screen
         this.setupCanvas();
     }
 
+    // Deal damage to the player
+    execDamage() {
+        const players = this.gameEnv.gameObjects.filter(obj => obj.constructor.name === 'Player');
+        if (players.length === 0) return null;
+
+        let nearest = players[0];
+        let minDist = Infinity;
+
+        for (const player of players) {
+            const dx = player.position.x - this.position.x;
+            const dy = player.position.y - this.position.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < minDist) {
+                minDist = dist;
+                nearest = player;
+            }
+        }
+
+        // Do distance formula calculation and return
+        const xDiff = nearest.position.x - this.position.x;
+        const yDiff = nearest.position.y - this.position.y;
+        const distanceFromPlayer = Math.sqrt(xDiff * xDiff + yDiff * yDiff);
+
+        // If the player is too close...
+        const PLAYER_HIT_DISTANCE = 20;
+        const ARROW_DAMAGE = 10;
+        const FIREBALL_DAMAGE = 15;
+        const DAMAGE_DEALT = this.type == "FIREBALL" ? FIREBALL_DAMAGE : ARROW_DAMAGE;
+        if (distanceFromPlayer <= PLAYER_HIT_DISTANCE) {
+            this.revComplete = true;
+            this.destroy();
+            nearest.data.health -= DAMAGE_DEALT;
+            if (nearest.data.health <= 0) {
+                // Only log to the console for now
+                console.log("Game over -- the player has been defeated!");
+            }
+        }
+    }
+
+    // Carry over the method that is destroying the image once it's offscreen
     destroy() {
         super.destroy();
     }
