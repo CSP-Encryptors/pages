@@ -9,6 +9,10 @@ author: Arnav Pallapotu, Sathwik Kintada
 date: 2025-10-26
 microblog: True
 breadcrumb: True
+footer:
+  previous: /digital-famine/cyber/mission-3-lesson/
+  home: /digital-famine/cybersecurity-game
+  next: /digital-famine/cyber/vault-final
 ---
 <style>
 .quiz-container {
