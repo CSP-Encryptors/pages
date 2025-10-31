@@ -338,22 +338,46 @@ class MansionLevel6_BattleRoom {
 
 // === [ADDED] Create the boss health bar ===
 function createBossHealthBar() {
+    // Create the main container that will hold both label and health bar
+    const container = document.createElement('div');
+    container.id = 'boss-health-container';
+    Object.assign(container.style, {
+        position: 'absolute',
+        top: '40px',  // Position it within the battle room
+        left: '50%',
+        transform: 'translateX(-50%)',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: '5px',
+        width: '60%',
+        zIndex: '100'  // Lower z-index to keep it in the battle room
+    });
+
+    // Create the label
+    const label = document.createElement('div');
+    label.textContent = "Reaper's HP";
+    Object.assign(label.style, {
+        color: '#FF0000',
+        fontFamily: "'Press Start 2P', sans-serif",
+        fontSize: '16px',
+        textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)',
+        marginBottom: '5px'
+    });
+
+    // Create the health bar container
     const barContainer = document.createElement('div');
     barContainer.id = 'boss-health-bar';
     Object.assign(barContainer.style, {
-        position: 'fixed',
-        top: '20px',
-        left: '50%',
-        transform: 'translateX(-50%)',
-        width: '60%',
-        height: '30px',
+        width: '100%',
+        height: '25px',
         backgroundColor: '#222',
         border: '2px solid #FF0000',
         borderRadius: '8px',
-        zIndex: '9999',
         boxShadow: '0 0 10px rgba(255, 0, 0, 0.5)'
     });
 
+    // Create the health fill
     const fill = document.createElement('div');
     fill.id = 'boss-health-fill';
     Object.assign(fill.style, {
@@ -364,8 +388,14 @@ function createBossHealthBar() {
         transition: 'width 0.3s ease'
     });
 
+    // Assemble the components
     barContainer.appendChild(fill);
-    document.body.appendChild(barContainer);
+    container.appendChild(label);
+    container.appendChild(barContainer);
+    
+    // Find the game canvas/container and append our health bar to it
+    const gameContainer = document.querySelector('canvas')?.parentElement || document.body;
+    gameContainer.appendChild(container);
 }
 
 // === [ADDED] Remove the boss health bar ===
