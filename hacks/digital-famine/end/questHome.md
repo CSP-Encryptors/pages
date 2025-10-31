@@ -7,6 +7,7 @@ description: >
 author: CodeMaxxers
 permalink: /digital-famine/end/
 breadcrumb: true
+show_videos: false
 lxdData:
   Title: "End Modules"
   Description: "Fix your ship and return the knoladge found throught your adventure!"
@@ -52,6 +53,8 @@ lxdData:
       Image: "/images/digital-famine/CrashingRocket.png"
       Alt: "end Submodule 5"
 ---
+
+{%- include tailwind/quests/digital-famine.html -%}
 
 <script type="module">
   import { initEndModuleProgression } from '{{site.baseurl}}/assets/js/digitalFamine/endModuleProgression.js';
