@@ -69,6 +69,25 @@ breadcrumb: True
   text-align: center;
   color: #00ff99;
 }
+.retry-btn {
+  background: #ff4444;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 15px;
+}
+.retry-btn:hover {
+  background: #ff6666;
+}
+.hint {
+  background: rgba(0, 255, 150, 0.1);
+  color: #00ff99;
+  padding: 10px;
+  border-radius: 8px;
+  margin-top: 10px;
+}
 </style>
 
 <div class="quiz-container">
@@ -84,38 +103,40 @@ breadcrumb: True
 
 <script>
 const questions = [
-  // MISSION 1
-  {question:"What is a database schema?",options:["The actual data stored in tables","A blueprint defining table structure, columns, and constraints","A backup file of the database","The SQL queries used to retrieve data"],correct:1,mission:1,lessonUrl:"/digital-famine/cyber/submodule_1"},
-  {question:"Which constraint uniquely identifies each record in a table?",options:["NOT NULL","UNIQUE","PRIMARY KEY","FOREIGN KEY"],correct:2,mission:1,lessonUrl:"/digital-famine/cyber/submodule_1"},
-  {question:"What does a FOREIGN KEY do in the earth_base.db?",options:["Encrypts sensitive data","Links two tables by referencing another table's PRIMARY KEY","Makes queries run faster","Prevents duplicate entries"],correct:1,mission:1,lessonUrl:"/digital-famine/cyber/submodule_1"},
-  {question:"Which SQL statement adds new agents to the database?",options:["CREATE TABLE Agents","INSERT INTO Agents","UPDATE Agents","SELECT FROM Agents"],correct:1,mission:1,lessonUrl:"/digital-famine/cyber/submodule_1"},
-  {question:"What happens if you delete an agent who verified alien sightings?",options:["Everything deletes automatically","The database prevents deletion to maintain integrity","The agent deletes but sightings remain unchanged","All sightings become unverified"],correct:1,mission:1,lessonUrl:"/digital-famine/cyber/submodule_1"},
-  {question:"Which data type stores clearance_level values (1-10)?",options:["TEXT","REAL","INTEGER","BLOB"],correct:2,mission:1,lessonUrl:"/digital-famine/cyber/submodule_1"},
-  {question:"What does CHECK(threat_level >= 1 AND threat_level <= 5) do?",options:["Checks for database corruption","Validates data meets conditions before insertion","Checks for duplicate values","Automatically fixes invalid data"],correct:1,mission:1,lessonUrl:"/digital-famine/cyber/submodule_1"},
+  // Mission 1
+  {question:"What is a database schema?",options:["The actual data stored in tables","A blueprint defining table structure, columns, and constraints","A backup file of the database","The SQL queries used to retrieve data"],correct:1,hint:"It defines the layout — like blueprints for your data structure.",mission:1,lessonUrl:"/digital-famine/cyber/submodule_1"},
+  {question:"Which constraint uniquely identifies each record in a table?",options:["NOT NULL","UNIQUE","PRIMARY KEY","FOREIGN KEY"],correct:2,hint:"It’s both UNIQUE and NOT NULL.",mission:1,lessonUrl:"/digital-famine/cyber/submodule_1"},
+  {question:"What does a FOREIGN KEY do in the earth_base.db?",options:["Encrypts sensitive data","Links two tables by referencing another table's PRIMARY KEY","Makes queries run faster","Prevents duplicate entries"],correct:1,hint:"It connects one table to another through shared columns.",mission:1,lessonUrl:"/digital-famine/cyber/submodule_1"},
+  {question:"Which SQL statement adds new agents to the database?",options:["CREATE TABLE Agents","INSERT INTO Agents","UPDATE Agents","SELECT FROM Agents"],correct:1,hint:"You use it when adding new rows, not changing existing ones.",mission:1,lessonUrl:"/digital-famine/cyber/submodule_1"},
+  {question:"What happens if you delete an agent who verified alien sightings?",options:["Everything deletes automatically","The database prevents deletion to maintain integrity","The agent deletes but sightings remain unchanged","All sightings become unverified"],correct:1,hint:"Think about what prevents orphaned data.",mission:1,lessonUrl:"/digital-famine/cyber/submodule_1"},
+  {question:"Which data type stores clearance_level values (1-10)?",options:["TEXT","REAL","INTEGER","BLOB"],correct:2,hint:"They’re whole numbers only.",mission:1,lessonUrl:"/digital-famine/cyber/submodule_1"},
+  {question:"What does CHECK(threat_level >= 1 AND threat_level <= 5) do?",options:["Checks for database corruption","Validates data meets conditions before insertion","Checks for duplicate values","Automatically fixes invalid data"],correct:1,hint:"It ensures data follows set limits before being added.",mission:1,lessonUrl:"/digital-famine/cyber/submodule_1"},
 
-  // MISSION 2
-  {question:"What is SQL Injection?",options:["A method to speed up queries","A vulnerability where attackers insert malicious SQL into inputs","A database backup technique","A tool for debugging SQL"],correct:1,mission:2,lessonUrl:"/digital-famine/cyber/submodule_2"},
-  {question:"Which login input could be a SQL injection attempt?",options:["username: 'john_doe'","username: 'admin' OR '1'='1'","username: 'user@email.com'","username: 'agent_007'"],correct:1,mission:2,lessonUrl:"/digital-famine/cyber/submodule_2"},
-  {question:"What's the best defense against SQL injection?",options:["Using longer passwords","Using parameterized queries with placeholders","Encrypting the database","Limiting login attempts"],correct:1,mission:2,lessonUrl:"/digital-famine/cyber/submodule_2"},
-  {question:"Why is this vulnerable: 'SELECT * FROM Agents WHERE codename=\"' + userInput + '\"'",options:["It uses SELECT statement","User input is directly concatenated into the SQL string","It doesn't check clearance levels","The table name is incorrect"],correct:1,mission:2,lessonUrl:"/digital-famine/cyber/submodule_2"},
-  {question:"Which payload could expose ALL agent records?",options:["' OR 1=1 --","DELETE FROM Agents","CREATE TABLE hacked","UPDATE Agents SET clearance=10"],correct:0,mission:2,lessonUrl:"/digital-famine/cyber/submodule_2"},
-  {question:"What does input validation prevent?",options:["Slow queries","Malicious data from being processed by the system","Users from creating accounts","Database backups from failing"],correct:1,mission:2,lessonUrl:"/digital-famine/cyber/submodule_2"},
-  {question:"In SQL injection attacks, what does '--' do?",options:["Subtracts two numbers","Starts a comment, ignoring everything after it","Creates a new table","Encrypts the query"],correct:1,mission:2,lessonUrl:"/digital-famine/cyber/submodule_2"},
+  // Mission 2
+  {question:"What is SQL Injection?",options:["A method to speed up queries","A vulnerability where attackers insert malicious SQL into inputs","A database backup technique","A tool for debugging SQL"],correct:1,hint:"It involves attackers inserting harmful commands into queries.",mission:2,lessonUrl:"/digital-famine/cyber/submodule_2"},
+  {question:"Which login input could be a SQL injection attempt?",options:["username: 'john_doe'","username: 'admin' OR '1'='1'","username: 'user@email.com'","username: 'agent_007'"],correct:1,hint:"Look for suspicious logic operators like OR 1=1.",mission:2,lessonUrl:"/digital-famine/cyber/submodule_2"},
+  {question:"What's the best defense against SQL injection?",options:["Using longer passwords","Using parameterized queries with placeholders","Encrypting the database","Limiting login attempts"],correct:1,hint:"It separates user input from actual SQL code.",mission:2,lessonUrl:"/digital-famine/cyber/submodule_2"},
+  {question:"Why is this vulnerable: 'SELECT * FROM Agents WHERE codename=\"' + userInput + '\"'",options:["It uses SELECT statement","User input is directly concatenated into the SQL string","It doesn't check clearance levels","The table name is incorrect"],correct:1,hint:"It combines untrusted input directly into a query.",mission:2,lessonUrl:"/digital-famine/cyber/submodule_2"},
+  {question:"Which payload could expose ALL agent records?",options:["' OR 1=1 --","DELETE FROM Agents","CREATE TABLE hacked","UPDATE Agents SET clearance=10"],correct:0,hint:"This one always makes WHERE true.",mission:2,lessonUrl:"/digital-famine/cyber/submodule_2"},
+  {question:"What does input validation prevent?",options:["Slow queries","Malicious data from being processed by the system","Users from creating accounts","Database backups from failing"],correct:1,hint:"It ensures the data follows rules before being stored.",mission:2,lessonUrl:"/digital-famine/cyber/submodule_2"},
+  {question:"In SQL injection attacks, what does '--' do?",options:["Subtracts two numbers","Starts a comment, ignoring everything after it","Creates a new table","Encrypts the query"],correct:1,hint:"Attackers use it to comment out the rest of the query.",mission:2,lessonUrl:"/digital-famine/cyber/submodule_2"},
 
-  // MISSION 3
-  {question:"What's the difference between hashing and encryption?",options:["Hashing is faster than encryption","Hashing is one-way (irreversible), encryption is two-way (reversible)","Hashing works on text, encryption on numbers","There's no difference"],correct:1,mission:3,lessonUrl:"/digital-famine/cyber/submodule_3"},
-  {question:"How many characters is a SHA-256 hash output?",options:["32 hexadecimal characters","64 hexadecimal characters","128 hexadecimal characters","Varies based on input length"],correct:1,mission:3,lessonUrl:"/digital-famine/cyber/submodule_3"},
-  {question:"What is the 'avalanche effect' in SHA-256?",options:["Hashing multiple launch codes simultaneously","A tiny change in input creates a completely different hash","The hash gets longer as input increases","Multiple inputs produce the same hash"],correct:1,mission:3,lessonUrl:"/digital-famine/cyber/submodule_3"},
-  {question:"Why hash launch codes instead of storing them in plaintext?",options:["To save storage space in earth_base.db","To make verification faster","So aliens can't read codes even if they breach the database","Because it's required by defense protocols"],correct:2,mission:3,lessonUrl:"/digital-famine/cyber/submodule_3"},
-  {question:"If you hash 'ALPHA-001' today and tomorrow, will the hashes match?",options:["No - hashes change daily","Yes - hashing is deterministic (same input = same output)","Only if using the same computer","Depends on the time of day"],correct:1,mission:3,lessonUrl:"/digital-famine/cyber/submodule_3"},
-  {question:"What is 'salt' in password hashing?",options:["A secret decryption key","Random data added to passwords before hashing to prevent rainbow table attacks","A specific type of hashing algorithm","A compression method for long passwords"],correct:1,mission:3,lessonUrl:"/digital-famine/cyber/submodule_3"}
+  // Mission 3
+  {question:"What's the difference between hashing and encryption?",options:["Hashing is faster than encryption","Hashing is one-way (irreversible), encryption is two-way (reversible)","Hashing works on text, encryption on numbers","There's no difference"],correct:1,hint:"One you can reverse, the other you can’t.",mission:3,lessonUrl:"/digital-famine/cyber/submodule_3"},
+  {question:"How many characters is a SHA-256 hash output?",options:["32 hexadecimal characters","64 hexadecimal characters","128 hexadecimal characters","Varies based on input length"],correct:1,hint:"It’s always the same length: 64 hex characters.",mission:3,lessonUrl:"/digital-famine/cyber/submodule_3"},
+  {question:"What is the 'avalanche effect' in SHA-256?",options:["Hashing multiple launch codes simultaneously","A tiny change in input creates a completely different hash","The hash gets longer as input increases","Multiple inputs produce the same hash"],correct:1,hint:"Even one small input change causes a massive difference.",mission:3,lessonUrl:"/digital-famine/cyber/submodule_3"},
+  {question:"Why hash launch codes instead of storing them in plaintext?",options:["To save storage space in earth_base.db","To make verification faster","So aliens can't read codes even if they breach the database","Because it's required by defense protocols"],correct:2,hint:"Hashing makes leaked data unreadable.",mission:3,lessonUrl:"/digital-famine/cyber/submodule_3"},
+  {question:"If you hash 'ALPHA-001' today and tomorrow, will the hashes match?",options:["No - hashes change daily","Yes - hashing is deterministic (same input = same output)","Only if using the same computer","Depends on the time of day"],correct:1,hint:"Hashing always gives the same output for the same input.",mission:3,lessonUrl:"/digital-famine/cyber/submodule_3"},
+  {question:"What is 'salt' in password hashing?",options:["A secret decryption key","Random data added to passwords before hashing to prevent rainbow table attacks","A specific type of hashing algorithm","A compression method for long passwords"],correct:1,hint:"It randomizes hashes even for identical passwords.",mission:3,lessonUrl:"/digital-famine/cyber/submodule_3"}
 ];
 
 let currentQuestion = 0;
+let score = 0;
+let retryMode = false;
 
 function showQuestion() {
   const q = questions[currentQuestion];
-  document.getElementById("progress").textContent = `Question ${currentQuestion + 1} of ${questions.length}`;
+  document.getElementById("progress").textContent = `Question ${currentQuestion + 1} of ${questions.length} | Score: ${score}`;
   document.getElementById("question").textContent = q.question;
 
   const optionsContainer = document.getElementById("options");
@@ -139,21 +160,47 @@ function checkAnswer(selected) {
   if (selected === q.correct) {
     feedback.textContent = "✅ Correct!";
     feedback.className = "feedback correct";
+    if (!retryMode) score += 5;
     document.getElementById("next-btn").style.display = "inline-block";
   } else {
-    feedback.innerHTML = `❌ Incorrect. Review the lesson before trying again: <a href="${q.lessonUrl}" style="color:#00ff99;">Go to Lesson</a>`;
-    feedback.className = "feedback wrong";
+    if (!retryMode) {
+      retryMode = true;
+      feedback.innerHTML = `❌ Incorrect. You can retry!<br><a href="${q.lessonUrl}" style="color:#00ff99;">Go to Lesson</a><div class="hint">💡 Hint: ${q.hint}</div>`;
+      feedback.className = "feedback wrong";
+    } else {
+      feedback.innerHTML = `❌ Still incorrect. Review the material: <a href="${q.lessonUrl}" style="color:#00ff99;">Go to Lesson</a>`;
+      feedback.className = "feedback wrong";
+      document.getElementById("next-btn").style.display = "inline-block";
+    }
   }
 }
 
 document.getElementById("next-btn").onclick = () => {
+  retryMode = false;
   currentQuestion++;
   if (currentQuestion < questions.length) {
     showQuestion();
   } else {
-    document.getElementById("quiz-content").innerHTML = "<h2>🎉 Quiz Complete! Great job, Agent!</h2>";
+    finishQuiz();
   }
 };
+
+function finishQuiz() {
+  const percent = (score / (questions.length * 5)) * 100;
+  const quizContent = document.getElementById("quiz-content");
+  if (percent >= 80) {
+    quizContent.innerHTML = `<h2>🎉 Quiz Complete! Score: ${percent}%</h2><p>Great job, Agent! You’ve unlocked the Vault.</p><a href="/digital-famine/cyber/vault/final-vault/" class="next-btn">Enter the Vault</a>`;
+  } else {
+    quizContent.innerHTML = `<h2>❌ Score: ${percent}%</h2><p>You need at least 80% to unlock the Vault.</p><button class="retry-btn" onclick="restartQuiz()">Retry Quiz</button>`;
+  }
+}
+
+function restartQuiz() {
+  currentQuestion = 0;
+  score = 0;
+  retryMode = false;
+  showQuestion();
+}
 
 showQuestion();
 </script>
