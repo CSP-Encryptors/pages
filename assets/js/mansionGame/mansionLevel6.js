@@ -367,7 +367,7 @@ class MansionLevel6 {
             SCALE_FACTOR: 6,
             ANIMATION_RATE: 100,
             pixels: {width: 2029, height: 2025},
-            INIT_POSITION: {x: (width * 8 / 80), y: (height * 8 / 80)},
+            INIT_POSITION: {x: (width * 8 / 80), y: (height * 1 / 4)},
             orientation: {rows: 1, columns: 1},
             down: {row: 0, start: 0, columns: 1},
             hitbox: {widthPercentage: 0.1, heightPercentage: 0.2}
