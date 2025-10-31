@@ -19,6 +19,23 @@ class GameLevelHomePage {
     existingDialogues.forEach(el => el.remove());
 
     this.dialogueSystem = new DialogueSystem();
+    
+    // Add flag to track if dialogue is open
+    this.dialogueOpen = false;
+    
+    // Override dialogueSystem methods to track state
+    const originalShowDialogue = this.dialogueSystem.showDialogue.bind(this.dialogueSystem);
+    this.dialogueSystem.showDialogue = (...args) => {
+      this.dialogueOpen = true;
+      return originalShowDialogue(...args);
+    };
+    
+    const originalCloseDialogue = this.dialogueSystem.closeDialogue.bind(this.dialogueSystem);
+    this.dialogueSystem.closeDialogue = () => {
+      this.dialogueOpen = false;
+      this.removeExistingKeyListener();
+      return originalCloseDialogue();
+    };
 
     this.applyPlanetEffect = (ctx, sprite, planetName) => {
       const isCompleted = this.progression[planetName];
@@ -102,6 +119,7 @@ class GameLevelHomePage {
       
       if (e.key.toLowerCase() === 'r' && e.ctrlKey) {
         localStorage.removeItem('planetProgression');
+        localStorage.removeItem('playerPosition'); // Also clear player position
         location.reload();
       }
     });
@@ -115,12 +133,6 @@ class GameLevelHomePage {
       }
     };
     
-    const originalCloseDialogue = this.dialogueSystem.closeDialogue.bind(this.dialogueSystem);
-    this.dialogueSystem.closeDialogue = () => {
-      this.removeExistingKeyListener();
-      originalCloseDialogue();
-    };
-    
     const image_src_desert = path + "/images/digital-famine/galaxy.jpg";
     const image_data_desert = {
       name: 'galaxy',
@@ -128,6 +140,24 @@ class GameLevelHomePage {
       src: image_src_desert,
       pixels: { height: 580, width: 1038 }
     };
+
+    // Load saved player position or use default
+    const savedPosition = localStorage.getItem('playerPosition');
+    let playerInitPosition = { x: (width * 0.01), y: (height * 0.75) - 100 };
+    
+    if (savedPosition) {
+      try {
+        const parsed = JSON.parse(savedPosition);
+        // Validate that position is within bounds
+        if (parsed.x >= 0 && parsed.x <= width - 100 && 
+            parsed.y >= 0 && parsed.y <= height - 100) {
+          playerInitPosition = parsed;
+          console.log('✅ Restored player position:', playerInitPosition);
+        }
+      } catch (e) {
+        console.warn('Failed to parse saved player position');
+      }
+    }
 
     const sprite_src_chillguy = path + "/images/digital-famine/Rocket.png";
     const CHILLGUY_SCALE_FACTOR = 5;
@@ -138,7 +168,7 @@ class GameLevelHomePage {
         SCALE_FACTOR: 9,
         STEP_FACTOR: 1000,
         ANIMATION_RATE: 10,
-        INIT_POSITION: { x: (width * 0.01), y: (height * 0.75) - 100 }, 
+        INIT_POSITION: playerInitPosition, // Use saved position
         pixels: {height: 512, width: 256},
         orientation: {rows: 4, columns: 2},
         right: {row: 3, start: 0, columns: 2},
@@ -221,6 +251,12 @@ class GameLevelHomePage {
         dialogues: ["Would you like to travel to the Cyber Planet?"],
         reaction: function() { },
         interact: function() {
+          // Check if dialogue is already open
+          if (this.dialogueOpen) {
+            console.log('⚠️ Dialogue already open, ignoring interaction');
+            return;
+          }
+          
           this.removeExistingKeyListener();
           this.debugProgress();
           
@@ -278,6 +314,12 @@ class GameLevelHomePage {
           }
         }.bind(this),
         interact: function() {
+          // Check if dialogue is already open
+          if (this.dialogueOpen) {
+            console.log('⚠️ Dialogue already open, ignoring interaction');
+            return;
+          }
+          
           this.removeExistingKeyListener();
           if (!this.progression.microblog) {
             dialogueSystem.showDialogue("Complete Microblogging Planet first!", "", sprite_src_medialit);
@@ -331,6 +373,12 @@ class GameLevelHomePage {
           }
         }.bind(this),
         interact: function() {
+          // Check if dialogue is already open
+          if (this.dialogueOpen) {
+            console.log('⚠️ Dialogue already open, ignoring interaction');
+            return;
+          }
+          
           this.removeExistingKeyListener();
           if (!this.progression.medialit) {
             dialogueSystem.showDialogue("Complete Media Literacy Planet first!", "", sprite_src_ai);
@@ -369,6 +417,12 @@ class GameLevelHomePage {
           this.applyPlanetEffect(ctx, this, 'microblog');
         }.bind(this),
         interact: function() {
+          // Check if dialogue is already open
+          if (this.dialogueOpen) {
+            console.log('⚠️ Dialogue already open, ignoring interaction');
+            return;
+          }
+          
           this.removeExistingKeyListener();
           dialogueSystem.showDialogue("Do you want to travel to Microblogging Planet?", "", sprite_src_microblog);
           dialogueSystem.addButtons([{
@@ -414,6 +468,12 @@ class GameLevelHomePage {
           }
         }.bind(this),
         interact: function() {
+          // Check if dialogue is already open
+          if (this.dialogueOpen) {
+            console.log('⚠️ Dialogue already open, ignoring interaction');
+            return;
+          }
+          
           this.removeExistingKeyListener();
           if (!this.progression.cyber) {
             dialogueSystem.showDialogue("Complete all planets first!", "", sprite_src_home);
@@ -445,6 +505,9 @@ class GameLevelHomePage {
     this.playerData = sprite_data_chillguy;
     this.satelliteObject = null;
     this.playerObject = null;
+    
+    // Save position interval handle
+    this.savePositionInterval = null;
     
     this.createPageCounter();
   }
@@ -586,6 +649,17 @@ class GameLevelHomePage {
                              (this.progression.ai ? 1 : 0) +
                              (this.progression.cyber ? 1 : 0);
       this.pageCounter.textContent = `${pagesCollected}/4`;
+    }
+  }
+  
+  savePlayerPosition() {
+    if (this.playerObject && this.playerObject.position) {
+      const position = {
+        x: this.playerObject.position.x,
+        y: this.playerObject.position.y
+      };
+      localStorage.setItem('playerPosition', JSON.stringify(position));
+      // Silent save - no console log to avoid spam
     }
   }
 
@@ -740,6 +814,7 @@ class GameLevelHomePage {
                 <li>Your satellite companion follows you around for moral support!</li>
                 <li>Look for glowing planets - they're ready for interaction</li>
                 <li>Check the page counter in the bottom-right to track your progress</li>
+                <li>Your rocket position is automatically saved!</li>
               </ul>
             </div>
             
@@ -1356,6 +1431,20 @@ class GameLevelHomePage {
       const objectId = gameObject.id || gameObject.canvas?.id;
       if (objectId === 'Chill Guy' || objectId === 'chill guy') {
         this.playerObject = gameObject;
+        
+        // Start saving position periodically
+        this.savePositionInterval = setInterval(() => {
+          this.savePlayerPosition();
+        }, 2000); // Save every 2 seconds
+        
+        // Also save on any movement
+        const originalUpdate = gameObject.update?.bind(gameObject);
+        if (originalUpdate) {
+          gameObject.update = (...args) => {
+            originalUpdate(...args);
+            this.savePlayerPosition();
+          };
+        }
       } else if (objectId === 'Satellite' || objectId === 'satellite') {
         this.satelliteObject = gameObject;
         gameObject.canvas.style.display = 'none';
@@ -1368,6 +1457,19 @@ class GameLevelHomePage {
         this.satelliteObject.canvas.style.display = isVisible ? 'none' : 'block';
       }
     });
+    
+    // Save position when the page is unloaded
+    window.addEventListener('beforeunload', () => {
+      this.savePlayerPosition();
+    });
+  }
+  
+  cleanup() {
+    // Clear save position interval when cleaning up
+    if (this.savePositionInterval) {
+      clearInterval(this.savePositionInterval);
+      this.savePositionInterval = null;
+    }
   }
 
   update() {
