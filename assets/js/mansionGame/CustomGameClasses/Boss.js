@@ -2,6 +2,7 @@ import Enemy from '../GameEngine/Enemy.js';
 import Boomerang from '../CustomGameClasses/Boomerang.js';
 import Projectile from '../CustomGameClasses/Projectile.js';
 import Arm from '../CustomGameClasses/Arm.js';
+import showEndScreen from '../EndScreen.js';
 
 class Boss extends Enemy {
     constructor(data = null, gameEnv = null) {
@@ -95,8 +96,14 @@ class Boss extends Enemy {
         }
 
         // If boss health is 0 or less, do nothing for now.
-        // Placeholder: keep the object intact; we'll add death animation/behavior later.
+        // If boss is dead, show end screen once (delegated to EndScreen module)
         if (this.healthPoints <= 0) {
+            if (!this._victoryShown) {
+                this._victoryShown = true;
+                try {
+                    showEndScreen(this.gameEnv);
+                } catch (e) { console.error('Error showing end screen:', e); }
+            }
             return;
         }
         // Update the position and draw the boss
