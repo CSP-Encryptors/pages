@@ -117,6 +117,14 @@ class Projectile extends Character {
 
     // Deal damage to the player
     execDamage() {
+        // Do not apply damage while the battleroom intro/fade is running.
+        // The level code sets `window.__battleRoomFadeComplete = true` when
+        // the intro finishes. Guarding here ensures projectiles can't harm
+        // the player during the loading/intro sequence.
+        if (typeof window !== 'undefined' && window.__battleRoomFadeComplete === false) {
+            return;
+        }
+
         const players = this.gameEnv.gameObjects.filter(obj => obj.constructor.name === 'Player');
         if (players.length === 0) return null;
 
