@@ -282,9 +282,9 @@ class Projectile extends Character {
         deathMessage.style.boxShadow = '0 0 20px rgba(255, 0, 0, 0.5)';
         deathMessage.style.width = '400px';
         deathMessage.innerHTML = `
-            <div style="margin-bottom: 20px;">☠️ YOU DIED ☠️</div>
-            <div style="font-size: 16px; margin-bottom: 20px;">The Reaper has Defeated you!</div>
-            <div style="font-size: 14px;">Respawning in 2 seconds...</div>
+            <div style="margin-bottom: 20px;">YOU DIED</div>
+            <div style="font-size: 16px; margin-bottom: 20px;">The Reaper has taken another victim</div>
+            <div style="font-size: 14px;">Respawning in 5 seconds...</div>
         `;
         
         document.body.appendChild(deathMessage);
@@ -294,7 +294,7 @@ class Projectile extends Character {
             if (deathMessage.parentNode) {
                 deathMessage.parentNode.removeChild(deathMessage);
             }
-        }, 2000);
+        }, 5000);
         
         // 3. Reset the level after a short delay using page reload for reliability
         setTimeout(() => {
@@ -305,7 +305,7 @@ class Projectile extends Character {
             
             // Force a complete page reload - most reliable way to reset
             location.reload();
-        }, 2000); // 2 second delay before reset
+        }, 5000); // 2 second delay before reset
     }
 
     // Carry over the method that is destroying the image once it's offscreen
