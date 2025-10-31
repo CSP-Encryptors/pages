@@ -7,6 +7,9 @@ class Boss extends Enemy {
     constructor(data = null, gameEnv = null) {
         super(data, gameEnv);
 
+        // Lazy cache for the boss health fill DOM element (populated when available)
+        this._bossHealthFill = null;
+
         this.stage = 1;
         this.fullHealth = data?.initialHealth || 1500;
         this.healthPoints = this.fullHealth;
@@ -68,12 +71,34 @@ class Boss extends Enemy {
 
     // Update function for the Boss
     update() {
+        // === [ADDED] Update boss health bar ===
+        // Lazily grab the fill element (the battle room creates it when the level loads)
+        if (!this._bossHealthFill && typeof document !== 'undefined') {
+            this._bossHealthFill = document.getElementById('boss-health-fill');
+        }
+
+        if (this._bossHealthFill) {
+            // Guard against division by zero if fullHealth is ever 0
+            const full = this.fullHealth || 1;
+            const percent = Math.max(0, Math.min(100, (this.healthPoints / full) * 100));
+            this._bossHealthFill.style.width = `${percent}%`;
+            this._bossHealthFill.style.backgroundColor = percent < 33 ? '#8B0000' : percent < 66 ? '#FF4500' : '#FF0000';
+
+            // If boss is dead, remove the health bar from the DOM (cleanup)
+            if (this.healthPoints <= 0) {
+                try {
+                    const bar = document.getElementById('boss-health-bar');
+                    if (bar && bar.parentNode) bar.parentNode.removeChild(bar);
+                } catch (e) { console.warn('Failed to remove boss health bar:', e); }
+                this._bossHealthFill = null;
+            }
+        }
+
         // If boss health is 0 or less, do nothing for now.
         // Placeholder: keep the object intact; we'll add death animation/behavior later.
         if (this.healthPoints <= 0) {
             return;
         }
-
         // Update the position and draw the boss
         this.spriteData.update.call(this);
         this.draw();

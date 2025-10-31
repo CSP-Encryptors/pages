@@ -327,6 +327,52 @@ class MansionLevel6_BattleRoom {
             {class: Boss, data: sprite_data_enemy},
             //{class: Character, data: sprite_scythe_data},
         ];
+
+        // === [ADDED] Create health bar when battle room loads ===
+        if (typeof window !== 'undefined') {
+            createBossHealthBar();
+        }
+
+    }
+}
+
+// === [ADDED] Create the boss health bar ===
+function createBossHealthBar() {
+    const barContainer = document.createElement('div');
+    barContainer.id = 'boss-health-bar';
+    Object.assign(barContainer.style, {
+        position: 'fixed',
+        top: '20px',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        width: '60%',
+        height: '30px',
+        backgroundColor: '#222',
+        border: '2px solid #FF0000',
+        borderRadius: '8px',
+        zIndex: '9999',
+        boxShadow: '0 0 10px rgba(255, 0, 0, 0.5)'
+    });
+
+    const fill = document.createElement('div');
+    fill.id = 'boss-health-fill';
+    Object.assign(fill.style, {
+        height: '100%',
+        width: '100%',
+        backgroundColor: '#FF0000',
+        borderRadius: '6px',
+        transition: 'width 0.3s ease'
+    });
+
+    barContainer.appendChild(fill);
+    document.body.appendChild(barContainer);
+}
+
+// === [ADDED] Remove the boss health bar ===
+function removeBossHealthBar() {
+    const bar = document.getElementById('boss-health-bar');
+    if (bar && bar.parentNode) {
+        bar.parentNode.removeChild(bar);
     }
 }
 
