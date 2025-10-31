@@ -134,8 +134,9 @@ class Projectile extends Character {
         if (distanceFromPlayer <= PLAYER_HIT_DISTANCE) {
             this.revComplete = true;
             this.destroy();
+            if (!nearest.data) nearest.data = { health: 100 }; // Initialize health if not exists
             nearest.data.health -= DAMAGE_DEALT;
-            console.log("Player Health:", nearest.player.health);
+            console.log("Player Health:", nearest.data.health);
             if (nearest.data.health <= 0) {
                 // Only log to the console for now
                 console.log("Game over -- the player has been defeated!");
