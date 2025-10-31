@@ -66,7 +66,7 @@ In this room, there is the actual boss fight. This boss fight is designed to be 
 
 The boss of this level is the skeleton reaper. 
 
-![]({{site.baseurl}}/images/MansionGame/Reaper.png)
+![]({{site.baseurl}}/images/mansionGame/Reaper.png)
 
 As you can see in the image, the boss is a hooded skeleton with 4 floating arms around him. In the game, he chases you around and if he collides with you, you will die. 
 
