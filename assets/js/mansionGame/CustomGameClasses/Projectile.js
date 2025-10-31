@@ -127,7 +127,7 @@ class Projectile extends Character {
         const distanceFromPlayer = Math.sqrt(xDiff * xDiff + yDiff * yDiff);
 
         // If the player is too close...
-        const PLAYER_HIT_DISTANCE = 20;
+        const PLAYER_HIT_DISTANCE = 100;
         const ARROW_DAMAGE = 10;
         const FIREBALL_DAMAGE = 15;
         const DAMAGE_DEALT = this.type == "FIREBALL" ? FIREBALL_DAMAGE : ARROW_DAMAGE;
