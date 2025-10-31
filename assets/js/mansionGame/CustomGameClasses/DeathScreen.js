@@ -1,3 +1,4 @@
+// Define the death screen
 function showDeathScreen(player) {
 
     // === PLAYER DEATH: ALL FUNCTIONALITY INLINE ===
@@ -66,7 +67,7 @@ function showDeathScreen(player) {
     deathMessage.innerHTML = `
         <div style="margin-bottom: 20px;">☠️ YOU DIED ☠️</div>
         <div style="font-size: 16px; margin-bottom: 20px;">The Reaper has Defeated you!</div>
-        <div style="font-size: 14px;">Respawning in 2 seconds...</div>
+        <div style="font-size: 14px;">Respawning in 5 seconds...</div>
     `;
     
     document.body.appendChild(deathMessage);
@@ -87,7 +88,7 @@ function showDeathScreen(player) {
         
         // Force a complete page reload - most reliable way to reset
         location.reload();
-    }, 2000); // 2 second delay before reset
+    }, 5000); // 5 second delay before reset
 }
 
 export default showDeathScreen;
