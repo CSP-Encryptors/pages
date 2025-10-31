@@ -290,7 +290,7 @@ class GameLevelHomePage {
                 this.progression.medialit = true;
                 localStorage.setItem('planetProgression', JSON.stringify(this.progression));
                 dialogueSystem.closeDialogue();
-                window.location.href = '/digital-famine/medialit/';
+                window.location.href = '/digital-famine/media-lit/';
               },
               primary: true
             }]);

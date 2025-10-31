@@ -154,7 +154,7 @@ export function initPlanetNavigation(gameInstance) {
 function getPlanetURL(planetKey) {
   const planetURLs = {
     'microblog': '/digital-famine/microblog/',
-    'medialit': '/digital-famine/medialit/',
+    'medialit': '/digital-famine/media-lit/',
     'ai': '/digital-famine/ai/',
     'cyber': '/digital-famine/cybersecurity-game/',
     'end': '/digital-famine/end/'
