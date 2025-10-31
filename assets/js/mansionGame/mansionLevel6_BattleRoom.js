@@ -343,7 +343,7 @@ function createBossHealthBar() {
     container.id = 'boss-health-container';
     Object.assign(container.style, {
         position: 'absolute',
-        top: '40px',  // Position it within the battle room
+        top: '80px',  // Moved further down in the battle room
         left: '50%',
         transform: 'translateX(-50%)',
         display: 'flex',
