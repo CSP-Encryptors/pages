@@ -213,8 +213,11 @@ date: 2025-10-26
                     <h2 class="text-3xl font-bold mb-6">🎯 Build Alien Sightings Table</h2>
                     <div class="bg-red-900/20 border border-red-500/30 rounded-lg p-6">
                         <h3 class="text-xl font-semibold text-red-300 mb-3">🎯 Your Mission</h3>
-                        <p class="mb-4">Click to create the Sightings table:</p>
-                        <button id="create-sightings-btn" onclick="createSightingsTable()" class="w-full py-3 rounded-lg font-semibold bg-red-600 hover:bg-red-700">Create Sightings Table</button>
+                        <p class="mb-4">Write the SQL to create the <b>Alien_Sightings</b> table below. When ready, click <b>Run SQL</b> to build your table.</p>
+                        <textarea id="sightings-sql" class="w-full text-white bg-slate-900 p-3 rounded-lg font-mono mb-2" rows="5" placeholder="CREATE TABLE Alien_Sightings (sighting_id INTEGER PRIMARY KEY, timestamp TEXT, location TEXT, threat_level INTEGER, description TEXT, verified_by INTEGER);" disabled></textarea>
+                        <button id="run-sightings-sql" onclick="runSightingsSQL()" class="w-full py-3 rounded-lg font-semibold bg-red-600 hover:bg-red-700 mb-2" disabled>Run SQL</button>
+                        <div id="sightings-sql-loading" class="text-red-300 font-semibold mb-2">Loading database...</div>
+                        <div id="sightings-sql-feedback" class="text-red-400 font-semibold mb-2"></div>
                     </div>
                     <div id="sightings-result" class="section-hidden">
                         <div class="bg-green-900/20 border border-green-500/30 rounded-lg p-6">
@@ -264,13 +267,17 @@ date: 2025-10-26
                     locateFile: file => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/${file}`
                 });
                 db = new SQL.Database();
-                // Enable SQL input/button and hide loading
+                // Enable SQL input/button and hide loading for both editors
                 document.getElementById('agents-sql').disabled = false;
                 document.getElementById('run-agents-sql').disabled = false;
                 document.getElementById('agents-sql-loading').style.display = 'none';
+                document.getElementById('sightings-sql').disabled = false;
+                document.getElementById('run-sightings-sql').disabled = false;
+                document.getElementById('sightings-sql-loading').style.display = 'none';
             } catch (e) {
                 console.error(e);
                 document.getElementById('agents-sql-loading').textContent = 'Failed to load database.';
+                document.getElementById('sightings-sql-loading').textContent = 'Failed to load database.';
             }
         }
         function goToSection(n) {
@@ -317,16 +324,53 @@ date: 2025-10-26
                 feedback.textContent = 'SQL Error: ' + e.message;
             }
         }
-        function createSightingsTable() {
-            if (!db) return;
-            db.run('CREATE TABLE Alien_Sightings (sighting_id INTEGER PRIMARY KEY, timestamp TEXT, location TEXT, threat_level INTEGER, description TEXT, verified_by INTEGER)');
-            [['2025-10-26T14:23','Nevada Desert',4,'Triangular craft',1],['2025-10-26T16:45','Pacific Ocean',3,'Submerged lights',2],['2025-10-26T19:12','Amazon',2,'Energy readings',3],['2025-10-26T21:30','Arctic',5,'Multiple craft',4],['2025-10-26T23:08','Sahara',3,'Ground markings',1],['2025-10-27T01:15','Antarctic',4,'Atmospheric disturbance',2],['2025-10-27T03:42','Himalayas',2,'Radar contact',3],['2025-10-27T05:55','Mediterranean',3,'Submersible object',5]].forEach(s => db.run('INSERT INTO Alien_Sightings VALUES (?,?,?,?,?,?)', [null].concat(s)));
-            const r = db.exec('SELECT s.sighting_id,s.location,s.threat_level,s.description,a.codename FROM Alien_Sightings s JOIN Agents a ON s.verified_by=a.agent_id')[0].values;
-            const tb = document.getElementById('sightings-tbody');
-            r.forEach(row => { const tr = document.createElement('tr'); tr.innerHTML = '<td class="py-2 px-3">' + row[0] + '</td><td class="py-2 px-3">' + row[1] + '</td><td class="py-2 px-3">' + row[2] + '</td><td class="py-2 px-3">' + row[3] + '</td><td class="py-2 px-3">' + row[4] + '</td>'; tb.appendChild(tr); });
-            document.getElementById('sightings-result').classList.remove('section-hidden');
-            document.getElementById('continue-to-validation').classList.remove('section-hidden');
-            document.getElementById('create-sightings-btn').disabled = true;
+
+        function runSightingsSQL() {
+            const sql = document.getElementById('sightings-sql').value.trim();
+            const feedback = document.getElementById('sightings-sql-feedback');
+            feedback.textContent = '';
+            if (!db) { feedback.textContent = 'Database not initialized.'; return; }
+            // Basic validation: must start with CREATE TABLE Alien_Sightings and have all columns
+            const required = [
+                /CREATE\s+TABLE\s+Alien_Sightings/i,
+                /sighting_id\s+INTEGER\s+PRIMARY\s+KEY/i,
+                /timestamp\s+TEXT/i,
+                /location\s+TEXT/i,
+                /threat_level\s+INTEGER/i,
+                /description\s+TEXT/i,
+                /verified_by\s+INTEGER/i
+            ];
+            let valid = true;
+            for (const r of required) if (!r.test(sql)) valid = false;
+            if (!valid) {
+                feedback.textContent = 'Your SQL must create the Alien_Sightings table with all required columns and types.';
+                return;
+            }
+            try {
+                db.run(sql);
+                // Insert starter data
+                [
+                    ['2025-10-26T14:23','Nevada Desert',4,'Triangular craft',1],
+                    ['2025-10-26T16:45','Pacific Ocean',3,'Submerged lights',2],
+                    ['2025-10-26T19:12','Amazon',2,'Energy readings',3],
+                    ['2025-10-26T21:30','Arctic',5,'Multiple craft',4],
+                    ['2025-10-26T23:08','Sahara',3,'Ground markings',1],
+                    ['2025-10-27T01:15','Antarctic',4,'Atmospheric disturbance',2],
+                    ['2025-10-27T03:42','Himalayas',2,'Radar contact',3],
+                    ['2025-10-27T05:55','Mediterranean',3,'Submersible object',5]
+                ].forEach(s => db.run('INSERT INTO Alien_Sightings VALUES (?,?,?,?,?,?)', [null].concat(s)));
+                const r = db.exec('SELECT s.sighting_id,s.location,s.threat_level,s.description,a.codename FROM Alien_Sightings s JOIN Agents a ON s.verified_by=a.agent_id')[0].values;
+                const tb = document.getElementById('sightings-tbody');
+                tb.innerHTML = '';
+                r.forEach(row => { const tr = document.createElement('tr'); tr.innerHTML = '<td class="py-2 px-3">' + row[0] + '</td><td class="py-2 px-3">' + row[1] + '</td><td class="py-2 px-3">' + row[2] + '</td><td class="py-2 px-3">' + row[3] + '</td><td class="py-2 px-3">' + row[4] + '</td>'; tb.appendChild(tr); });
+                document.getElementById('sightings-result').classList.remove('section-hidden');
+                document.getElementById('continue-to-validation').classList.remove('section-hidden');
+                document.getElementById('run-sightings-sql').disabled = true;
+                document.getElementById('sightings-sql').disabled = true;
+                feedback.textContent = '';
+            } catch (e) {
+                feedback.textContent = 'SQL Error: ' + e.message;
+            }
         }
         function runValidation() {
             let p = 0;
@@ -342,7 +386,7 @@ date: 2025-10-26
             document.getElementById('validation-results').classList.remove('section-hidden');
             document.getElementById('validation-start').classList.add('section-hidden');
         }
-        window.addEventListener('load', initDatabase);
+    window.addEventListener('load', initDatabase);
     </script>
 </body>
 </html>
