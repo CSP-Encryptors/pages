@@ -9,10 +9,9 @@ submodule: 1
 categories: [CSP, Submodule, Analytics/Admin]
 tags: [analytics, submodule, curators]
 author: "Curators Team: Nikhil, Rohan, Pranav, Shriya, Samhita, Adi"
-date: 2025-10-21
+date: 2025-10-22
 ---
 
-{%- include tailwind/cs-portfolio-quest-lessons_info.html -%}
 
 # Submodule 1: Overall Analytics & Grades
 

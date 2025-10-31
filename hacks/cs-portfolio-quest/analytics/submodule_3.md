@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: cs-portfolio-lesson
 title: "Submodule 3"
 description: "Submodule 3 of Analytics/Admin Mini-Quest"
 permalink: /cs-portfolio-quest/analytics/submodule_3/
@@ -9,14 +9,11 @@ submodule: 3
 categories: [CSP, Submodule, Analytics/Admin]
 tags: [analytics, submodule, curators]
 author: "Curators Team"
-date: 2025-10-21
 ---
 
-{%- include tailwind/cs-portfolio-quest-lessons_info.html -%}
 
 # Submodule 3: User Management System and User Analytics
 
-[Return to Analytics and Mastery Certificate Quest]({{ site.baseurl }}/cs-portfolio-quest/analytics/)
 <style>
   .analytics-container {
     background-color: #121212;
