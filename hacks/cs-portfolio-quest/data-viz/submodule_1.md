@@ -1,245 +1,191 @@
 ---
-layout: post
+layout: cs-portfolio-lesson
 title: "Submodule 1"
-description: "User Authentication & Profile Management with Spring Boot"
+description: "Spring Boot RESTful Company Profile System"
 permalink: /cs-portfolio-quest/data-viz/submodule_1/
 parent: "Data Visualization"
 team: "Applicators"
 submodule: 1
 categories: [CSP, Submodule, DataVisualization]
-tags: [spring-boot, authentication, oauth, jpa]
+tags: [spring-boot, rest, jpa, sqlite]
 author: "Applicators Team"
 date: 2025-10-21
 ---
 
-<head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Module 1: User Authentication & Profile Management — Mini</title>
+# Submodule 1 · Company Profile & REST APIs — Minimal Interactive (Styling Preserved)
+
+
+<!-- NOTE: Styling essence preserved — black background & minimal chrome remain unchanged -->
 <style>
-:root{
-  --bg:#000;--text:#fff;--muted:#bbb;--muted-2:#888;--border:#333;
-  --panel:#0b0b0b;--panel-2:#111;--accent:#ddd;--accent-2:#aaa;
+html,body{height:100%}
+h1{margin:16px 0 8px;border-bottom:1px solid var(--b);padding-bottom:8px}
+.container{padding:18px}
+
+.nav{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 14px}
+.nav button{
+  background:#101010; color:var(--fg); border:1px solid var(--b);
+  padding:8px 10px; border-radius:8px; cursor:pointer; font-weight:700
 }
-*{box-sizing:border-box} html,body{height:100%}
-body{
-  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
-  background:var(--bg);color:var(--text);max-width:1200px;margin:0 auto;padding:20px;line-height:1.6;
-}
-.container{padding:32px 0}
-h1{color:var(--text);border-bottom:1px solid var(--border);padding-bottom:8px;margin:0 0 20px}
-h2,h3{color:var(--text);margin-top:24px}
-p,li,label,small{color:var(--muted)}
-a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
-.card, .panel, .out, .block, .pill{
-  background:transparent;border:1px solid var(--border);border-radius:8px;padding:14px;margin:12px 0;color:var(--text)
-}
-pre{background:var(--panel-2);border:1px solid var(--border);border-radius:8px;padding:12px;overflow:auto;color:#eee}
-code{font-family:'Courier New',Consolas,monospace;background:var(--panel);border:1px solid var(--border);border-radius:4px;padding:1px 5px;color:#eee}
+.nav button.active{border-color:#aaa}
+
+.card{border:1px solid var(--b);border-radius:10px;padding:14px;margin:12px 0;background:transparent}
+label{color:var(--muted);display:block;margin:10px 0 4px}
 input,textarea,select{
-  width:100%;padding:10px;border:1px solid var(--border);border-radius:8px;background:var(--panel-2);color:var(--text);
-  font-family:ui-monospace,SFMono-Regular,Consolas;font-size:13px;margin:8px 0;
+  width:100%; padding:10px; border:1px solid var(--b); border-radius:8px;
+  background:var(--p2); color:var(--fg); font-family:ui-monospace,SFMono-Regular,Consolas
 }
 textarea{min-height:110px}
-button{
-  background:#1a1a1a;color:var(--text);border:1px solid var(--border);padding:10px 14px;border-radius:8px;cursor:pointer;font-weight:700;margin:6px 6px 6px 0
+pre{
+  margin:10px 0; background:var(--p2); border:1px solid var(--b);
+  border-radius:8px; padding:12px; overflow:auto; color:#eee
 }
-button:hover{transform:translateY(-1px);border-color:var(--accent-2)}
+.badge{display:inline-block;border:1px solid var(--b);border-radius:999px;padding:2px 8px;color:var(--hint);font-size:11px;margin-left:6px}
+.btn{background:#141414;color:var(--fg);border:1px solid var(--b);padding:9px 12px;border-radius:8px;cursor:pointer;font-weight:700}
+.btn:hover{border-color:#aaa}
+.out{white-space:pre-wrap}
+.hidden{display:none}
+
+.quiz .opt{border:1px solid var(--b);border-radius:8px;padding:8px;margin:6px 0;cursor:pointer;color:var(--muted)}
+.quiz .opt.sel{border-color:#aaa;color:#fff}
+.quiz .opt.good{border-color:#3f3}
+.quiz .opt.bad{border-color:#f55}
+
+small.hint{color:var(--hint)}
+hr{border:none;border-top:1px solid var(--b);margin:18px 0}
+.kbd{font-family:ui-monospace,SFMono-Regular,Consolas;border:1px solid var(--b);border-radius:6px;padding:2px 6px;background:#111;color:#ddd}
 .grid{display:grid;gap:10px}
 .grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
-.nav{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 14px}
-.nav button{background:#101010;border:1px solid var(--border)} .nav button.active{border-color:#aaa}
-.hidden{display:none}
-.badge{display:inline-block;border:1px solid var(--border);border-radius:999px;padding:2px 8px;color:#aaa;font-size:11px;margin-left:6px}
-.pill{display:inline-block;padding:3px 8px;border-radius:999px}
-.ok{border-color:#3f3;color:#3f3} .warn{border-color:#ffa500;color:#ffa500} .err{border-color:#f55;color:#f55}
-.out{white-space:pre-wrap;font-family:ui-monospace,SFMono-Regular,Consolas}
-.kbd{font-family:ui-monospace,SFMono-Regular,Consolas;border:1px solid var(--border);border-radius:6px;padding:2px 6px;background:#111;color:#ddd}
-.rule{border:none;border-top:1px solid var(--border);margin:18px 0}
-.quiz .opt{border:1px solid var(--border);border-radius:8px;padding:8px;margin:6px 0;cursor:pointer;color:var(--muted)}
-.quiz .opt.sel{border-color:#aaa;color:#fff} .quiz .opt.good{border-color:#3f3} .quiz .opt.bad{border-color:#f55}
-.str-bar{height:8px;border-radius:6px;background:#1b1b1b;border:1px solid #333;overflow:hidden}
-.str-bar>div{height:100%;width:0%;background:#555;transition:width .2s}
-table{width:100%;border-collapse:collapse} th,td{border:1px solid var(--border);padding:10px;text-align:left;color:var(--muted)}
-th{color:var(--text)}
 </style>
-</head>
-<body>
+
 <div class="container">
-  <h1>🔐 Module 1: User Authentication & Profile Management <span class="badge">mini</span></h1>
-  <p>Goals: registration/login, JWT, OAuth2 mock, RBAC, profile CRUD. Everything is **interactive**—use the widgets below.</p>
+  <h1> Submodule 1 · Company Profile & REST APIs <span class="badge">minimal</span></h1>
+  <p style="color:#bdbdbd;margin:6px 0 12px">
+    Goals: CRUD with Spring Boot + JPA, Many-to-Many, custom query. Most content is interactive ↓
+  </p>
 
   <div class="nav">
-    <button class="active" data-tab="auth">Auth Simulator</button>
-    <button data-tab="jwt">JWT Tools</button>
-    <button data-tab="rbac">RBAC Guard</button>
-    <button data-tab="prof">Profile Editor</button>
+    <button class="active" data-tab="sim">API Simulator</button>
     <button data-tab="kata">Code Kata</button>
     <button data-tab="quiz">Quick Quiz</button>
+    <button data-tab="build">Build Company</button>
     <button data-tab="snips">Spring Snips</button>
   </div>
 
-  <!-- AUTH SIMULATOR -->
-  <section id="auth" class="card">
-    <h3>🔑 Auth Simulator</h3>
-    <div>Auth Status: <span id="aStat" class="pill err">Logged Out</span></div>
+  <!-- API SIMULATOR -->
+  <section id="sim" class="card">
     <div class="grid grid-2">
-      <div class="panel">
-        <h4>Register</h4>
-        <input id="rEmail" type="email" placeholder="Email"/>
-        <div>
-          <input id="rPass" type="password" placeholder="Password" oninput="pwStrength(this.value)"/>
-          <div class="str-bar" title="password strength"><div id="str"></div></div>
-          <small id="strLabel"></small>
-        </div>
-        <input id="rFirst" placeholder="First name"/>
-        <input id="rLast" placeholder="Last name"/>
-        <button onclick="register()">Register</button>
-      </div>
-      <div class="panel">
-        <h4>Login</h4>
-        <input id="lEmail" type="email" placeholder="Email"/>
-        <input id="lPass" type="password" placeholder="Password"/>
-        <button onclick="login()">Login</button>
-        <button onclick="logout()">Logout</button>
-        <div style="margin-top:8px">
-          <button onclick="oauth('google')">Continue with Google</button>
-          <button onclick="oauth('github')">GitHub</button>
-        </div>
-      </div>
-    </div>
-    <label>Response</label>
-    <pre id="authOut" class="out">No requests yet…</pre>
-
-    <h4>Users</h4>
-    <div id="uList"></div>
-  </section>
-
-  <!-- JWT TOOLS -->
-  <section id="jwt" class="card hidden">
-    <h3>🎫 JWT Tools (mock)</h3>
-    <div class="grid grid-2">
-      <div class="panel">
-        <h4>Encode (email → JWT)</h4>
-        <input id="jEmail" placeholder="email@example.com"/>
-        <button onclick="genJwt()">Generate</button>
-        <pre id="jwtTok" class="out"></pre>
-      </div>
-      <div class="panel">
-        <h4>Decode (header.payload.signature)</h4>
-        <textarea id="jIn" placeholder="Paste a JWT"></textarea>
-        <button onclick="decJwt()">Decode</button>
-        <pre id="jwtOut" class="out"></pre>
-      </div>
-    </div>
-    <small>Note: This uses a simplified mock encoder/decoder to visualize structure.</small>
-  </section>
-
-  <!-- RBAC GUARD -->
-  <section id="rbac" class="card hidden">
-    <h3>🛡️ RBAC Route Guard</h3>
-    <p>Select a protected route and check access against current user roles.</p>
-    <div class="grid grid-2">
-      <div class="panel">
-        <label>Route</label>
-        <select id="route">
-          <option value="ROLE_USER">/profile (ROLE_USER)</option>
-          <option value="ROLE_ADMIN">/admin (ROLE_ADMIN)</option>
+      <div>
+        <label>Endpoint</label>
+        <select id="ep" onchange="uiEP()">
+          <option>POST /api/companies</option>
+          <option>GET /api/companies</option>
+          <option>GET /api/companies/{id}</option>
+          <option>PUT /api/companies/{id}</option>
+          <option>DELETE /api/companies/{id}</option>
         </select>
-        <button onclick="checkRoute()">Check Access</button>
-        <pre id="guardOut" class="out"></pre>
       </div>
-      <div class="panel">
-        <label>Modify Current Roles (comma)</label>
-        <input id="roleEdit" placeholder="ROLE_USER, ROLE_ADMIN"/>
-        <button onclick="setRoles()">Set Roles</button>
-        <pre id="roleOut" class="out"></pre>
+      <div id="pidWrap" class="hidden">
+        <label>Path <span class="kbd">{id}</span></label>
+        <input id="pid" type="number" min="1" placeholder="e.g., 1"/>
       </div>
     </div>
-  </section>
 
-  <!-- PROFILE EDITOR -->
-  <section id="prof" class="card hidden">
-    <h3>👤 Profile Editor</h3>
-    <div id="pMsg" class="out">Login to edit your profile.</div>
-    <div id="pForm" class="hidden">
-      <div class="grid grid-2">
-        <div><label>First</label><input id="pFirst"/></div>
-        <div><label>Last</label><input id="pLast"/></div>
-        <div><label>Phone</label><input id="pPhone"/></div>
-        <div><label>Education</label><input id="pEdu"/></div>
+    <div id="bodyWrap" class="card" style="margin-top:10px">
+      <label>Body (JSON)</label>
+      <textarea id="body">{
+  "name": "TechCorp",
+  "industry": "Software",
+  "location": "San Francisco",
+  "size": 150,
+  "skills": ["Java","Spring"],
+  "roles": ["Backend","DevOps"]
+}</textarea>
+      <div>
+        <button class="btn" onclick="send()">Send</button>
+        <button class="btn" onclick="resetDB()">Reset DB</button>
       </div>
-      <label>Experience</label><textarea id="pExp"></textarea>
-      <label>Skills (comma)</label><input id="pSkills" placeholder="Java, Spring, SQL"/>
-      <label><input type="checkbox" id="pPublic"/> Public Profile</label>
-      <button onclick="saveProfile()">Save</button>
-      <pre id="pOut" class="out"></pre>
+      <label style="margin-top:10px">Response <small id="status" class="hint"></small></label>
+      <pre id="out" class="out">Try a request!</pre>
+    </div>
+
+    <div class="card">
+      <label>Current Companies</label>
+      <div id="list"></div>
     </div>
   </section>
 
   <!-- CODE KATA -->
   <section id="kata" class="card hidden">
-    <h3>💻 Code Kata (1-liner)</h3>
-    <p>Repository method to fetch a user by email <em>(unique)</em>.</p>
-    <input id="kataIn" placeholder="Optional<User> findByEmail(String email);" />
-    <button onclick="checkKata()">Check</button>
-    <span id="kataMsg" style="margin-left:8px"></span>
-    <hr class="rule"/>
-    <p>Bonus (show admin users):</p>
-    <input id="kataIn2" placeholder='List<User> findByRolesContaining("ROLE_ADMIN");' />
-    <button onclick="checkKata2()">Check</button>
-    <span id="kataMsg2" style="margin-left:8px"></span>
+    <p><strong>One-liner:</strong> Derived query returning companies where <code>size &gt; minSize</code>.</p>
+    <input id="kataIn" placeholder="List<Company> findBySizeGreaterThan(Integer minSize);" />
+    <div style="margin-top:8px">
+      <button class="btn" onclick="checkKata()">Check</button>
+      <span id="kataMsg" style="margin-left:8px"></span>
+    </div>
+    <details style="margin-top:10px"><summary>💡 Hint</summary><small class="hint">Use Spring Data naming: <code>findBy&lt;Field&gt;GreaterThan(param)</code>.</small></details>
   </section>
 
   <!-- QUIZ -->
   <section id="quiz" class="card hidden">
-    <h3>📝 Quick Quiz</h3>
-    <div id="qBox" class="quiz"></div>
-    <button onclick="grade()">Grade</button>
-    <div id="qScore" style="margin-top:8px"></div>
+    <div id="quizBox" class="quiz"></div>
+    <button class="btn" onclick="grade()" style="margin-top:8px">Grade</button>
+    <div id="score" style="margin-top:8px"></div>
   </section>
 
-  <!-- SPRING SNIPS -->
+  <!-- BUILDER -->
+  <section id="build" class="card hidden">
+    <div class="grid grid-2">
+      <div><label>Name</label><input id="bName" placeholder="Acme Inc"/></div>
+      <div><label>Industry</label><select id="bInd"><option>Software</option><option>AI</option><option>Healthcare</option><option>Finance</option></select></div>
+      <div><label>Location</label><input id="bLoc" placeholder="San Diego"/></div>
+      <div><label>Size</label><input id="bSize" type="number" min="1" placeholder="50"/></div>
+      <div><label>Skills (comma)</label><input id="bSkills" placeholder="Java, Spring"/></div>
+      <div><label>Roles (comma)</label><input id="bRoles" placeholder="Backend, QA"/></div>
+    </div>
+    <button class="btn" onclick="builderAdd()" style="margin-top:8px">Add</button>
+    <pre id="bOut" class="out"></pre>
+  </section>
+
+  <!-- SPRING SNIPS (kept tiny; look & feel unchanged) -->
   <section id="snips" class="card hidden">
     <details open>
       <summary>🔗 Repository</summary>
-      <pre>public interface UserRepository extends JpaRepository&lt;User, Long&gt; {
-  Optional&lt;User&gt; findByEmail(String email);
-  List&lt;User&gt; findByProfilePublic(boolean isPublic);
-  List&lt;User&gt; findByRolesContaining(String role);
+      <pre>public interface CompanyRepository extends JpaRepository&lt;Company, Long&gt; {
+  List&lt;Company&gt; findByIndustry(String industry);
+  List&lt;Company&gt; findBySizeGreaterThan(Integer minSize);
+  @Query("SELECT c FROM Company c JOIN c.skills s WHERE s.name = :skill")
+  List&lt;Company&gt; findBySkillName(@Param("skill") String skill);
 }</pre>
     </details>
     <details>
-      <summary>🔐 Security (very small)</summary>
-      <pre>@Configuration
-class SecurityConfig {
-  @Bean PasswordEncoder passwordEncoder(){ return new BCryptPasswordEncoder(); }
-  @Bean SecurityFilterChain chain(HttpSecurity http) throws Exception {
-    http.csrf().disable()
-       .authorizeHttpRequests(a->a.requestMatchers("/api/auth/**").permitAll().anyRequest().authenticated())
-       .oauth2Login();
-    return http.build();
+      <summary> Controller</summary>
+      <pre>@RestController
+@RequestMapping("/api/companies")
+class CompanyController {
+  @Autowired CompanyService svc;
+  @PostMapping public ResponseEntity&lt;Company&gt; create(@RequestBody Company c){
+    return new ResponseEntity<>(svc.createCompany(c), HttpStatus.CREATED);
   }
+  @GetMapping("/{id}") public Company one(@PathVariable Long id){ return svc.getCompanyById(id); }
+  @GetMapping public List&lt;Company&gt; all(){ return svc.getAllCompanies(); }
 }</pre>
     </details>
     <details>
-      <summary>⚙️ application.properties</summary>
-      <pre>spring.datasource.url=jdbc:sqlite:users.db
+      <summary> application.properties</summary>
+      <pre>spring.datasource.url=jdbc:sqlite:company_profiles.db
 spring.datasource.driver-class-name=org.sqlite.JDBC
 spring.jpa.hibernate.ddl-auto=update
-spring.jpa.show-sql=true
-jwt.secret=demoSecret
-jwt.expiration=86400000</pre>
+spring.jpa.show-sql=true</pre>
     </details>
-    <small>Keep the focus on the interactive practice above.</small>
+    <small class="hint">Entities/service omitted to keep it short—practice via Simulator & Builder.</small>
   </section>
 
-  <hr class="rule"/>
-  <small>Tip: Treat the simulator like Postman; replicate in your real Spring app.</small>
+  <hr/>
+  <small class="hint">Styling background preserved; content trimmed; interactions unchanged.</small>
 </div>
 
 <script>
-// ---------- Tabs ----------
+// Tabs (UI behavior unchanged)
 document.querySelectorAll('.nav button').forEach(btn=>{
   btn.onclick=()=>{
     document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
@@ -250,177 +196,130 @@ document.querySelectorAll('.nav button').forEach(btn=>{
   };
 });
 
-// ---------- In-memory "backend" ----------
-let users=[
-  { id:1, email:"john@example.com", passHash:"hashed_secret", first:"John", last:"Doe",
-    phone:"555-0100", edu:"BS CS", exp:"3y Java", skills:["Java","Spring","SQL"], roles:["ROLE_USER"], public:true }
+// In-memory DB (for Simulator + Builder)
+let db=[
+  {id:1,name:"TechNova",industry:"AI",location:"San Diego",size:1200,skills:["Python","TensorFlow"],roles:["ML Engineer","DS"]},
+  {id:2,name:"HealthBridge",industry:"Healthcare",location:"Austin",size:300,skills:["Java","Spring"],roles:["Backend Engineer"]}
 ];
-let nextId=2;
-let current=null;         // current user object
-let token=null;           // mock token
+let nextId=3;
 
-const $ = (id)=>document.getElementById(id);
-const show = (el,flag)=>el.classList.toggle('hidden',!flag);
+const $=(id)=>document.getElementById(id);
+const ep=$('ep'), pidWrap=$('pidWrap'), pid=$('pid'), bodyWrap=$('bodyWrap'), bodyEl=$('body'), out=$('out'), statusEl=$('status'), list=$('list');
 
-function escapeHtml(s){return String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'","&#039;");}
-function hash(p){return "hashed_"+p}
-function mkToken(email){return "jwt_"+btoa(email+"."+Date.now())}
-function renderUsers(){
-  $('uList').innerHTML = users.map(u=>`
-    <div class="panel">
-      <strong>${escapeHtml(u.first)} ${escapeHtml(u.last)}</strong> <span class="badge">${escapeHtml(u.email)}</span><br/>
-      ${escapeHtml(u.edu||"")} · ${escapeHtml(u.phone||"")}<br/>
-      ${(u.skills||[]).map(s=>`<span class="badge">${escapeHtml(s)}</span>`).join(' ')}<br/>
-      roles: ${(u.roles||[]).join(', ')} · public: ${u.public}
+function uiEP(){
+  const val=ep.value;
+  const needsId=val.includes('{id}');
+  pidWrap.classList.toggle('hidden',!needsId);
+  bodyWrap.classList.toggle('hidden',!(val.startsWith('POST')||val.startsWith('PUT')));
+}
+function renderList(){
+  list.innerHTML=db.map(c=>`
+    <div style="border:1px solid #333;border-radius:8px;padding:8px;margin:6px 0">
+      <strong>${escapeHtml(c.name)}</strong> <span class="badge">${escapeHtml(c.industry)}</span><br/>
+      ${escapeHtml(c.location)} · size ${c.size}<br/>
+      ${(c.skills||[]).map(s=>`<span class="badge">${escapeHtml(s)}</span>`).join(' ')}
     </div>
   `).join('');
 }
-function setAuthUI(){
-  const pill = $('aStat');
-  if(current){
-    pill.textContent=`Logged In (${current.email})`; pill.className="pill ok";
-    $('authOut').textContent = JSON.stringify({user:current, token}, null, 2);
-    $('pMsg').textContent=""; show($('pForm'), true);
-    fillProfile();
-  }else{
-    pill.textContent="Logged Out"; pill.className="pill err";
-    show($('pForm'), false); $('pMsg').textContent="Login to edit your profile.";
-  }
-}
-function result(outEl, code, obj){ outEl.textContent = (code?`HTTP ${code}\n`:"") + (obj?JSON.stringify(obj,null,2):""); }
+function escapeHtml(s){return String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'","&#039;");}
+function parseJSON(txt){try{return JSON.parse(txt||'{}');}catch(e){throw new Error('Invalid JSON body');}}
+function normCompany(o){return {name:o.name??'Unnamed',industry:o.industry??'Unknown',location:o.location??'Unknown',size:Number(o.size??0),skills:Array.isArray(o.skills)?o.skills:[],roles:Array.isArray(o.roles)?o.roles:[]};}
+function setStatus(code){statusEl.textContent=code;}
 
-// ---------- Password strength ----------
-function pwStrength(v){
-  const meter=$('str'), lbl=$('strLabel');
-  let score=0;
-  if(v.length>=8)score+=25;
-  if(/[A-Z]/.test(v))score+=25;
-  if/[0-9]/.test(v)score+=25;
-  if(/[^A-Za-z0-9]/.test(v))score+=25;
-  meter.style.width=score+"%";
-  meter.style.background = score<50?"#f55":score<75?"#ffa500":"#3f3";
-  lbl.textContent = score<50?"weak":score<75?"medium":"strong";
+function send(){
+  const [method,path]=ep.value.split(' ');
+  let res=null;
+  try{
+    if(method==='POST'&&path==='/api/companies'){
+      const obj=normCompany(parseJSON(bodyEl.value)); obj.id=nextId++; db.push(obj); setStatus(201); res=obj;
+    }else if(method==='GET'&&path==='/api/companies'){
+      setStatus(200); res=db;
+    }else if(method==='GET'&&path==='/api/companies/{id}'){
+      const id=Number(pid.value); const f=db.find(x=>x.id===id);
+      if(!f){setStatus(404);res={error:'Not found'};}else{setStatus(200);res=f;}
+    }else if(method==='PUT'&&path==='/api/companies/{id}'){
+      const id=Number(pid.value); const i=db.findIndex(x=>x.id===id);
+      if(i===-1){setStatus(404);res={error:'Not found'};}
+      else{const obj=normCompany(parseJSON(bodyEl.value)); db[i]={...db[i],...obj,id}; setStatus(200); res=db[i];}
+    }else if(method==='DELETE'&&path==='/api/companies/{id}'){
+      const id=Number(pid.value); const before=db.length; db=db.filter(x=>x.id!==id);
+      if(db.length===before){setStatus(404);res={error:'Not found'};} else {setStatus(204); res={};}
+    }else{ setStatus(400); res={error:'Unsupported operation'}; }
+  }catch(err){ setStatus(400); res={error:err.message}; }
+  out.textContent=JSON.stringify(res,null,2);
+  renderList();
 }
-
-// ---------- Auth actions ----------
-function register(){
-  const email=$('rEmail').value.trim(), pass=$('rPass').value,
-        first=$('rFirst').value.trim(), last=$('rLast').value.trim();
-  if(!email||!pass||!first||!last){ result($('authOut'), 400, {error:"All fields required"}); return; }
-  if(users.find(u=>u.email===email)){ result($('authOut'), 409, {error:"Email exists"}); return; }
-  const u={ id:nextId++, email, passHash:hash(pass), first,last, phone:"",edu:"",exp:"",skills:[],roles:["ROLE_USER"], public:true };
-  users.push(u); current=u; token=mkToken(email);
-  result($('authOut'), 201, {user:u, token}); renderUsers(); setAuthUI();
-}
-function login(){
-  const email=$('lEmail').value.trim(), pass=$('lPass').value;
-  const u=users.find(x=>x.email===email && x.passHash===hash(pass));
-  if(!u){ result($('authOut'), 401, {error:"Invalid credentials"}); return; }
-  current=u; token=mkToken(email); result($('authOut'), 200, {user:u, token}); setAuthUI();
-}
-function logout(){ current=null; token=null; result($('authOut'), 200, {message:"Logged out"}); setAuthUI(); }
-
-// ---------- JWT Tools (mock) ----------
-function genJwt(){
-  const email=$('jEmail').value.trim(); if(!email){$('jwtTok').textContent="";return;}
-  const hdr=btoa(JSON.stringify({alg:"HS256",typ:"JWT"}));
-  const pl=btoa(JSON.stringify({sub:email,iat:Date.now()}));
-  const sig=btoa("sig"); const tok=[hdr,pl,sig].join('.');
-  $('jwtTok').textContent=tok; $('jIn').value=tok;
-}
-function decJwt(){
-  const t=$('jIn').value.trim(); if(!t){$('jwtOut').textContent="";return;}
-  const parts=t.split('.'); if(parts.length!==3){$('jwtOut').textContent="Invalid format";return;}
-  const [h,p,s]=parts;
-  const safe = (x)=>{try{return atob(x)}catch(e){return "(bad base64)"}}
-  $('jwtOut').textContent = `Header: ${safe(h)}\nPayload: ${safe(p)}\nSignature: ${s}`;
+function resetDB(){
+  db=[
+    {id:1,name:"TechNova",industry:"AI",location:"San Diego",size:1200,skills:["Python","TensorFlow"],roles:["ML Engineer","DS"]},
+    {id:2,name:"HealthBridge",industry:"Healthcare",location:"Austin",size:300,skills:["Java","Spring"],roles:["Backend Engineer"]}
+  ];
+  nextId=3; setStatus(200); out.textContent="Database reset."; renderList();
 }
 
-// ---------- RBAC ----------
-function checkRoute(){
-  const need=$('route').value;
-  const ok = !!current && (current.roles||[]).includes(need);
-  $('guardOut').textContent = ok ? `✅ Access granted to route requiring ${need}` : `❌ Access denied: missing ${need}`;
-}
-function setRoles(){
-  if(!current){$('roleOut').textContent="Login first";return;}
-  const roles=($('roleEdit').value||"").split(',').map(s=>s.trim()).filter(Boolean);
-  current.roles=roles.length?roles:["ROLE_USER"];
-  $('roleOut').textContent="Roles updated: "+current.roles.join(', ');
-}
-
-// ---------- Profile ----------
-function fillProfile(){
-  if(!current) return;
-  $('pFirst').value=current.first||"";
-  $('pLast').value=current.last||"";
-  $('pPhone').value=current.phone||"";
-  $('pEdu').value=current.edu||"";
-  $('pExp').value=current.exp||"";
-  $('pSkills').value=(current.skills||[]).join(', ');
-  $('pPublic').checked=!!current.public;
-}
-function saveProfile(){
-  if(!current){$('pOut').textContent="Login first";return;}
-  current.first=$('pFirst').value.trim();
-  current.last=$('pLast').value.trim();
-  current.phone=$('pPhone').value.trim();
-  current.edu=$('pEdu').value.trim();
-  current.exp=$('pExp').value.trim();
-  current.skills=($('pSkills').value||"").split(',').map(s=>s.trim()).filter(Boolean);
-  current.public=$('pPublic').checked;
-  $('pOut').textContent="Updated:\n"+JSON.stringify(current,null,2);
-  renderUsers(); setAuthUI();
-}
-
-// ---------- Code Kata ----------
+// Code Kata checker
 function checkKata(){
   const v=($('kataIn').value||'').trim().replace(/\s+/g,' ');
-  const ok=/^Optional<\s*User\s*>\s*findByEmail\s*\(\s*String\s+\w+\s*\);\s*$/i.test(v);
-  $('kataMsg').textContent = ok ? '✅ Correct' : '❌ Try: Optional<User> findByEmail(String email);';
-  $('kataMsg').style.color = ok ? '#bfffbf' : '#ffb3b3';
-}
-function checkKata2(){
-  const v=($('kataIn2').value||'').trim().replace(/\s+/g,' ');
-  const ok=/^List<\s*User\s*>\s*findByRolesContaining\s*\(\s*String\s+\w+\s*\);\s*$/i.test(v);
-  $('kataMsg2').textContent = ok ? '✅ Correct' : '❌ Try: List<User> findByRolesContaining(String role);';
-  $('kataMsg2').style.color = ok ? '#bfffbf' : '#ffb3b3';
+  const ok=/^List<\s*Company\s*>\s*findBySizeGreaterThan\s*\(\s*Integer\s+\w+\s*\);\s*$/i.test(v);
+  const msg=$('kataMsg');
+  msg.textContent= ok ? '✅ Correct derived query.' : '❌ Try: List<Company> findBySizeGreaterThan(Integer minSize);';
+  msg.style.color= ok ? '#bfffbf' : '#ffb3b3';
 }
 
-// ---------- Quiz ----------
-const quiz=[
-  {q:'JWT is typically sent via which header?', opts:['X-Auth','Authorization: Bearer <token>','Cookie: jwt','X-JWT'], a:1},
-  {q:'Strongest password choice?', opts:['8 lower','12 mixed','10 digits','password1!'], a:1},
-  {q:'403 vs 401?', opts:['403=auth required,401=forbidden','401=auth required,403=forbidden','same','neither'], a:1},
+// Quiz (minimal)
+const quizData=[
+  {q:'Marks a REST controller?', opts:['@Controller','@RestController','@Service','@Repository'], a:1},
+  {q:'@JoinTable is for…', opts:['PK','table name','join table & columns','ID strategy'], a:2},
+  {q:'CompletableFuture is…', opts:['sync I/O','blocking DB','async computation','ORM'], a:2}
 ];
-const picks={};
+const selections={};
 function renderQuiz(){
-  const box=$('qBox'); box.innerHTML='';
-  quiz.forEach((it,i)=>{
+  const box=$('quizBox'); box.innerHTML='';
+  quizData.forEach((item,i)=>{
     const wrap=document.createElement('div');
-    wrap.innerHTML=`<div style="margin:6px 0"><strong>Q${i+1}.</strong> ${it.q}</div>`;
-    it.opts.forEach((o,oi)=>{
-      const el=document.createElement('div'); el.className='opt'; el.textContent=o; el.dataset.i=i; el.dataset.oi=oi;
-      el.onclick=()=>{picks[i]=oi; box.querySelectorAll(`.opt[data-i="${i}"]`).forEach(x=>x.classList.remove('sel')); el.classList.add('sel');};
-      wrap.appendChild(el);
+    wrap.innerHTML=`<div style="margin:8px 0 4px"><strong>Q${i+1}.</strong> ${item.q}</div>`;
+    item.opts.forEach((o,oi)=>{
+      const opt=document.createElement('div');
+      opt.className='opt'; opt.textContent=o; opt.dataset.i=i; opt.dataset.oi=oi;
+      opt.onclick=()=>{
+        selections[i]=oi;
+        box.querySelectorAll(`.opt[data-i="${i}"]`).forEach(el=>el.classList.remove('sel'));
+        opt.classList.add('sel');
+      };
+      wrap.appendChild(opt);
     });
     box.appendChild(wrap);
   });
 }
 function grade(){
-  let s=0;
+  let score=0;
   document.querySelectorAll('.opt').forEach(el=>el.classList.remove('good','bad'));
-  quiz.forEach((it,i)=>{ const pick=picks[i]; if(pick===it.a) s++; const opts=[...document.querySelectorAll(`.opt[data-i="${i}"]`)]; opts[it.a].classList.add('good'); if(pick!=null&&pick!==it.a) opts[pick].classList.add('bad');});
-  $('qScore').textContent=`Score: ${s}/${quiz.length}`;
+  quizData.forEach((item,i)=>{
+    const pick=selections[i];
+    if(pick===item.a) score++;
+    const opts=[...document.querySelectorAll(`.opt[data-i="${i}"]`)];
+    opts[item.a].classList.add('good');
+    if(pick!=null && pick!==item.a) opts[pick].classList.add('bad');
+  });
+  $('score').textContent=`Score: ${score}/${quizData.length}`;
 }
 
-// ---------- Init ----------
-renderUsers(); setAuthUI(); renderQuiz();
+// Builder
+function builderAdd(){
+  const obj={
+    id:nextId++,
+    name:($('bName').value||'New Co').trim(),
+    industry:$('bInd').value,
+    location:($('bLoc').value||'Unknown').trim(),
+    size:Number($('bSize').value||0),
+    skills:($('bSkills').value||'').split(',').map(s=>s.trim()).filter(Boolean),
+    roles:($('bRoles').value||'').split(',').map(s=>s.trim()).filter(Boolean)
+  };
+  db.push(obj); $('bOut').textContent=JSON.stringify(obj,null,2); setStatus(201); renderList();
+}
+
+// Init
+uiEP(); renderList(); renderQuiz();
 </script>
-</body>
-
-
-
-
 
 

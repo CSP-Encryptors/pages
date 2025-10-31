@@ -22,7 +22,7 @@ class MansionLevelMain {
         name: 'mainworld',
         greeting: "Welcome to the main lobby!",
         src: image_src_mainworld,
-        pixels: {height: 580, width: 1038},
+        pixels: {height: 550, width: 1038},
         mode: 'contain'
     };
 

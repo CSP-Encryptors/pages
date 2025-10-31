@@ -6,12 +6,11 @@ permalink: /cs-portfolio-quest/frontend/submodule_2/
 parent: "Frontend Development"
 team: "Creators"
 submodule: 2
-microblog: True
-breadcumb: True 
 categories: [CSP, Submodule, HTML]
 tags: [markdown, html, fullstack]
 author: "Creators Team"
 date: 2025-10-21
+breadcumb: true 
 ---
 
 
@@ -20,10 +19,8 @@ date: 2025-10-21
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
 <style>
-  /* ---------- Keep original styling intact (copied verbatim) ---------- */
   body {
     font-family: 'Inter', sans-serif;
-    background: radial-gradient(circle at top, #1e293b, #0f172a);
     color: white;
     margin: 0;
     overflow-x: hidden;
@@ -58,7 +55,7 @@ date: 2025-10-21
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 40px;
+    gap: 100px;
     margin-top: 50px;
     position: relative;
     z-index: 2;
@@ -142,7 +139,7 @@ date: 2025-10-21
   }
 
   .editor-container {
-    margin: 60px auto;
+    margin: 120px auto 
     background: #1e293b;
     border-radius: 16px;
     padding: 30px;
@@ -155,13 +152,13 @@ date: 2025-10-21
     background: #0f172a;
     border-radius: 12px;
     min-height: 200px;
-    padding: 15px;
+    padding: 5px;
     color: #e2e8f0;
   }
 
   #htmlPreview {
     border: 1px solid #475569;
-    margin-top: 20px;
+    margin-top: 60px;
   }
 
   .split-view {
@@ -355,6 +352,17 @@ date: 2025-10-21
 
 </style>
 
+## Lesson Objectives
+
+By the end of this lesson, you will be able to:
+
+- Explain the relationship between Markdown and HTML in web development.
+- Identify key differences between Markdown syntax and HTML tags.
+- Convert Markdown content into HTML manually and using automated tools.
+- Understand how frontend rendering connects to backend data handling in a full-stack environment.
+- Reflect on the advantages of using Markdown for project documentation and web publishing.
+
+
 ## Why Convert Markdown to HTML?
 - Markdown is **simple and easy to read** for humans.  
 - HTML is **structured and readable by browsers**.  
@@ -432,7 +440,7 @@ This process is used by platforms like **GitHub Pages**, **Notion**, and **Obsid
 - **Static Site Generators:** Markdown powers entire websites when compiled into HTML.
 
 ---
-<div class="section-divider"></div>
+
 
 <section>
   <h2>WordQuill Helper</h2>
@@ -447,7 +455,7 @@ This process is used by platforms like **GitHub Pages**, **Notion**, and **Obsid
 
     <div class="split-view">
       <div style="min-width:360px;max-width:520px;">
-        <h3>🖊️ Markdown Editor</h3>
+        <h3>Markdown Editor</h3>
         <div id="editor"></div>
 
         <!-- Markdown source (syntax highlighted) -->
@@ -556,23 +564,6 @@ The **frontend’s job** in this system is to:
     <div class="message" id="message"></div>
   </div>
 </section>
-
-<a href="{{site.baseurl}}/cs-portfolio-quest/frontend/submodule_1" 
-   style="display:inline-block; background-color:#1e3a8a; color:white; text-decoration:none; 
-          padding:10px 20px; border-radius:8px; border:none; cursor:pointer; 
-          text-align:center; transition:background-color 0.2s;"
-   onmouseover="this.style.backgroundColor='#1d4ed8'" 
-   onmouseout="this.style.backgroundColor='#1e3a8a'">
-  Previous
-</a>
-<a href="{{site.baseurl}}/cs-portfolio-quest/frontend/submodule_3" 
-   style="display:inline-block; background-color:#1e3a8a; color:white; text-decoration:none; 
-          padding:10px 20px; border-radius:8px; border:none; cursor:pointer; 
-          text-align:center; transition:background-color 0.2s;"
-   onmouseover="this.style.backgroundColor='#1d4ed8'" 
-   onmouseout="this.style.backgroundColor='#1e3a8a'">
-  Next
-</a>
 
 <script type="module">
   import { javaURI } from '/assets/js/api/config.js';
@@ -900,7 +891,7 @@ The **frontend’s job** in this system is to:
       const response = responseInput.value.trim();
 
       if (!name || !response) {
-        messageDiv.textContent = "⚠️ Please fill in both fields.";
+        messageDiv.textContent = "Please fill in both fields.";
         messageDiv.style.color = "#f87171";
         return;
       }
@@ -914,15 +905,15 @@ The **frontend’s job** in this system is to:
 
         if (res.ok) {
           const data = await res.json();
-          messageDiv.textContent = `✅ Response saved successfully! (ID: ${data.id})`;
+          messageDiv.textContent = `Response saved successfully! (ID: ${data.id})`;
           messageDiv.style.color = "#4ade80";
           responseInput.value = "";
         } else {
-          messageDiv.textContent = "⚠️ Error submitting response.";
+          messageDiv.textContent = "Error submitting response.";
           messageDiv.style.color = "#facc15";
         }
       } catch (err) {
-        messageDiv.textContent = "❌ Could not connect to server.";
+        messageDiv.textContent = "Could not connect to server.";
         messageDiv.style.color = "#f87171";
       }
     });

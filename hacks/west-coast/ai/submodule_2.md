@@ -10,6 +10,10 @@ categories: [CSP, Submodule, AIUsage]
 tags: [ai, submodule, thinkers]
 author: "TheSprinters"
 date: 2025-10-21
+footer:
+  previous: /west-coast/ai/submodule_1/
+  home: /west-coast/ai/
+  next: /west-coast/ai/submodule_3/
 ---
 
 # Submodule 2: How LLM Memory Works: Interactive Visual Guide
@@ -24,24 +28,76 @@ LLMs don't have memory like humans. Instead, they have a **context window** - th
 
 ### Interactive Demo: Context Window Visualization
 
-<html>
-<head>
 <style>
   body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 20px;
-    background: #1a1a2e !important;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
     color: #eee !important;
+    line-height: 1.7;
   }
+
+  .wrapper {
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+
+  .post-content {
+    max-width: 100% !important;
+  }
+  
+  h1 {
+    color: #7dd3fc !important;
+    font-size: 2.5em;
+    margin-bottom: 40px;
+    text-align: center;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+    animation: fadeInDown 0.6s ease-out;
+  }
+  
+  h2 {
+    color: #4ecca3 !important;
+    font-size: 1.8em;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    font-weight: 500;
+    border-bottom: 2px solid #667eea;
+    padding-bottom: 10px;
+  }
+  
+  h3 {
+    color: #93c5fd !important;
+    font-size: 1.3em;
+    margin-top: 30px;
+    margin-bottom: 15px;
+    font-weight: 500;
+  }
+  
+  p {
+    margin-bottom: 20px;
+    font-size: 1.05em;
+    color: #d1d5db !important;
+  }
+  
+  @keyframes fadeInDown {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
   .demo-container {
-    background: #16213e !important;
+    background: rgba(30, 41, 59, 0.6) !important;
     border-radius: 12px;
     padding: 30px;
     box-shadow: 0 8px 16px rgba(0,0,0,0.4);
     margin: 20px 0;
-    border: 1px solid #0f3460;
+    border-left: 4px solid #667eea;
+    backdrop-filter: blur(10px);
   }
   .demo-container h2 {
     color: #4ecca3 !important;
@@ -55,19 +111,19 @@ LLMs don't have memory like humans. Instead, they have a **context window** - th
     color: #eee !important;
   }
   .conversation {
-    background: #0f3460 !important;
-    border: 2px solid #1a1a2e;
-    border-radius: 8px;
+    background: rgba(15, 23, 42, 0.8) !important;
+    border: 2px solid #0f3460;
+    border-radius: 12px;
     padding: 20px;
     margin: 20px 0;
     max-height: 400px;
     overflow-y: auto;
   }
   .message {
-    background: #1a1a2e !important;
+    background: rgba(30, 41, 59, 0.6) !important;
     padding: 12px 16px;
     margin: 8px 0;
-    border-radius: 8px;
+    border-radius: 12px;
     border-left: 4px solid #4ecca3;
     transition: all 0.3s;
     color: #eee !important;
@@ -76,17 +132,17 @@ LLMs don't have memory like humans. Instead, they have a **context window** - th
     color: #eee !important;
   }
   .message.in-context {
-    background: #16213e !important;
+    background: rgba(30, 41, 59, 0.8) !important;
     border-left-color: #4ecca3;
     box-shadow: 0 2px 8px rgba(78, 204, 163, 0.3);
   }
   .message.out-of-context {
-    background: #1a1a2e !important;
-    border-left-color: #e74c3c;
+    background: rgba(30, 41, 59, 0.4) !important;
+    border-left-color: #ef4444;
     opacity: 0.5;
   }
   .message.current {
-    background: #2d4059 !important;
+    background: rgba(45, 64, 89, 0.8) !important;
     border-left-color: #f39c12;
     font-weight: bold;
   }
@@ -97,19 +153,19 @@ LLMs don't have memory like humans. Instead, they have a **context window** - th
     flex-wrap: wrap;
   }
   button {
-    background: #4ecca3 !important;
+    background: linear-gradient(135deg, #4ecca3, #38f9d7) !important;
     color: #1a1a2e !important;
     border: none;
     padding: 12px 24px;
-    border-radius: 6px;
+    border-radius: 12px;
     cursor: pointer;
     font-size: 16px;
     font-weight: 600;
     transition: all 0.3s;
   }
   button:hover {
-    background: #45b393 !important;
     transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(78, 204, 163, 0.4);
   }
   button.secondary {
     background: #533483 !important;
@@ -119,13 +175,13 @@ LLMs don't have memory like humans. Instead, they have a **context window** - th
     background: #6c4ba0 !important;
   }
   .stats {
-    background: #0f3460 !important;
+    background: rgba(15, 23, 42, 0.8) !important;
     color: #eee !important;
     padding: 20px;
-    border-radius: 8px;
+    border-radius: 12px;
     margin: 20px 0;
     font-family: 'Courier New', monospace;
-    border: 1px solid #1a1a2e;
+    border: 2px solid #0f3460;
   }
   .stat-row {
     display: flex;
@@ -145,7 +201,7 @@ LLMs don't have memory like humans. Instead, they have a **context window** - th
   .progress-bar {
     width: 100%;
     height: 30px;
-    background: #1a1a2e !important;
+    background: rgba(30, 41, 59, 0.6) !important;
     border-radius: 15px;
     overflow: hidden;
     margin: 10px 0;
@@ -153,7 +209,7 @@ LLMs don't have memory like humans. Instead, they have a **context window** - th
   }
   .progress-fill {
     height: 100%;
-    background: linear-gradient(90deg, #4ecca3, #45b393) !important;
+    background: linear-gradient(90deg, #4ecca3, #38f9d7) !important;
     transition: width 0.3s;
     display: flex;
     align-items: center;
@@ -171,7 +227,7 @@ LLMs don't have memory like humans. Instead, they have a **context window** - th
     display: flex;
     align-items: center;
     gap: 8px;
-    background: #0f3460 !important;
+    background: rgba(15, 23, 42, 0.8) !important;
     padding: 8px 12px;
     border-radius: 6px;
   }
@@ -186,15 +242,12 @@ LLMs don't have memory like humans. Instead, they have a **context window** - th
   input[type="range"] {
     width: 100%;
     margin: 10px 0;
-    background: #0f3460 !important;
   }
   #window-size-display {
     color: #4ecca3 !important;
     font-weight: bold;
   }
 </style>
-</head>
-<body>
 
 <div class="demo-container">
   <h2>🪟 Context Window Simulator</h2>
@@ -213,15 +266,15 @@ LLMs don't have memory like humans. Instead, they have a **context window** - th
   
   <div class="legend">
     <div class="legend-item">
-      <div class="legend-box" style="background: #16213e; border: 2px solid #4ecca3;"></div>
+      <div class="legend-box" style="background: rgba(30, 41, 59, 0.8); border: 2px solid #4ecca3;"></div>
       <span>In Context (LLM can see)</span>
     </div>
     <div class="legend-item">
-      <div class="legend-box" style="background: #1a1a2e; border: 2px solid #e74c3c;"></div>
+      <div class="legend-box" style="background: rgba(30, 41, 59, 0.4); border: 2px solid #ef4444;"></div>
       <span>Out of Context (Forgotten)</span>
     </div>
     <div class="legend-item">
-      <div class="legend-box" style="background: #2d4059; border: 2px solid #f39c12;"></div>
+      <div class="legend-box" style="background: rgba(45, 64, 89, 0.8); border: 2px solid #f39c12;"></div>
       <span>Current Processing</span>
     </div>
   </div>
@@ -377,9 +430,6 @@ for (let i = 0; i < 3; i++) {
 }
 </script>
 
-</body>
-</html>
-
 ---
 
 ## Part 2: Attention Mechanism - How LLMs "Focus"
@@ -388,62 +438,41 @@ The attention mechanism allows LLMs to weigh the importance of different tokens 
 
 ### Interactive Demo: Attention Weights Visualizer
 
-<html>
-<head>
 <style>
-  body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 20px;
-    background: #1a1a2e !important;
-    color: #eee !important;
-  }
-  .demo-container {
-    background: #16213e !important;
-    border-radius: 12px;
-    padding: 30px;
-    box-shadow: 0 8px 16px rgba(0,0,0,0.4);
-    margin: 20px 0;
-    border: 1px solid #0f3460;
-  }
-  .demo-container h2 {
-    color: #4ecca3 !important;
-    margin-top: 0;
-  }
-  .demo-container p,
-  .demo-container label,
-  .demo-container span,
-  .demo-container strong,
-  .demo-container br {
-    color: #eee !important;
-  }
   .sentence-input {
     width: 100%;
     padding: 15px;
     font-size: 16px;
     border: 2px solid #0f3460;
-    border-radius: 8px;
+    border-radius: 12px;
     margin: 15px 0;
     font-family: inherit;
-    background: #0f3460 !important;
+    background: rgba(15, 23, 42, 0.8) !important;
     color: #eee !important;
+    transition: border-color 0.3s;
   }
+  
+  .sentence-input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  }
+  
   .word-container {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
     margin: 30px 0;
     padding: 20px;
-    background: #0f3460 !important;
-    border-radius: 8px;
+    background: rgba(15, 23, 42, 0.8) !important;
+    border-radius: 12px;
     min-height: 100px;
     align-items: center;
     justify-content: center;
   }
   .word {
     padding: 12px 20px;
-    border-radius: 8px;
+    border-radius: 12px;
     font-size: 18px;
     font-weight: 500;
     transition: all 0.3s;
@@ -464,7 +493,7 @@ The attention mechanism allows LLMs to weigh the importance of different tokens 
     position: absolute;
     top: -10px;
     right: -10px;
-    background: #e74c3c !important;
+    background: #ef4444 !important;
     color: white !important;
     border-radius: 50%;
     width: 28px;
@@ -475,32 +504,11 @@ The attention mechanism allows LLMs to weigh the importance of different tokens 
     font-size: 12px;
     font-weight: bold;
   }
-  .controls {
-    display: flex;
-    gap: 10px;
-    margin: 20px 0;
-    flex-wrap: wrap;
-  }
-  button {
-    background: #4ecca3 !important;
-    color: #1a1a2e !important;
-    border: none;
-    padding: 12px 24px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: 600;
-    transition: all 0.3s;
-  }
-  button:hover {
-    background: #45b393 !important;
-    transform: translateY(-2px);
-  }
   .info-box {
-    background: #0f3460 !important;
+    background: rgba(15, 23, 42, 0.8) !important;
     border-left: 4px solid #4ecca3;
     padding: 20px;
-    border-radius: 4px;
+    border-radius: 12px;
     margin: 20px 0;
   }
   .info-box strong,
@@ -508,7 +516,7 @@ The attention mechanism allows LLMs to weigh the importance of different tokens 
     color: #4ecca3 !important;
   }
   .query-word {
-    background: #2d4059 !important;
+    background: rgba(45, 64, 89, 0.8) !important;
     padding: 8px 16px;
     border-radius: 6px;
     display: inline-block;
@@ -541,8 +549,6 @@ The attention mechanism allows LLMs to weigh the importance of different tokens 
     color: #eee !important;
   }
 </style>
-</head>
-<body>
 
 <div class="demo-container">
   <h2>🎯 Attention Mechanism Visualizer</h2>
@@ -684,7 +690,7 @@ function renderWords(highlightIndex = null) {
         wordDiv.appendChild(scoreDiv);
       }
     } else {
-      wordDiv.style.background = '#0f3460';
+      wordDiv.style.background = 'rgba(15, 23, 42, 0.8)';
       wordDiv.style.color = '#eee';
     }
     
@@ -733,9 +739,6 @@ async function animateAttention() {
 }
 </script>
 
-</body>
-</html>
-
 ---
 
 ## Part 3: Training vs Runtime - Two Types of "Memory"
@@ -744,38 +747,7 @@ LLMs have two phases: **training** (where they learn patterns) and **runtime** (
 
 ### Interactive Demo: Training vs Runtime Simulator
 
-<html>
-<head>
 <style>
-  body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 20px;
-    background: #1a1a2e !important;
-    color: #eee !important;
-  }
-  .demo-container {
-    background: #16213e !important;
-    border-radius: 12px;
-    padding: 30px;
-    box-shadow: 0 8px 16px rgba(0,0,0,0.4);
-    margin: 20px 0;
-    border: 1px solid #0f3460;
-  }
-  .demo-container h2,
-  .demo-container h3 {
-    color: #4ecca3 !important;
-  }
-  .demo-container p,
-  .demo-container label,
-  .demo-container span,
-  .demo-container small,
-  .demo-container strong,
-  .demo-container em,
-  .demo-container br {
-    color: #eee !important;
-  }
   .phases {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -797,7 +769,7 @@ LLMs have two phases: **training** (where they learn patterns) and **runtime** (
     color: white !important;
   }
   .phase-box.runtime {
-    background: linear-gradient(135deg, #2d4059 0%, #395270 100%) !important;
+    background: linear-gradient(135deg, rgba(45, 64, 89, 0.8) 0%, rgba(57, 82, 112, 0.8) 100%) !important;
     color: white !important;
   }
   .phase-box h3,
@@ -806,16 +778,16 @@ LLMs have two phases: **training** (where they learn patterns) and **runtime** (
     color: white !important;
   }
   .knowledge-base {
-    background: #0f3460 !important;
+    background: rgba(15, 23, 42, 0.8) !important;
     color: #4ecca3 !important;
     padding: 20px;
-    border-radius: 8px;
+    border-radius: 12px;
     font-family: 'Courier New', monospace;
     min-height: 200px;
     max-height: 300px;
     overflow-y: auto;
     margin: 15px 0;
-    border: 1px solid #1a1a2e;
+    border: 1px solid #0f3460;
   }
   .knowledge-base div {
     color: #4ecca3 !important;
@@ -831,55 +803,24 @@ LLMs have two phases: **training** (where they learn patterns) and **runtime** (
   .knowledge-item small {
     color: #aaa !important;
   }
-  .controls {
-    display: flex;
-    gap: 10px;
-    margin: 20px 0;
-    flex-wrap: wrap;
-  }
-  button {
-    border: none;
-    padding: 12px 24px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: all 0.3s;
-    font-weight: 600;
-  }
-  .train-btn {
-    background: #533483 !important;
-    color: white !important;
-  }
-  .train-btn:hover {
-    background: #6c4ba0 !important;
-    transform: translateY(-2px);
-  }
-  .query-btn {
-    background: #4ecca3 !important;
-    color: #1a1a2e !important;
-  }
-  .query-btn:hover {
-    background: #45b393 !important;
-    transform: translateY(-2px);
-  }
-  .reset-btn {
-    background: #e74c3c !important;
-    color: white !important;
-  }
-  .reset-btn:hover {
-    background: #c0392b !important;
-    transform: translateY(-2px);
-  }
   input[type="text"] {
     flex: 1;
     padding: 12px;
     border: 2px solid #0f3460;
-    border-radius: 6px;
+    border-radius: 12px;
     font-size: 16px;
     min-width: 200px;
-    background: #0f3460 !important;
+    background: rgba(15, 23, 42, 0.8) !important;
     color: #eee !important;
+    transition: border-color 0.3s;
   }
+  
+  input[type="text"]:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  }
+  
   input[type="text"]::placeholder {
     color: #aaa !important;
   }
@@ -890,9 +831,9 @@ LLMs have two phases: **training** (where they learn patterns) and **runtime** (
     align-items: center;
   }
   .response-box {
-    background: #0f3460 !important;
+    background: rgba(15, 23, 42, 0.8) !important;
     border: 2px solid #4ecca3;
-    border-radius: 8px;
+    border-radius: 12px;
     padding: 20px;
     margin: 20px 0;
     min-height: 80px;
@@ -916,11 +857,11 @@ LLMs have two phases: **training** (where they learn patterns) and **runtime** (
     margin: 20px 0;
   }
   .stat-card {
-    background: #0f3460 !important;
+    background: rgba(15, 23, 42, 0.8) !important;
     padding: 20px;
-    border-radius: 8px;
+    border-radius: 12px;
     text-align: center;
-    border: 1px solid #1a1a2e;
+    border: 1px solid #0f3460;
   }
   .stat-number {
     font-size: 36px;
@@ -932,18 +873,38 @@ LLMs have two phases: **training** (where they learn patterns) and **runtime** (
     margin-top: 8px;
   }
   .alert {
-    background: #2d1f1f !important;
-    border-left: 4px solid #e74c3c;
+    background: rgba(45, 31, 31, 0.8) !important;
+    border-left: 4px solid #ef4444;
     padding: 15px;
-    border-radius: 4px;
+    border-radius: 12px;
     margin: 15px 0;
   }
   .alert strong {
-    color: #e74c3c !important;
+    color: #ef4444 !important;
+  }
+  .train-btn {
+    background: #533483 !important;
+    color: white !important;
+  }
+  .train-btn:hover {
+    background: #6c4ba0 !important;
+  }
+  .query-btn {
+    background: linear-gradient(135deg, #4ecca3, #38f9d7) !important;
+    color: #1a1a2e !important;
+  }
+  .query-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(78, 204, 163, 0.4);
+  }
+  .reset-btn {
+    background: #ef4444 !important;
+    color: white !important;
+  }
+  .reset-btn:hover {
+    background: #c0392b !important;
   }
 </style>
-</head>
-<body>
 
 <div class="demo-container">
   <h2>🧠 Training vs Runtime: How LLMs "Learn"</h2>
@@ -1198,9 +1159,6 @@ function resetModel() {
 }
 </script>
 
-</body>
-</html>
-
 ---
 
 ## Part 4: No Persistent Memory Between Conversations
@@ -1209,37 +1167,7 @@ Each conversation is isolated. The LLM cannot remember previous conversations!
 
 ### Interactive Demo: Conversation Isolation
 
-<html>
-<head>
 <style>
-  body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 20px;
-    background: #1a1a2e !important;
-    color: #eee !important;
-  }
-  .demo-container {
-    background: #16213e !important;
-    border-radius: 12px;
-    padding: 30px;
-    box-shadow: 0 8px 16px rgba(0,0,0,0.4);
-    margin: 20px 0;
-    border: 1px solid #0f3460;
-  }
-  .demo-container h2 {
-    color: #4ecca3 !important;
-    margin-top: 0;
-  }
-  .demo-container p,
-  .demo-container label,
-  .demo-container span,
-  .demo-container strong,
-  .demo-container ol,
-  .demo-container li {
-    color: #eee !important;
-  }
   .session-container {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -1250,109 +1178,38 @@ Each conversation is isolated. The LLM cannot remember previous conversations!
     border: 3px solid #0f3460;
     border-radius: 12px;
     padding: 20px;
-    background: linear-gradient(135deg, #16213e 0%, #0f3460 100%) !important;
+    background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 52, 96, 0.8) 100%) !important;
   }
   .session-box.active {
     border-color: #4ecca3;
     box-shadow: 0 0 20px rgba(78, 204, 163, 0.3);
   }
-  .conversation {
-    background: #1a1a2e !important;
-    border-radius: 8px;
-    padding: 15px;
-    min-height: 250px;
-    max-height: 400px;
-    overflow-y: auto;
-    margin: 15px 0;
-    border: 1px solid #0f3460;
-  }
-  .message {
-    padding: 10px 15px;
-    margin: 8px 0;
-    border-radius: 8px;
-  }
-  .message strong {
-    color: #4ecca3 !important;
-  }
   .user-msg {
-    background: #0f3460 !important;
+    background: rgba(15, 52, 96, 0.6) !important;
     border-left: 4px solid #4ecca3;
     color: #eee !important;
   }
   .ai-msg {
-    background: #2d4059 !important;
+    background: rgba(45, 64, 89, 0.6) !important;
     border-left: 4px solid #f39c12;
     color: #eee !important;
   }
   .system-msg {
-    background: #2d1f1f !important;
-    border-left: 4px solid #e74c3c;
+    background: rgba(45, 31, 31, 0.6) !important;
+    border-left: 4px solid #ef4444;
     font-style: italic;
     font-size: 14px;
     color: #eee !important;
   }
-  .input-group {
-    display: flex;
-    gap: 10px;
-    margin: 10px 0;
-  }
-  input {
-    flex: 1;
-    padding: 12px;
-    border: 2px solid #0f3460;
-    border-radius: 6px;
-    font-size: 16px;
-    background: #0f3460 !important;
-    color: #eee !important;
-  }
-  input::placeholder {
-    color: #aaa !important;
-  }
-  button {
-    background: #4ecca3 !important;
-    color: #1a1a2e !important;
-    border: none;
-    padding: 12px 24px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: 600;
-    transition: all 0.3s;
-  }
-  button:hover {
-    background: #45b393 !important;
-    transform: translateY(-2px);
-  }
-  .new-session-btn {
-    background: #533483 !important;
-    color: white !important;
-    padding: 14px 28px;
-    font-size: 18px;
-    display: block;
-    margin: 20px auto;
-  }
-  .new-session-btn:hover {
-    background: #6c4ba0 !important;
-  }
   .warning-box {
-    background: #2d1f1f !important;
-    border: 2px solid #e74c3c;
-    border-radius: 8px;
+    background: rgba(45, 31, 31, 0.8) !important;
+    border: 2px solid #ef4444;
+    border-radius: 12px;
     padding: 20px;
     margin: 20px 0;
   }
   .warning-box strong {
-    color: #e74c3c !important;
-  }
-  .info-box {
-    background: #0f3460 !important;
-    border: 2px solid #4ecca3;
-    border-radius: 8px;
-    padding: 20px;
-    margin: 20px 0;
-  }
-  .info-box strong {
-    color: #4ecca3 !important;
+    color: #ef4444 !important;
   }
   .session-header {
     background: rgba(78, 204, 163, 0.1) !important;
@@ -1368,9 +1225,18 @@ Each conversation is isolated. The LLM cannot remember previous conversations!
   .session-header span {
     color: #4ecca3 !important;
   }
+  .new-session-btn {
+    background: #533483 !important;
+    color: white !important;
+    padding: 14px 28px;
+    font-size: 18px;
+    display: block;
+    margin: 20px auto;
+  }
+  .new-session-btn:hover {
+    background: #6c4ba0 !important;
+  }
 </style>
-</head>
-<body>
 
 <div class="demo-container">
   <h2>💬 Conversation Isolation Simulator</h2>
@@ -1390,7 +1256,7 @@ Each conversation is isolated. The LLM cannot remember previous conversations!
   <div class="session-container" id="session-container"></div>
   
   <div class="warning-box">
-    <strong>⚠️ Key Point:</strong> Unlike humans, LLMs don't have long-term memory across conversations. 
+    <strong>⚠️ Key Point:</strong> Unlike humans, LLMs do not have long-term memory across conversations. 
     When you start a new chat, the AI has absolutely no memory of previous chats - it's like meeting 
     someone with complete amnesia every time.
   </div>
@@ -1573,9 +1439,6 @@ function generateResponse(session, message) {
 createSession();
 </script>
 
-</body>
-</html>
-
 ---
 
 ## Summary: Key Takeaways
@@ -1606,9 +1469,6 @@ createSession();
 
 *Want to learn more? Try modifying the demos, experimenting with different context window sizes, or building your own LLM memory visualizations!*
 
-
-
-<!-- Lock/Unlock Logic -->
 <style>
 .completion-banner {
   position: fixed;
@@ -1636,11 +1496,9 @@ createSession();
 </style>
 
 <script>
-// Scroll-to-bottom completion tracking
 document.addEventListener("DOMContentLoaded", function() {
     const storageKey = 'ai-module-c2-completed';
     
-    // Check if already completed
     if (localStorage.getItem(storageKey) === 'true') {
         return;
     }
@@ -1652,15 +1510,12 @@ document.addEventListener("DOMContentLoaded", function() {
         const windowHeight = window.innerHeight;
         const documentHeight = document.documentElement.scrollHeight;
         
-        // Check if user scrolled to within 100px of bottom
         if (scrollTop + windowHeight >= documentHeight - 100) {
             if (!hasScrolledToBottom) {
                 hasScrolledToBottom = true;
                 
-                // Mark module as completed
                 localStorage.setItem(storageKey, 'true');
                 
-                // Show completion banner
                 const banner = document.createElement('div');
                 banner.className = 'completion-banner';
                 banner.innerHTML = `
@@ -1669,22 +1524,17 @@ document.addEventListener("DOMContentLoaded", function() {
                 `;
                 document.body.appendChild(banner);
                 
-                // Remove banner after 4 seconds
                 setTimeout(() => {
                     banner.style.animation = 'slideIn 0.5s ease-out reverse';
                     setTimeout(() => banner.remove(), 500);
                 }, 4000);
                 
-                // Remove scroll listener
                 window.removeEventListener('scroll', checkScrollPosition);
             }
         }
     }
     
-    // Add scroll listener
     window.addEventListener('scroll', checkScrollPosition);
-    
-    // Check immediately in case page is short
     checkScrollPosition();
 });
 </script>

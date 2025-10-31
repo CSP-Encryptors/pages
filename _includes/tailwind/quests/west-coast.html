@@ -12,7 +12,7 @@
     <div class="module-progress">
       <div class="progress-bar" id="overall-progress"></div>
     </div>
-    <p class="text-gray-300 text-sm" id="progress-text">Complete modules C1-C6 to earn your certificate</p>
+    <p class="text-gray-300 text-sm" id="progress-text">Complete modules C1-C4 to earn your certificate</p>
   </div>
 </div>
 
@@ -30,6 +30,17 @@
     <!-- Topics Cards Grid -->
     <div class="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 gap-6 mb-12">
       {% for topic in page.lxdData.Topics %}
+        {% assign module_image = "" %}
+        {% if topic.Level == 1 %}
+          {% assign module_image = "images/WC_AIModule_Image.jpg" %}
+        {% elsif topic.Level == 2 %}
+          {% assign module_image = "images/WC_FoodModule.jpeg" %}
+        {% elsif topic.Level == 3 %}
+          {% assign module_image = "images/WC_SportsModule.jpeg" %}
+        {% elsif topic.Level == 4 %}
+          {% assign module_image = "images/WC_TravelModule.jpg" %}
+        {% endif %}
+        
         <div class="bg-gray-800 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden group transform hover:-translate-y-2 card-hover-effects" data-module="c{{ topic.Level }}">
           
           <!-- Module Status Badge -->
@@ -40,7 +51,7 @@
           <!-- Image with Play Overlay -->
           <div class="relative h-40 overflow-hidden bg-gradient-to-br from-gray-700 to-gray-900 mb-4">
             <a href="{{ topic.Video }}" class="block w-full h-full group video-link">
-              <img src="{{ site.baseurl }}{{ topic.Image }}" alt="{{ topic.Alt }}" class="w-full h-full object-contain transition-all duration-300 group-hover:scale-110">
+              <img src="{{ site.baseurl }}/{{ module_image }}" alt="{{ topic.Alt }}" class="w-full h-full object-contain transition-all duration-300 group-hover:scale-110">
               <!-- Play Button Overlay -->
               <div class="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                 <div class="iridescent bg-white bg-opacity-90 rounded-full p-3">
@@ -93,7 +104,7 @@ document.addEventListener("DOMContentLoaded", function() {
     
     // Check completion status for each module
     function updateModuleStatus() {
-        const modules = ['c1', 'c2', 'c3', 'c4', 'c5', 'c6'];
+        const modules = ['c1', 'c2', 'c3', 'c4'];
         let completedCount = 0;
         
         // First check if we have any module cards on this page
@@ -137,14 +148,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 case 'c4':
                     isAvailable = localStorage.getItem('plagiarism-c3-assessment') !== null;
                     isCompleted = localStorage.getItem('plagiarism-c4-assessment') !== null;
-                    break;
-                case 'c5':
-                    isAvailable = localStorage.getItem('plagiarism-c4-assessment') !== null;
-                    isCompleted = localStorage.getItem('plagiarism-instructor-assessment') !== null;
-                    break;
-                case 'c6':
-                    isAvailable = localStorage.getItem('plagiarism-instructor-assessment') !== null;
-                    isCompleted = localStorage.getItem('plagiarism-certificate-confirmation') !== null;
                     break;
             }
             

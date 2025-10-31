@@ -8,7 +8,7 @@ team: "Unzippers"
 submodule: 1
 categories: [CSP, Submodule, Microblogging]
 tags: [microblogging, submodule, unzippers]
-author: "The Unzippers"
+author: "Krishna Visvanath, Sloane Sommers"
 date: 2025-10-21
 breadcrumb: true
 ---
@@ -30,7 +30,7 @@ breadcrumb: true
             padding: 20px;
         }
         .quiz-container {
-            background-color: #f5f5f5;
+            background-color: #37096bff;
             padding: 20px;
             border-radius: 8px;
             margin-top: 20px;
@@ -45,7 +45,7 @@ breadcrumb: true
             cursor: pointer;
             border: none;
             border-radius: 4px;
-            background-color: #4CAF50;
+            background-color: #4b4b4bff;
             color: white;
             font-size: 16px;
         }
@@ -53,8 +53,8 @@ breadcrumb: true
             background-color: #45a049;
         }
         .option-button {
-            background-color: #ffffff;
-            color: #333;
+            background-color: #6a2e3d;
+            color: #131313ff;
             border: 1px solid #ddd;
         }
         .option-button:hover {
@@ -66,7 +66,7 @@ breadcrumb: true
             font-size: 18px;
         }
         .feedback {
-            color: #666;
+            color: #ffffffff;
             margin-top: 10px;
         }
     </style>
@@ -89,7 +89,7 @@ breadcrumb: true
         const questions = [
             {
                 question: "What does PII stand for?",
-                options: ["Peer Investigation Information", "Personally Identifiable Information", "Please Invert Intestine", "Personal Induction Infirmary"],
+                options: ["Peer Investigation Information", "Personally Identifiable Information", "Please Invert Intestine", "Personal Identifying Infirmary"],
                 correct: 1
             },
             {

@@ -281,7 +281,7 @@ document.addEventListener("DOMContentLoaded", function () {
   function enableNextButton() {
     const btn = nextBtn || backBtn;
     if (!btn) return;
-    btn.classList.remove("opacity-50", "pointer-events-none");
+    btn.classList.remove("nav-button-disabled", "opacity-50", "pointer-events-none");
     btn.setAttribute("aria-disabled", "false");
   }
 

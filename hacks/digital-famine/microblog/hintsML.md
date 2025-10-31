@@ -13,7 +13,7 @@ date: 2025-10-28
 breadcrumb: true
 ---
 
-## 📰 Media Literacy  
+## Media Literacy  
 ### Submodule 2
 
 ---

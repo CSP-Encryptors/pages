@@ -1,344 +1,450 @@
 ---
-layout: post
+layout: cs-portfolio-lesson
 title: "Submodule 2"
-description: "Spring Boot RESTful Company Profile System"
+description: "Search & Data Filtering with Spring Boot"
 permalink: /cs-portfolio-quest/data-viz/submodule_2/
 parent: "Data Visualization"
 team: "Applicators"
 submodule: 2
 categories: [CSP, Submodule, DataVisualization]
-tags: [spring-boot, rest, jpa, sqlite]
+tags: [spring-boot, search, jpql, pagination]
 author: "Applicators Team"
 date: 2025-10-21
 ---
 
-# Submodule 2 · Company Profile & REST APIs — Minimal Interactive (Styling Preserved)
+# Submodule 2 · Search & Data Filtering — **Concluding Module (Black · Interactive · Compact)**
 
 
-
-
-
-<head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Submodule 2 · Company REST APIs — Mini</title>
-
-<!-- NOTE: Styling essence preserved — black background & minimal chrome remain unchanged -->
 <style>
-:root{--bg:#000;--fg:#fff;--muted:#bdbdbd;--b:#333;--p:#0f0f0f;--p2:#151515;--hint:#aaa}
-*{box-sizing:border-box}
-html,body{height:100%}
+:root{
+  --bg:#000;--text:#fff;--muted:#bbb;--muted-2:#888;--border:#333;--panel:#0b0b0b;--panel-2:#111;--accent:#ddd;--accent-2:#aaa;
+}
+*{box-sizing:border-box} html,body{height:100%}
 body{
-  margin:0 auto;
-  max-width:1100px;
-  background:var(--bg);   /* background kept intact */
-  color:var(--fg);
-  font:15px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+  background:var(--bg);color:var(--text);max-width:1200px;margin:0 auto;padding:20px;line-height:1.6;
 }
-h1{margin:16px 0 8px;border-bottom:1px solid var(--b);padding-bottom:8px}
-.container{padding:18px}
+.container{padding:28px 0}
+h1{color:var(--text);border-bottom:1px solid var(--border);padding-bottom:8px;margin:0 0 18px}
+h2,h3{color:var(--text);margin-top:24px}
+p,li,label,small{color:var(--muted)}
+a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
 
-.nav{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 14px}
-.nav button{
-  background:#101010; color:var(--fg); border:1px solid var(--b);
-  padding:8px 10px; border-radius:8px; cursor:pointer; font-weight:700
+.card,.panel,.out{
+  background:transparent;border:1px solid var(--border);border-radius:10px;padding:14px;margin:12px 0;color:var(--text)
 }
-.nav button.active{border-color:#aaa}
+.rule{border:none;border-top:1px solid var(--border);margin:18px 0}
+.out{white-space:pre-wrap;font-family:ui-monospace,SFMono-Regular,Consolas}
+pre{background:var(--panel-2);border:1px solid var(--border);border-radius:8px;padding:12px;overflow:auto;color:#eee;font-size:13px}
+code{font-family:'Courier New',Consolas,monospace;background:var(--panel);border:1px solid var(--border);border-radius:4px;padding:1px 5px;color:#eee}
 
-.card{border:1px solid var(--b);border-radius:10px;padding:14px;margin:12px 0;background:transparent}
-label{color:var(--muted);display:block;margin:10px 0 4px}
 input,textarea,select{
-  width:100%; padding:10px; border:1px solid var(--b); border-radius:8px;
-  background:var(--p2); color:var(--fg); font-family:ui-monospace,SFMono-Regular,Consolas
+  width:100%;padding:10px;border:1px solid var(--border);border-radius:10px;background:var(--panel-2);color:var(--text);
+  font-family:ui-monospace,SFMono-Regular,Consolas;font-size:13px;margin:8px 0;
 }
 textarea{min-height:110px}
-pre{
-  margin:10px 0; background:var(--p2); border:1px solid var(--b);
-  border-radius:8px; padding:12px; overflow:auto; color:#eee
+button{
+  background:#1a1a1a;color:var(--text);border:1px solid var(--border);padding:10px 14px;border-radius:10px;cursor:pointer;font-weight:700;margin:6px 6px 6px 0
 }
-.badge{display:inline-block;border:1px solid var(--b);border-radius:999px;padding:2px 8px;color:var(--hint);font-size:11px;margin-left:6px}
-.btn{background:#141414;color:var(--fg);border:1px solid var(--b);padding:9px 12px;border-radius:8px;cursor:pointer;font-weight:700}
-.btn:hover{border-color:#aaa}
-.out{white-space:pre-wrap}
-.hidden{display:none}
+button:hover{transform:translateY(-1px);border-color:var(--accent-2)}
 
-.quiz .opt{border:1px solid var(--b);border-radius:8px;padding:8px;margin:6px 0;cursor:pointer;color:var(--muted)}
-.quiz .opt.sel{border-color:#aaa;color:#fff}
-.quiz .opt.good{border-color:#3f3}
-.quiz .opt.bad{border-color:#f55}
-
-small.hint{color:var(--hint)}
-hr{border:none;border-top:1px solid var(--b);margin:18px 0}
-.kbd{font-family:ui-monospace,SFMono-Regular,Consolas;border:1px solid var(--b);border-radius:6px;padding:2px 6px;background:#111;color:#ddd}
-.grid{display:grid;gap:10px}
+.grid{display:grid;gap:12px}
 .grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media (max-width: 920px){ .grid-3{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (max-width: 640px){ .grid-2,.grid-3{grid-template-columns:1fr} }
+
+.badge{display:inline-block;border:1px solid var(--border);border-radius:999px;padding:2px 8px;color:#aaa;font-size:11px;margin-left:6px}
+.pill{display:inline-block;padding:3px 8px;border-radius:999px;border:1px solid var(--border)}
+.ok{border-color:#3f3;color:#3f3} .warn{border-color:#ffa500;color:#ffa500} .err{border-color:#f55;color:#f55}
+
+.table{width:100%;border-collapse:collapse}
+.table th,.table td{border:1px solid var(--border);padding:10px;text-align:left;color:#bbb}
+.table th{color:#fff}
+
+.quiz .opt{border:1px solid var(--border);border-radius:10px;padding:10px;margin:6px 0;cursor:pointer;color:#bbb}
+.quiz .opt.sel{border-color:#aaa;color:#fff} .quiz .opt.good{border-color:#3f3} .quiz .opt.bad{border-color:#f55}
+
+/* ---------- FIXED LEARNING RECAP LAYOUT ---------- */
+.recap{
+  display:grid;gap:12px;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+}
+@media (max-width: 920px){ .recap{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (max-width: 640px){ .recap{grid-template-columns:1fr} }
+
+.recap-block{
+  border:1px solid var(--border);border-radius:10px;background:transparent;padding:14px
+}
+.recap-h{
+  display:flex;align-items:center;justify-content:space-between;margin-bottom:8px
+}
+.recap-title{font-weight:800;letter-spacing:.2px}
+.recap-chip{font-size:11px;color:#aaa;border:1px solid var(--border);border-radius:999px;padding:2px 8px}
+.recap-list{
+  display:grid;gap:8px;margin-top:6px
+}
+.recap-row{
+  display:grid;grid-template-columns:140px 1fr;gap:10px;align-items:start
+}
+.recap-key{color:#aaa}
+.recap-val code{display:inline-block}
+
+/* Small helper text */
+.note{font-size:12px;color:#888}
 </style>
-</head>
 
-<body>
 <div class="container">
-  <h1>📚 Submodule 2 · Company Profile & REST APIs <span class="badge">minimal</span></h1>
-  <p style="color:#bdbdbd;margin:6px 0 12px">
-    Goals: CRUD with Spring Boot + JPA, Many-to-Many, custom query. Most content is interactive ↓
-  </p>
+  <h1> Submodule 2: Search & Data Filtering — Conclusion <span class="badge">recap + interactive</span></h1>
+  <p>This closing module **cements** the core skills you built: derived queries, JPQL, Specifications, and Pageable. Use the widgets to prove mastery, then export your checklist.</p>
 
-  <div class="nav">
-    <button class="active" data-tab="sim">API Simulator</button>
-    <button data-tab="kata">Code Kata</button>
-    <button data-tab="quiz">Quick Quiz</button>
-    <button data-tab="build">Build Company</button>
-    <button data-tab="snips">Spring Snips</button>
-  </div>
+  <!-- LEARNING RECAP (CLEAN, NON-OVERLAPPING) -->
+  <section class="card">
+    <h3> Learning Recap</h3>
 
-  <!-- API SIMULATOR -->
-  <section id="sim" class="card">
+    <div class="recap">
+      <!-- Column 1 -->
+      <div class="recap-block">
+        <div class="recap-h">
+          <div class="recap-title">Derived Queries</div>
+          <div class="recap-chip">Spring Data</div>
+        </div>
+        <div class="recap-list">
+          <div class="recap-row">
+            <div class="recap-key">Equality</div>
+            <div class="recap-val"><code>findByLocation(String)</code></div>
+          </div>
+          <div class="recap-row">
+            <div class="recap-key">Multi-field</div>
+            <div class="recap-val"><code>findByLocationAndIndustry(..)</code></div>
+          </div>
+          <div class="recap-row">
+            <div class="recap-key">Compare</div>
+            <div class="recap-val"><code>findByExperienceGreaterThan(..)</code></div>
+          </div>
+          <div class="recap-row">
+            <div class="recap-key">Like</div>
+            <div class="recap-val"><code>findByFirstNameContaining(..)</code></div>
+          </div>
+          <div class="recap-row">
+            <div class="recap-key">Order/Limit</div>
+            <div class="recap-val"><code>findTop10ByOrderByExperienceDesc()</code></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Column 2 -->
+      <div class="recap-block">
+        <div class="recap-h">
+          <div class="recap-title">JPQL & Native</div>
+          <div class="recap-chip">@Query</div>
+        </div>
+        <div class="recap-list">
+          <div class="recap-row">
+            <div class="recap-key">Filter</div>
+            <div class="recap-val"><code>@Query("c.size &gt; :min")</code></div>
+          </div>
+          <div class="recap-row">
+            <div class="recap-key">Join</div>
+            <div class="recap-val"><code>JOIN c.skills s</code></div>
+          </div>
+          <div class="recap-row">
+            <div class="recap-key">Projection</div>
+            <div class="recap-val"><code>SELECT new DTO(...)</code></div>
+          </div>
+          <div class="recap-row">
+            <div class="recap-key">Native</div>
+            <div class="recap-val"><code>nativeQuery = true</code></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Column 3 -->
+      <div class="recap-block">
+        <div class="recap-h">
+          <div class="recap-title">Specs & Pageable</div>
+          <div class="recap-chip">Advanced</div>
+        </div>
+        <div class="recap-list">
+          <div class="recap-row">
+            <div class="recap-key">Specs Chain</div>
+            <div class="recap-val"><code>where(a).and(b).or(c)</code></div>
+          </div>
+          <div class="recap-row">
+            <div class="recap-key">Optional</div>
+            <div class="recap-val"><code>return null;</code> to skip unused filters</div>
+          </div>
+          <div class="recap-row">
+            <div class="recap-key">Page</div>
+            <div class="recap-val"><code>findAll(Pageable)</code></div>
+          </div>
+          <div class="recap-row">
+            <div class="recap-key">Sort</div>
+            <div class="recap-val"><code>PageRequest.of(p,s,Sort)</code></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INTERACTIVE 1: FINAL QUERY BUILDER -->
+  <section class="card">
+    <h3> Final Query Builder</h3>
+    <p>Compose a **JPQL query** and a matching **Specification chain** by toggling criteria.</p>
     <div class="grid grid-2">
-      <div>
-        <label>Endpoint</label>
-        <select id="ep" onchange="uiEP()">
-          <option>POST /api/companies</option>
-          <option>GET /api/companies</option>
-          <option>GET /api/companies/{id}</option>
-          <option>PUT /api/companies/{id}</option>
-          <option>DELETE /api/companies/{id}</option>
+      <div class="panel">
+        <label><input type="checkbox" id="qLoc"/> Filter by Location</label>
+        <input id="vLoc" placeholder="e.g., NYC" disabled/>
+        <label><input type="checkbox" id="qInd"/> Filter by Industry</label>
+        <select id="vInd" disabled>
+          <option>Tech</option><option>Finance</option><option>Healthcare</option><option>Education</option>
         </select>
+        <label><input type="checkbox" id="qSkill"/> Require Skill</label>
+        <input id="vSkill" placeholder="e.g., Java" disabled/>
+        <label><input type="checkbox" id="qMinExp"/> Min Experience</label>
+        <input id="vMinExp" type="number" min="0" placeholder="e.g., 5" disabled/>
+        <label><input type="checkbox" id="qAny"/> Any of multiple skills</label>
+        <input id="vAny" placeholder="comma skills: Java,AWS" disabled/>
+        <button onclick="buildFinalQuery()">Build</button>
       </div>
-      <div id="pidWrap" class="hidden">
-        <label>Path <span class="kbd">{id}</span></label>
-        <input id="pid" type="number" min="1" placeholder="e.g., 1"/>
+      <div class="panel">
+        <strong>JPQL</strong>
+        <pre id="jpqlOut" class="out">SELECT u FROM User u</pre>
+        <strong>Specifications</strong>
+        <pre id="specOut" class="out">Specification.where(/* ... */)</pre>
       </div>
-    </div>
-
-    <div id="bodyWrap" class="card" style="margin-top:10px">
-      <label>Body (JSON)</label>
-      <textarea id="body">{
-  "name": "TechCorp",
-  "industry": "Software",
-  "location": "San Francisco",
-  "size": 150,
-  "skills": ["Java","Spring"],
-  "roles": ["Backend","DevOps"]
-}</textarea>
-      <div>
-        <button class="btn" onclick="send()">Send</button>
-        <button class="btn" onclick="resetDB()">Reset DB</button>
-      </div>
-      <label style="margin-top:10px">Response <small id="status" class="hint"></small></label>
-      <pre id="out" class="out">Try a request!</pre>
-    </div>
-
-    <div class="card">
-      <label>Current Companies</label>
-      <div id="list"></div>
     </div>
   </section>
 
-  <!-- CODE KATA -->
-  <section id="kata" class="card hidden">
-    <p><strong>One-liner:</strong> Derived query returning companies where <code>size &gt; minSize</code>.</p>
-    <input id="kataIn" placeholder="List<Company> findBySizeGreaterThan(Integer minSize);" />
-    <div style="margin-top:8px">
-      <button class="btn" onclick="checkKata()">Check</button>
-      <span id="kataMsg" style="margin-left:8px"></span>
-    </div>
-    <details style="margin-top:10px"><summary>💡 Hint</summary><small class="hint">Use Spring Data naming: <code>findBy&lt;Field&gt;GreaterThan(param)</code>.</small></details>
-  </section>
-
-  <!-- QUIZ -->
-  <section id="quiz" class="card hidden">
-    <div id="quizBox" class="quiz"></div>
-    <button class="btn" onclick="grade()" style="margin-top:8px">Grade</button>
-    <div id="score" style="margin-top:8px"></div>
-  </section>
-
-  <!-- BUILDER -->
-  <section id="build" class="card hidden">
+  <!-- INTERACTIVE 2: PAGINATION LAB -->
+  <section class="card">
+    <h3> Pagination Lab</h3>
+    <p>Experiment with page/size/sort and see which records are returned.</p>
     <div class="grid grid-2">
-      <div><label>Name</label><input id="bName" placeholder="Acme Inc"/></div>
-      <div><label>Industry</label><select id="bInd"><option>Software</option><option>AI</option><option>Healthcare</option><option>Finance</option></select></div>
-      <div><label>Location</label><input id="bLoc" placeholder="San Diego"/></div>
-      <div><label>Size</label><input id="bSize" type="number" min="1" placeholder="50"/></div>
-      <div><label>Skills (comma)</label><input id="bSkills" placeholder="Java, Spring"/></div>
-      <div><label>Roles (comma)</label><input id="bRoles" placeholder="Backend, QA"/></div>
+      <div class="panel">
+        <label>page</label><input id="pg" type="number" min="0" value="0"/>
+        <label>size</label><input id="sz" type="number" min="1" value="5"/>
+        <label>sort (field,asc|desc)</label><input id="sort" placeholder="exp,desc"/>
+        <button onclick="runPaging()">Apply</button>
+      </div>
+      <div class="panel">
+        <pre id="pageOut" class="out">No results yet…</pre>
+      </div>
     </div>
-    <button class="btn" onclick="builderAdd()" style="margin-top:8px">Add</button>
-    <pre id="bOut" class="out"></pre>
   </section>
 
-  <!-- SPRING SNIPS (kept tiny; look & feel unchanged) -->
-  <section id="snips" class="card hidden">
-    <details open>
-      <summary>🔗 Repository</summary>
-      <pre>public interface CompanyRepository extends JpaRepository&lt;Company, Long&gt; {
-  List&lt;Company&gt; findByIndustry(String industry);
-  List&lt;Company&gt; findBySizeGreaterThan(Integer minSize);
-  @Query("SELECT c FROM Company c JOIN c.skills s WHERE s.name = :skill")
-  List&lt;Company&gt; findBySkillName(@Param("skill") String skill);
-}</pre>
-    </details>
-    <details>
-      <summary>🌐 Controller</summary>
-      <pre>@RestController
-@RequestMapping("/api/companies")
-class CompanyController {
-  @Autowired CompanyService svc;
-  @PostMapping public ResponseEntity&lt;Company&gt; create(@RequestBody Company c){
-    return new ResponseEntity<>(svc.createCompany(c), HttpStatus.CREATED);
-  }
-  @GetMapping("/{id}") public Company one(@PathVariable Long id){ return svc.getCompanyById(id); }
-  @GetMapping public List&lt;Company&gt; all(){ return svc.getAllCompanies(); }
-}</pre>
-    </details>
-    <details>
-      <summary>⚙️ application.properties</summary>
-      <pre>spring.datasource.url=jdbc:sqlite:company_profiles.db
-spring.datasource.driver-class-name=org.sqlite.JDBC
-spring.jpa.hibernate.ddl-auto=update
-spring.jpa.show-sql=true</pre>
-    </details>
-    <small class="hint">Entities/service omitted to keep it short—practice via Simulator & Builder.</small>
+  <!-- INTERACTIVE 3: CAPSTONE SCENARIO CHECKER -->
+  <section class="card">
+    <h3> Capstone Scenario Checker</h3>
+    <p>Given a scenario, pick the **best approach** (Derived / JPQL / Spec / Pageable / DTO). Then compare.</p>
+    <div class="panel">
+      <select id="scenarioSel">
+        <option value="1">Search public users in NYC with Java skill, sort by experience desc, top 20</option>
+        <option value="2">Companies with any of {Kubernetes, AWS} skill tags and size > 500</option>
+        <option value="3">Free-text name contains 'son' & experience ≥ 7 (composable filters)</option>
+      </select>
+      <div class="grid grid-2">
+        <div>
+          <label>Your pick</label>
+          <select id="approach">
+            <option>Derived Query</option>
+            <option>JPQL</option>
+            <option>Specifications</option>
+            <option>Pageable</option>
+            <option>DTO Projection</option>
+          </select>
+          <button onclick="scoreScenario()">Check</button>
+        </div>
+        <div>
+          <pre id="scenarioOut" class="out">Select a scenario and approach, then "Check".</pre>
+        </div>
+      </div>
+    </div>
   </section>
 
-  <hr/>
-  <small class="hint">Styling background preserved; content trimmed; interactions unchanged.</small>
+  <!-- INTERACTIVE 4: EXIT QUIZ -->
+  <section class="card">
+    <h3> Exit Quiz (5 Qs)</h3>
+    <div id="qBox" class="quiz"></div>
+    <button onclick="grade()">Grade</button>
+    <div id="qScore" style="margin-top:8px"></div>
+  </section>
+
+  <!-- INTERACTIVE 5: DONE/CHECKLIST + EXPORT -->
+  <section class="card">
+    <h3> Completion Checklist</h3>
+    <div class="grid grid-2">
+      <div class="panel">
+        <label><input type="checkbox" class="ck" value="derived"/> I can write derived methods with multi-field + ordering</label>
+        <label><input type="checkbox" class="ck" value="jpql"/> I can write JPQL joins + projections</label>
+        <label><input type="checkbox" class="ck" value="spec"/> I can chain Specifications with optional params</label>
+        <label><input type="checkbox" class="ck" value="pageable"/> I can paginate & sort with Pageable</label>
+        <label><input type="checkbox" class="ck" value="dto"/> I can return DTOs for lean responses</label>
+        <button onclick="exportNotes()">Export Notes</button>
+      </div>
+      <div class="panel">
+        <strong>Notes (editable)</strong>
+        <textarea id="notes" placeholder="Key takeaways, gotchas, next steps..."></textarea>
+        <pre id="exportOut" class="out">Your export will appear here…</pre>
+      </div>
+    </div>
+  </section>
+
+  <hr class="rule"/>
+  <small class="note">Tip: Keep controllers thin; push composition into a search service. Favor Specs for optional filters, Pageable for sort/limit, and DTOs for lean payloads.</small>
 </div>
 
 <script>
-// Tabs (UI behavior unchanged)
-document.querySelectorAll('.nav button').forEach(btn=>{
-  btn.onclick=()=>{
-    document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    const t=btn.dataset.tab;
-    document.querySelectorAll('section').forEach(s=>s.classList.add('hidden'));
-    document.getElementById(t).classList.remove('hidden');
+// ---------- Helpers ----------
+const $ = id => document.getElementById(id);
+
+// ---------- Query Builder Finals ----------
+['qLoc','qInd','qSkill','qMinExp','qAny'].forEach(id=>{
+  $(id).onchange = () => {
+    if(id==='qLoc')   $('vLoc').disabled   = !$(id).checked;
+    if(id==='qInd')   $('vInd').disabled   = !$(id).checked;
+    if(id==='qSkill') $('vSkill').disabled = !$(id).checked;
+    if(id==='qMinExp')$('vMinExp').disabled= !$(id).checked;
+    if(id==='qAny')   $('vAny').disabled   = !$(id).checked;
   };
 });
 
-// In-memory DB (for Simulator + Builder)
-let db=[
-  {id:1,name:"TechNova",industry:"AI",location:"San Diego",size:1200,skills:["Python","TensorFlow"],roles:["ML Engineer","DS"]},
-  {id:2,name:"HealthBridge",industry:"Healthcare",location:"Austin",size:300,skills:["Java","Spring"],roles:["Backend Engineer"]}
+function buildFinalQuery(){
+  const parts=[], spec=[];
+  const params = {};
+  if($('qLoc').checked && $('vLoc').value.trim()){
+    parts.push('u.location = :location'); spec.push('hasLocation(location)');
+    params.location = $('vLoc').value.trim();
+  }
+  if($('qInd').checked){
+    parts.push('u.industry = :industry'); spec.push('hasIndustry(industry)');
+    params.industry = $('vInd').value;
+  }
+  if($('qSkill').checked && $('vSkill').value.trim()){
+    parts.push(':skill MEMBER OF u.skills'); spec.push('hasSkill(skill)');
+    params.skill = $('vSkill').value.trim();
+  }
+  if($('qMinExp').checked && $('vMinExp').value){
+    parts.push('u.experience >= :minExperience'); spec.push('hasMinExperience(minExperience)');
+    params.minExperience = Number($('vMinExp').value);
+  }
+  if($('qAny').checked && $('vAny').value.trim()){
+    parts.push('EXISTS (SELECT s FROM u.skills s WHERE s IN :anySkills)'); spec.push('hasAnySkills(anySkills)');
+    params.anySkills = $('vAny').value.split(',').map(s=>s.trim()).filter(Boolean);
+  }
+
+  const jpql = parts.length ? `SELECT u FROM User u WHERE ${parts.join(' AND ')}` : 'SELECT u FROM User u';
+  const sc = spec.length ? `Specification.where(${spec[0]})${spec.slice(1).map(x=>' .and('+x+')').join('')}` : 'Specification.where(null)';
+  $('jpqlOut').textContent = jpql + '\n\nParams: ' + JSON.stringify(params, null, 2);
+  $('specOut').textContent = sc;
+}
+
+// ---------- Pagination Lab ----------
+let sample = [
+  {id:1, first:'Alice', exp:5,  loc:'NYC'},
+  {id:2, first:'Bob',   exp:3,  loc:'SF'},
+  {id:3, first:'Carol', exp:8,  loc:'NYC'},
+  {id:4, first:'Dave',  exp:2,  loc:'Austin'},
+  {id:5, first:'Eve',   exp:6,  loc:'SF'},
+  {id:6, first:'Frank', exp:10, loc:'Boston'},
+  {id:7, first:'Grace', exp:4,  loc:'NYC'},
+  {id:8, first:'Henry', exp:7,  loc:'Seattle'},
+  {id:9, first:'Ivy',   exp:1,  loc:'NYC'},
+  {id:10,first:'Jack',  exp:9,  loc:'LA'}
 ];
-let nextId=3;
 
-const $=(id)=>document.getElementById(id);
-const ep=$('ep'), pidWrap=$('pidWrap'), pid=$('pid'), bodyWrap=$('bodyWrap'), bodyEl=$('body'), out=$('out'), statusEl=$('status'), list=$('list');
+function runPaging(){
+  let page = Math.max(0, parseInt($('pg').value||0));
+  let size = Math.max(1, parseInt($('sz').value||5));
+  let sort = ($('sort').value||'').trim();
 
-function uiEP(){
-  const val=ep.value;
-  const needsId=val.includes('{id}');
-  pidWrap.classList.toggle('hidden',!needsId);
-  bodyWrap.classList.toggle('hidden',!(val.startsWith('POST')||val.startsWith('PUT')));
-}
-function renderList(){
-  list.innerHTML=db.map(c=>`
-    <div style="border:1px solid #333;border-radius:8px;padding:8px;margin:6px 0">
-      <strong>${escapeHtml(c.name)}</strong> <span class="badge">${escapeHtml(c.industry)}</span><br/>
-      ${escapeHtml(c.location)} · size ${c.size}<br/>
-      ${(c.skills||[]).map(s=>`<span class="badge">${escapeHtml(s)}</span>`).join(' ')}
-    </div>
-  `).join('');
-}
-function escapeHtml(s){return String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'","&#039;");}
-function parseJSON(txt){try{return JSON.parse(txt||'{}');}catch(e){throw new Error('Invalid JSON body');}}
-function normCompany(o){return {name:o.name??'Unnamed',industry:o.industry??'Unknown',location:o.location??'Unknown',size:Number(o.size??0),skills:Array.isArray(o.skills)?o.skills:[],roles:Array.isArray(o.roles)?o.roles:[]};}
-function setStatus(code){statusEl.textContent=code;}
+  let data = [...sample];
+  if(sort){
+    const [field,dirRaw] = sort.split(','); const dir = (dirRaw||'asc').toLowerCase();
+    data.sort((a,b)=> ((a[field] > b[field]) - (a[field] < b[field])) * (dir==='desc'?-1:1));
+  }
 
-function send(){
-  const [method,path]=ep.value.split(' ');
-  let res=null;
-  try{
-    if(method==='POST'&&path==='/api/companies'){
-      const obj=normCompany(parseJSON(bodyEl.value)); obj.id=nextId++; db.push(obj); setStatus(201); res=obj;
-    }else if(method==='GET'&&path==='/api/companies'){
-      setStatus(200); res=db;
-    }else if(method==='GET'&&path==='/api/companies/{id}'){
-      const id=Number(pid.value); const f=db.find(x=>x.id===id);
-      if(!f){setStatus(404);res={error:'Not found'};}else{setStatus(200);res=f;}
-    }else if(method==='PUT'&&path==='/api/companies/{id}'){
-      const id=Number(pid.value); const i=db.findIndex(x=>x.id===id);
-      if(i===-1){setStatus(404);res={error:'Not found'};}
-      else{const obj=normCompany(parseJSON(bodyEl.value)); db[i]={...db[i],...obj,id}; setStatus(200); res=db[i];}
-    }else if(method==='DELETE'&&path==='/api/companies/{id}'){
-      const id=Number(pid.value); const before=db.length; db=db.filter(x=>x.id!==id);
-      if(db.length===before){setStatus(404);res={error:'Not found'};} else {setStatus(204); res={};}
-    }else{ setStatus(400); res={error:'Unsupported operation'}; }
-  }catch(err){ setStatus(400); res={error:err.message}; }
-  out.textContent=JSON.stringify(res,null,2);
-  renderList();
-}
-function resetDB(){
-  db=[
-    {id:1,name:"TechNova",industry:"AI",location:"San Diego",size:1200,skills:["Python","TensorFlow"],roles:["ML Engineer","DS"]},
-    {id:2,name:"HealthBridge",industry:"Healthcare",location:"Austin",size:300,skills:["Java","Spring"],roles:["Backend Engineer"]}
-  ];
-  nextId=3; setStatus(200); out.textContent="Database reset."; renderList();
+  const total = data.length, totalPages = Math.ceil(total/size);
+  page = Math.min(page, Math.max(totalPages-1,0));
+  const start = page*size, end = start+size;
+  const rows = data.slice(start,end);
+
+  $('pageOut').textContent =
+    `page=${page}, size=${size}, sort=${sort||'(none)'}\n`+
+    `total=${total}, totalPages=${totalPages}\n\n`+
+    (rows.map(r=>`${r.id}. ${r.first} — exp:${r.exp}, loc:${r.loc}`).join('\n') || 'No data');
 }
 
-// Code Kata checker
-function checkKata(){
-  const v=($('kataIn').value||'').trim().replace(/\s+/g,' ');
-  const ok=/^List<\s*Company\s*>\s*findBySizeGreaterThan\s*\(\s*Integer\s+\w+\s*\);\s*$/i.test(v);
-  const msg=$('kataMsg');
-  msg.textContent= ok ? '✅ Correct derived query.' : '❌ Try: List<Company> findBySizeGreaterThan(Integer minSize);';
-  msg.style.color= ok ? '#bfffbf' : '#ffb3b3';
+// ---------- Scenario Checker ----------
+function scenarioAnswer(id){
+  switch(id){
+    case '1': return ['Specifications','Pageable','DTO Projection']; // filters + sort + topN
+    case '2': return ['JPQL','Specifications']; // ANY skill + size>500
+    case '3': return ['Specifications']; // contains + >=, composable
+    default: return [];
+  }
+}
+function scoreScenario(){
+  const sel=$('scenarioSel').value;
+  const pick=$('approach').value;
+  const good = scenarioAnswer(sel).includes(pick);
+  const extra = scenarioAnswer(sel).join(' + ');
+  $('scenarioOut').textContent = (good? ' Good choice.' : ' Prefer a different tool.')+
+    `\nRecommended: ${extra}\n`+
+    (sel==='1' ? 'Specs for filters, Pageable for sort/limit, DTO for lean payload.' :
+     sel==='2' ? 'Use JPQL JOIN or Specs (MEMBER OF) + size predicate.' :
+     'Specs chain: name contains + exp ≥ threshold.');
 }
 
-// Quiz (minimal)
-const quizData=[
-  {q:'Marks a REST controller?', opts:['@Controller','@RestController','@Service','@Repository'], a:1},
-  {q:'@JoinTable is for…', opts:['PK','table name','join table & columns','ID strategy'], a:2},
-  {q:'CompletableFuture is…', opts:['sync I/O','blocking DB','async computation','ORM'], a:2}
+// ---------- Exit Quiz ----------
+const quiz=[
+  {q:'Which is best for optional, combinable filters?', opts:['Derived query','JPQL','Specifications','Native SQL'], a:2},
+  {q:'What does returning DTOs primarily improve?', opts:['Security','Performance (payload)','Authentication','Transactions'], a:1},
+  {q:'To sort + limit results you should use…', opts:['Specifications only','Pageable','@Transactional','@OrderBy only'], a:1},
+  {q:'A query "name contains x AND experience >= y" maps cleanly to…', opts:['Derived only','JPQL only','Specifications chain','Native SQL only'], a:2},
+  {q:'MEMBER OF in JPQL is used to…', opts:['Check collection membership','Encrypt params','Paginate results','Create indexes'], a:0}
 ];
-const selections={};
+const picks={};
 function renderQuiz(){
-  const box=$('quizBox'); box.innerHTML='';
-  quizData.forEach((item,i)=>{
+  const box=$('qBox'); box.innerHTML='';
+  quiz.forEach((it,i)=>{
     const wrap=document.createElement('div');
-    wrap.innerHTML=`<div style="margin:8px 0 4px"><strong>Q${i+1}.</strong> ${item.q}</div>`;
-    item.opts.forEach((o,oi)=>{
-      const opt=document.createElement('div');
-      opt.className='opt'; opt.textContent=o; opt.dataset.i=i; opt.dataset.oi=oi;
-      opt.onclick=()=>{
-        selections[i]=oi;
-        box.querySelectorAll(`.opt[data-i="${i}"]`).forEach(el=>el.classList.remove('sel'));
-        opt.classList.add('sel');
-      };
-      wrap.appendChild(opt);
+    wrap.innerHTML=`<div style="margin:6px 0"><strong>Q${i+1}.</strong> ${it.q}</div>`;
+    it.opts.forEach((o,oi)=>{
+      const el=document.createElement('div'); el.className='opt'; el.textContent=o; el.dataset.i=i; el.dataset.oi=oi;
+      el.onclick=()=>{picks[i]=oi; box.querySelectorAll(\`.opt[data-i="\${i}"]\`).forEach(x=>x.classList.remove('sel')); el.classList.add('sel');};
+      wrap.appendChild(el);
     });
     box.appendChild(wrap);
   });
 }
 function grade(){
-  let score=0;
+  let s=0;
   document.querySelectorAll('.opt').forEach(el=>el.classList.remove('good','bad'));
-  quizData.forEach((item,i)=>{
-    const pick=selections[i];
-    if(pick===item.a) score++;
-    const opts=[...document.querySelectorAll(`.opt[data-i="${i}"]`)];
-    opts[item.a].classList.add('good');
-    if(pick!=null && pick!==item.a) opts[pick].classList.add('bad');
+  quiz.forEach((it,i)=>{
+    const pick=picks[i];
+    const opts=[...document.querySelectorAll(\`.opt[data-i="\${i}"]\`)];
+    opts[it.a].classList.add('good');
+    if(pick===it.a) s++; else if(pick!=null) opts[pick].classList.add('bad');
   });
-  $('score').textContent=`Score: ${score}/${quizData.length}`;
+  $('qScore').textContent=`Score: ${s}/${quiz.length}`;
 }
 
-// Builder
-function builderAdd(){
+// ---------- Export Notes ----------
+function exportNotes(){
+  const checks=[...document.querySelectorAll('.ck')].filter(x=>x.checked).map(x=>x.value);
   const obj={
-    id:nextId++,
-    name:($('bName').value||'New Co').trim(),
-    industry:$('bInd').value,
-    location:($('bLoc').value||'Unknown').trim(),
-    size:Number($('bSize').value||0),
-    skills:($('bSkills').value||'').split(',').map(s=>s.trim()).filter(Boolean),
-    roles:($('bRoles').value||'').split(',').map(s=>s.trim()).filter(Boolean)
+    time:new Date().toISOString(),
+    mastery:checks,
+    jpql:$('jpqlOut').textContent,
+    spec:$('specOut').textContent,
+    paging: $('pageOut').textContent,
+    scenario: $('scenarioOut').textContent,
+    notes: $('notes').value
   };
-  db.push(obj); $('bOut').textContent=JSON.stringify(obj,null,2); setStatus(201); renderList();
+  $('exportOut').textContent = JSON.stringify(obj,null,2);
 }
 
 // Init
-uiEP(); renderList(); renderQuiz();
+renderQuiz();
 </script>
-</body>
-

@@ -1,43 +1,21 @@
 // To build GameLevels, each contains GameObjects from below imports
 import GameEnvBackground from './GameEngine/GameEnvBackground.js';
 import Player from './GameEngine/Player.js';
+import GameObject from './GameEngine/GameObject.js';
 
-class Barrier {
-    constructor(data) {
-        this.x = data.x;
-        this.y = data.y;
-        this.width = data.width;
-        this.height = data.height;
-        this.color = data.color || 'rgba(255, 0, 0, 0.3)';
-        this.visible = data.visible !== undefined ? data.visible : false;
-    }
-
-    draw() {
-        if (!this.visible) return;
-        const ctx = GameEnvBackground.ctx;
-        ctx.fillStyle = this.color;
-        ctx.strokeRect(this.x, this.y, this.width, this.height);
-        ctx.strokeStyle = 'rgba(225, 0, 0, 0.8)';
-        ctx.lineWidth = 2;
-        ctx.strokeRect(this.x, this.y, this.width, this.height);
-    }
-
-    checkCollision(player) {
-        const playerHitbox = player.getHitbox();
-        return !(
-            playerHitbox.x > this.x + this.width ||
-            playerHitbox.x + playerHitbox.width < this.x ||
-            playerHitbox.y > this.y + this.height ||
-            playerHitbox.y + playerHitbox.height < this.y
-        );
-    }
-}
+//Import custom classes from select files
+import Barrier from './CustomGameClasses/Barrier.js';
+import BlackjackGameManager from './CustomGameClasses/Blackjack.js';
+import TriggerZone from './CustomGameClasses/TriggerZone.js';
 
 class MansionLevel4 {
     constructor(gameEnv) {
         let width = gameEnv.innerWidth;
         let height = gameEnv.innerHeight;
         let path = gameEnv.path;
+
+        // Initialize blackjack manager
+        this.blackjackManager = new BlackjackGameManager(gameEnv);
 
         // Background data
         const image_background = path + "/images/mansionGame/image_lvl4.png";
@@ -69,123 +47,59 @@ class MansionLevel4 {
             upLeft: {row: 0, start: 0, columns: 3, rotate: Math.PI/16},
             upRight: {row: 1, start: 0, columns: 3, rotate: -Math.PI/16},
             hitbox: { widthPercentage: 0.45, heightPercentage: 0.2 },
-            // Use WASD for movement (will modify Player to support arrows)
-            keypress: { 
-                up: 87,    // W key (default)
-                left: 65,  // A key
-                down: 83,  // S key
-                right: 68  // D key
-            },
-            // Add coordinate tracking with visual display
-            hasLoggedStart: false,
-            init: function() {
-                // Create coordinate display if it doesn't exist
-                if (!document.getElementById('coordDisplay')) {
-                    const display = document.createElement('div');
-                    display.id = 'coordDisplay';
-                    display.style.position = 'fixed';
-                    display.style.top = '10px';
-                    display.style.left = '10px';
-                    display.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
-                    display.style.color = 'white';
-                    display.style.padding = '10px';
-                    display.style.fontFamily = 'monospace';
-                    display.style.zIndex = '1000';
-                    document.getElementById('gameContainer').appendChild(display);
-                }
-            },
-            update: function() {
-                const display = document.getElementById('coordDisplay');
-                if (!display) {
-                    this.init();
-                }
-                
-                // Log starting position once
-                if (!this.hasLoggedStart) {
-                    document.getElementById('coordDisplay').innerHTML = 
-                        `Starting Position: (${Math.round(this.x)}, ${Math.round(this.y)})`;
-                    this.hasLoggedStart = true;
-                }
-                
-                // Update current position when moving
-                if (this.moved) {
-                    document.getElementById('coordDisplay').innerHTML = 
-                        `Current Position: (${Math.round(this.x)}, ${Math.round(this.y)})`;
-                }
+            keypress: {up: 87, left: 65, down: 83, right: 68} // W, A, S, D
+        };
+
+        // Store reference to blackjack manager for use in trigger zone
+        const blackjackManager = this.blackjackManager;
+
+        // Define trigger zone in the illuminated center area
+        const triggerZoneData = {
+            x: width * 0.35,
+            y: height * 0.15,
+            width: width * 0.30,
+            height: height * 0.40,
+            color: 'rgba(255, 215, 0, 0.2)',
+            visible: false, // Make invisible so it doesn't show the ugly yellow box
+            message: '🎰 Welcome to the Casino! Step into the light to start gambling!',
+            onEnter: () => {
+                blackjackManager.startGame();
             }
         };
-        // Define barrier locations
+
+        // Define barrier locations - Creating a simple pathway to the center
         const barrierData = [
-            // Outer walls
-            { x: 0, y: 0, width: width, height: 40 }, // Top wall
-            { x: 0, y: height - 40, width: width, height: 40 }, // Bottom wall
-            { x: 0, y: 0, width: 40, height: height }, // Left wall
-            { x: width - 40, y: 0, width: 40, height: height }, // Right wall
-
-            // Blackjack Tables
-            { x: width * 0.05, y: height * 0.12, width: width * 0.18, height: height * 0.15 },
-            { x: width * 0.77, y: height * 0.12, width: width * 0.18, height: height * 0.15 },
-
-            // Slot Machines
-            { x: width * 0.02, y: height * 0.35, width: width * 0.08, height: height * 0.12 },
-            { x: width * 0.05, y: height * 0.65, width: width * 0.18, height: height * 0.18 },
-            { x: width * 0.02, y: height * 0.88, width: width * 0.06, height: height * 0.08 },
-            { x: width * 0.28, y: height * 0.52, width: width * 0.14, height: height * 0.15 },
-            { x: width * 0.58, y: height * 0.52, width: width * 0.14, height: height * 0.15 },
-            { x: width * 0.90, y: height * 0.35, width: width * 0.08, height: height * 0.12 },
-            { x: width * 0.77, y: height * 0.65, width: width * 0.18, height: height * 0.18 },
-            { x: width * 0.92, y: height * 0.88, width: width * 0.06, height: height * 0.08 },
-            { x: width * 0.12, y: height * 0.38, width: width * 0.06, height: height * 0.08 },
-            { x: width * 0.82, y: height * 0.38, width: width * 0.06, height: height * 0.08 },
-            { x: width * 0.46, y: height * 0.02, width: width * 0.08, height: height * 0.05 },
-            { x: width * 0.45, y: height * 0.45, width: width * 0.10, height: height * 0.08 },
-            { x: width * 0.05, y: height * 0.28, width: width * 0.18, height: height * 0.05 },
-            { x: width * 0.77, y: height * 0.28, width: width * 0.18, height: height * 0.05 },
-            { x: width * 0.02, y: height * 0.02, width: width * 0.06, height: height * 0.08 },
-            { x: width * 0.92, y: height * 0.02, width: width * 0.06, height: height * 0.08 }
+            // Outer walls only - keep player contained
+            { x: 0, y: 0, width: width, height: 20, visible: true },                    // Top wall
+            { x: 0, y: height - 20, width: width, height: 20, visible: true },          // Bottom wall
+            { x: 0, y: 0, width: 20, height: height, visible: true },                   // Left wall
+            { x: width - 20, y: 0, width: 20, height: height, visible: true }           // Right wall
         ];
 
         // Initialize game objects
         this.classes = [
             { class: GameEnvBackground, data: image_data_background },
             { class: Player, data: sprite_data_chillguy },
+            { class: TriggerZone, data: triggerZoneData },
             ...barrierData.map(data => ({ class: Barrier, data }))
         ];
+
+        this.gameEnv = gameEnv;
+        
+        // Adding Music
+        this.backgroundMusic = new Audio(path + '/audio/mansionGame/SpookieDookie.mp3');
+        this.backgroundMusic.loop = true;
+        this.backgroundMusic.volume = 0.3; // Set volume to a reasonable level
+        this.backgroundMusic.play();
     }
 
-    // Handle collisions between player and barriers
-    checkCollisions(player, barriers) {
-        for (const barrier of barriers) {
-            if (barrier.checkCollision(player)) {
-                const overlapLeft = (player.x + player.width) - barrier.x;
-                const overlapRight = (barrier.x + barrier.width) - player.x;
-                const overlapTop = (player.y + player.height) - barrier.y;
-                const overlapBottom = (barrier.y + barrier.height) - player.y;
-
-                const minOverlapX = Math.min(overlapLeft, overlapRight);
-                const minOverlapY = Math.min(overlapTop, overlapBottom);
-
-                if (minOverlapX < minOverlapY) {
-                    // Horizontal collision
-                    if (overlapLeft < overlapRight) {
-                        player.x -= overlapLeft;  // Collision from left
-                    } else {
-                        player.x += overlapRight; // Collision from right
-                    }
-                } else {
-                    // Vertical collision
-                    if (overlapTop < overlapBottom) {
-                        player.y -= overlapTop;   // Collision from top
-                    } else {
-                        player.y += overlapBottom; // Collision from bottom
-                    }
-                }
-                player.velocity = { x: 0, y: 0 }; // Stop movement on collision
-                return true;
-            }
-        }
-        return false;
+    // Update method called every frame by the game engine
+    update() {
+        // Collision detection removed - it was causing player to be stuck
+        // The player now moves freely, only blocked by canvas boundaries
     }
+
+    // Removed collision checking method - was causing issues with player movement
 }
 
-export default MansionLevel4
+export default MansionLevel4;

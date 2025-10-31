@@ -151,6 +151,10 @@ class Npc extends Character {
         
         // Show dialogue with greeting message
         const greeting = this.spriteData?.greeting || "Hello!";
+        if (this.spriteData?.greeting == false){
+            console.log("Greeting set to false!")
+            return;
+        }
         this.dialogueSystem.showDialogue(greeting, npcName, npcAvatar);
     }
     

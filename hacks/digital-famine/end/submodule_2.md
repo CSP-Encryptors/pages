@@ -9,6 +9,7 @@ submodule: 2
 categories: [CSP, Submodule, End]
 tags: [end, submodule, codemaxxers, media-literacy]
 author: "Cyrus Zhang"
+microblog: true
 date: 2025-10-24
 breadcrumb: true
 ---
@@ -226,7 +227,7 @@ breadcrumb: true
     <p class="alert-message">
       EMERGENCY: Your ship's shields are under attack from hostile alien disinformation!<br><br>
       Shield Status: CRITICAL<br>
-      Defensive Action Required: Complete 5 security challenges to restore shield integrity.<br><br>
+      Defensive Action Required: Complete 10 comprehensive security challenges to restore shield integrity.<br><br>
       <span style="color: var(--warn)">⚠️ WARNING: Each wrong answer drains shield power! Choose wisely.</span>
     </p>
     <button class="alert-button" onclick="startChallenge()">Initialize Defense Protocol</button>
@@ -334,15 +335,106 @@ breadcrumb: true
 
   <!-- Stage 5 -->
   <div class="stage-card hidden" id="stage-5">
-    <div class="stage-badge">Stage 5 — Final Firewall</div>
-    <div class="prompt">Choose the most credible report and explain why.</div>
+    <div class="stage-badge">Stage 5 — Bias Detection Array</div>
+    <div class="prompt">You encounter a news article claiming "Miracle cure DESTROYS disease that doctors HATE!" Which types of bias are present?</div>
     <div class="choices">
-      <button class="btn choice" data-choice="1" data-correct>1) Peer-reviewed scientific journal article.</button>
-      <button class="btn choice" data-choice="2">2) Viral meme with 10M shares.</button>
-      <button class="btn choice" data-choice="3">3) Emotional post by a political influencer.</button>
+      <button class="btn choice" data-choice="a" data-correct>A) Sensationalism bias and commercial bias (promoting a product).</button>
+      <button class="btn choice" data-choice="b">B) Political bias only.</button>
+      <button class="btn choice" data-choice="c">C) No bias—it's just enthusiastic reporting.</button>
+      <button class="btn choice" data-choice="d">D) Cultural bias only.</button>
     </div>
     <div class="feedback" id="fb-5"></div>
-    <textarea id="mini-5" rows="3" style="width:100%;margin-top:6px;border-radius:8px;border:1px solid var(--card-border);background:#0b1020;color:var(--text);padding:8px" placeholder="Explain credibility (peer review, methods, citations) and how bias affects the others."></textarea>
+    <div class="mini">Task: List 3 types of bias you should watch for in media:</div>
+    <textarea id="mini-5" rows="3" style="width:100%;margin-top:6px;border-radius:8px;border:1px solid var(--card-border);background:#0b1020;color:var(--text);padding:8px" placeholder="e.g., confirmation bias, political bias, selection bias, commercial bias, framing bias, etc."></textarea>
+    <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap">
+      <button class="btn" data-next="stage-6">Lock & Continue</button>
+    </div>
+  </div>
+
+  <!-- Stage 6 -->
+  <div class="stage-card hidden" id="stage-6">
+    <div class="stage-badge">Stage 6 — Context & Framing Scanner</div>
+    <div class="prompt">Two headlines about the same event: "Protesters storm capitol" vs "Citizens exercise right to peaceful assembly." What's happening?</div>
+    <div class="choices">
+      <button class="btn choice" data-choice="a" data-correct>A) Different framing changes perception of the same event.</button>
+      <button class="btn choice" data-choice="b">B) One is fake news, the other is real.</button>
+      <button class="btn choice" data-choice="c">C) They describe completely different events.</button>
+      <button class="btn choice" data-choice="d">D) The first is always more accurate.</button>
+    </div>
+    <div class="feedback" id="fb-6"></div>
+    <div class="mini">Explain in 1-2 sentences how framing can manipulate perception without lying:</div>
+    <textarea id="mini-6" rows="3" style="width:100%;margin-top:6px;border-radius:8px;border:1px solid var(--card-border);background:#0b1020;color:var(--text);padding:8px" placeholder="Discuss word choice, emotional language, context omission, perspective emphasis..."></textarea>
+    <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap">
+      <button class="btn" data-next="stage-7">Lock & Continue</button>
+    </div>
+  </div>
+
+  <!-- Stage 7 -->
+  <div class="stage-card hidden" id="stage-7">
+    <div class="stage-badge">Stage 7 — Propaganda Recognition Module</div>
+    <div class="prompt">Which technique is used in: "Every patriot supports this policy. Don't you love your planet?"</div>
+    <div class="choices">
+      <button class="btn choice" data-choice="a" data-correct>A) Bandwagon + Appeal to Emotion (patriotism).</button>
+      <button class="btn choice" data-choice="b">B) Pure factual statement.</button>
+      <button class="btn choice" data-choice="c">C) Statistical evidence.</button>
+      <button class="btn choice" data-choice="d">D) Expert testimony.</button>
+    </div>
+    <div class="feedback" id="fb-7"></div>
+    <div class="mini">Name two other propaganda techniques to watch for:</div>
+    <textarea id="mini-7" rows="2" style="width:100%;margin-top:6px;border-radius:8px;border:1px solid var(--card-border);background:#0b1020;color:var(--text);padding:8px" placeholder="e.g., transfer, glittering generalities, name-calling, plain folks, testimonial, card stacking, fear appeals..."></textarea>
+    <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap">
+      <button class="btn" data-next="stage-8">Lock & Continue</button>
+    </div>
+  </div>
+
+  <!-- Stage 8 -->
+  <div class="stage-card hidden" id="stage-8">
+    <div class="stage-badge">Stage 8 — Algorithm Awareness Test</div>
+    <div class="prompt">Your social feed only shows content you've liked before. What's the risk?</div>
+    <div class="choices">
+      <button class="btn choice" data-choice="a" data-correct>A) Creates echo chamber; limits exposure to diverse perspectives.</button>
+      <button class="btn choice" data-choice="b">B) No risk—it's personalized to your interests.</button>
+      <button class="btn choice" data-choice="c">C) Improves accuracy of information.</button>
+      <button class="btn choice" data-choice="d">D) Increases critical thinking automatically.</button>
+    </div>
+    <div class="feedback" id="fb-8"></div>
+    <div class="mini">How can you break out of algorithmic filter bubbles? List 2 strategies:</div>
+    <textarea id="mini-8" rows="3" style="width:100%;margin-top:6px;border-radius:8px;border:1px solid var(--card-border);background:#0b1020;color:var(--text);padding:8px" placeholder="e.g., follow diverse sources, clear cookies, use incognito mode, seek opposing views, check multiple platforms..."></textarea>
+    <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap">
+      <button class="btn" data-next="stage-9">Lock & Continue</button>
+    </div>
+  </div>
+
+  <!-- Stage 9 -->
+  <div class="stage-card hidden" id="stage-9">
+    <div class="stage-badge">Stage 9 — Confirmation Bias Detector</div>
+    <div class="prompt">You find an article that perfectly supports your existing belief. Your FIRST reaction should be:</div>
+    <div class="choices">
+      <button class="btn choice" data-choice="a" data-correct>A) Be extra skeptical—check for confirmation bias and seek opposing evidence.</button>
+      <button class="btn choice" data-choice="b">B) Share immediately—it proves you were right all along.</button>
+      <button class="btn choice" data-choice="c">C) Trust it more because it aligns with your view.</button>
+      <button class="btn choice" data-choice="d">D) Stop researching—you found the truth.</button>
+    </div>
+    <div class="feedback" id="fb-9"></div>
+    <div class="mini">Define confirmation bias in your own words:</div>
+    <textarea id="mini-9" rows="2" style="width:100%;margin-top:6px;border-radius:8px;border:1px solid var(--card-border);background:#0b1020;color:var(--text);padding:8px" placeholder="Tendency to seek, interpret, and remember information that confirms pre-existing beliefs..."></textarea>
+    <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap">
+      <button class="btn" data-next="stage-10">Lock & Continue</button>
+    </div>
+  </div>
+
+  <!-- Stage 10 -->
+  <div class="stage-card hidden" id="stage-10">
+    <div class="stage-badge">Stage 10 — Credibility Assessment Final</div>
+    <div class="prompt">Rank these sources from MOST to LEAST credible for scientific information: (A) Peer-reviewed journal, (B) Personal blog, (C) News wire service, (D) Social media influencer</div>
+    <div class="choices">
+      <button class="btn choice" data-choice="1" data-correct>1) A → C → B → D</button>
+      <button class="btn choice" data-choice="2">2) D → B → C → A</button>
+      <button class="btn choice" data-choice="3">3) C → D → A → B</button>
+      <button class="btn choice" data-choice="4">4) All equally credible</button>
+    </div>
+    <div class="feedback" id="fb-10"></div>
+    <textarea id="mini-10" rows="3" style="width:100%;margin-top:6px;border-radius:8px;border:1px solid var(--card-border);background:#0b1020;color:var(--text);padding:8px" placeholder="Explain why peer review matters and how credibility hierarchy works..."></textarea>
     <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap">
       <button class="btn primary" id="finish">Finish & Compute Shield</button>
     </div>
@@ -387,9 +479,14 @@ breadcrumb: true
       2: { answered: false, correct: false, sources: [] },
       3: { answered: false, correct: false, mini: '' },
       4: { answered: false, correct: false, picks: [] , rewrite: ''},
-      5: { answered: false, correct: false, rationale: '' }
+      5: { answered: false, correct: false, mini: '' },
+      6: { answered: false, correct: false, mini: '' },
+      7: { answered: false, correct: false, mini: '' },
+      8: { answered: false, correct: false, mini: '' },
+      9: { answered: false, correct: false, mini: '' },
+      10: { answered: false, correct: false, rationale: '' }
     },
-    version: 1
+    version: 2
   };
 
   function clamp(v, min, max){ return Math.max(min, Math.min(max, v)); }
@@ -484,15 +581,15 @@ breadcrumb: true
     hide('#intro'); refreshHUD();
     // Reveal completed or next stage
     let next = 1;
-    for (let i=1;i<=5;i++){
+    for (let i=1;i<=10;i++){
       if (state.stages[i].answered) { show('#stage-' + i); lockStage(i); next = i+1; }
       else { show('#stage-' + i); next = i; break; }
     }
-    if (next>5) { hideAllStages(); show('#results'); finalize(); }
+    if (next>10) { hideAllStages(); show('#results'); finalize(); }
   });
   $('#reset').addEventListener('click', reset);
 
-  function hideAllStages(){ for (let i=1;i<=5;i++){ hide('#stage-' + i); } }
+  function hideAllStages(){ for (let i=1;i<=10;i++){ hide('#stage-' + i); } }
 
   // Stage 1
   $$('#stage-1 .btn.choice').forEach(btn=>{
@@ -500,7 +597,7 @@ breadcrumb: true
       const correct = btn.hasAttribute('data-correct');
       const fb = $('#fb-1');
       state.stages[1].answered = true; state.stages[1].correct = correct;
-      if (correct){ fb.className = 'feedback good'; fb.innerHTML = '✅ Correct. First verify the source: author, credentials, publication reputation, timestamps. Then corroborate across independent outlets.'; addScore(20); }
+      if (correct){ fb.className = 'feedback good'; fb.innerHTML = '✅ Correct. First verify the source: author, credentials, publication reputation, timestamps. Then corroborate across independent outlets.'; addScore(10); }
       else { fb.className = 'feedback bad'; fb.innerHTML = '❌ Not quite. Sharing or rewriting without verification spreads possible misinformation.'; drainEnergy(2); }
       fb.style.display = 'block';
       lockStage(1);
@@ -517,7 +614,7 @@ breadcrumb: true
       const correct = btn.hasAttribute('data-correct');
       const fb = $('#fb-2');
       state.stages[2].answered = true; state.stages[2].correct = correct;
-      if (correct){ fb.className = 'feedback good'; fb.innerHTML = '✅ Correct. Algorithmic personalization can create echo chambers; diversify inputs deliberately.'; addScore(20); }
+      if (correct){ fb.className = 'feedback good'; fb.innerHTML = '✅ Correct. Algorithmic personalization can create echo chambers; diversify inputs deliberately.'; addScore(10); }
       else { fb.className = 'feedback bad'; fb.innerHTML = '❌ Feeds rarely homogenize by coincidence; algorithms prioritize engagement-aligned content.'; drainEnergy(2); }
       fb.style.display = 'block';
       lockStage(2);
@@ -537,7 +634,7 @@ breadcrumb: true
       const correct = btn.hasAttribute('data-correct');
       const fb = $('#fb-3');
       state.stages[3].answered = true; state.stages[3].correct = correct;
-      if (correct){ fb.className = 'feedback good'; fb.innerHTML = '✅ Correct. Use reverse image search, check timestamps, EXIF/provenance, lighting/shadows, and report lineage.'; addScore(20); }
+      if (correct){ fb.className = 'feedback good'; fb.innerHTML = '✅ Correct. Use reverse image search, check timestamps, EXIF/provenance, lighting/shadows, and report lineage.'; addScore(10); }
       else { fb.className = 'feedback bad'; fb.innerHTML = '❌ Crowd opinion ≠ verification. Use digital forensics and provenance checks.'; drainEnergy(2); }
       fb.style.display = 'block';
       lockStage(3);
@@ -563,7 +660,7 @@ breadcrumb: true
     if (isCorrect){
       fb.className = 'feedback good';
       fb.innerHTML = '✅ Correct. #1 is sensational; #2 implies secret knowledge. #3 may be factual (depending on source), not inherently clickbait.';
-      addScore(20);
+      addScore(10);
       showShieldEffect(); // Explicitly trigger shield effect
     } else {
       fb.className = 'feedback bad';
@@ -590,45 +687,128 @@ breadcrumb: true
       const correct = btn.hasAttribute('data-correct');
       const fb = $('#fb-5');
       state.stages[5].answered = true; state.stages[5].correct = correct;
-      if (correct){
-        fb.className = 'feedback good';
-        fb.innerHTML = '✅ Correct. Peer-reviewed work provides methods, citations, and accountability. Virality or emotion ≠ evidence.';
-        addScore(20);
-      } else {
-        fb.className = 'feedback bad';
-        fb.innerHTML = '❌ Popularity and emotion can bias interpretation; they don’t validate claims.';
-        drainEnergy(2);
-      }
+      if (correct){ fb.className = 'feedback good'; fb.innerHTML = '✅ Correct. Sensationalism and commercial bias work together in misleading health claims.'; addScore(10); }
+      else { fb.className = 'feedback bad'; fb.innerHTML = '❌ Not quite. This shows multiple biases: sensational language and commercial motivation.'; drainEnergy(2); }
       fb.style.display = 'block';
       lockStage(5);
     });
   });
+  $('#stage-5 [data-next]').addEventListener('click', ()=>{
+    state.stages[5].mini = $('#mini-5').value.trim();
+    hide('#stage-5'); show('#stage-6'); save();
+  });
+
+  // Stage 6
+  $$('#stage-6 .btn.choice').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const correct = btn.hasAttribute('data-correct');
+      const fb = $('#fb-6');
+      state.stages[6].answered = true; state.stages[6].correct = correct;
+      if (correct){ fb.className = 'feedback good'; fb.innerHTML = '✅ Correct. Framing uses word choice to shape perception—same event, different angle.'; addScore(10); }
+      else { fb.className = 'feedback bad'; fb.innerHTML = '❌ Both can be technically accurate but frame the event differently through language.'; drainEnergy(2); }
+      fb.style.display = 'block';
+      lockStage(6);
+    });
+  });
+  $('#stage-6 [data-next]').addEventListener('click', ()=>{
+    state.stages[6].mini = $('#mini-6').value.trim();
+    hide('#stage-6'); show('#stage-7'); save();
+  });
+
+  // Stage 7
+  $$('#stage-7 .btn.choice').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const correct = btn.hasAttribute('data-correct');
+      const fb = $('#fb-7');
+      state.stages[7].answered = true; state.stages[7].correct = correct;
+      if (correct){ fb.className = 'feedback good'; fb.innerHTML = '✅ Correct. Bandwagon ("every patriot") + emotional appeal (patriotism) pressure agreement.'; addScore(10); }
+      else { fb.className = 'feedback bad'; fb.innerHTML = '❌ This uses propaganda techniques, not evidence or expert opinion.'; drainEnergy(2); }
+      fb.style.display = 'block';
+      lockStage(7);
+    });
+  });
+  $('#stage-7 [data-next]').addEventListener('click', ()=>{
+    state.stages[7].mini = $('#mini-7').value.trim();
+    hide('#stage-7'); show('#stage-8'); save();
+  });
+
+  // Stage 8
+  $$('#stage-8 .btn.choice').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const correct = btn.hasAttribute('data-correct');
+      const fb = $('#fb-8');
+      state.stages[8].answered = true; state.stages[8].correct = correct;
+      if (correct){ fb.className = 'feedback good'; fb.innerHTML = '✅ Correct. Personalization can trap you in a bubble—actively seek diverse views.'; addScore(10); }
+      else { fb.className = 'feedback bad'; fb.innerHTML = '❌ Comfort doesn\'t equal truth. Filter bubbles limit your exposure to important perspectives.'; drainEnergy(2); }
+      fb.style.display = 'block';
+      lockStage(8);
+    });
+  });
+  $('#stage-8 [data-next]').addEventListener('click', ()=>{
+    state.stages[8].mini = $('#mini-8').value.trim();
+    hide('#stage-8'); show('#stage-9'); save();
+  });
+
+  // Stage 9
+  $$('#stage-9 .btn.choice').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const correct = btn.hasAttribute('data-correct');
+      const fb = $('#fb-9');
+      state.stages[9].answered = true; state.stages[9].correct = correct;
+      if (correct){ fb.className = 'feedback good'; fb.innerHTML = '✅ Correct. When something confirms your beliefs, be EXTRA skeptical to fight confirmation bias.'; addScore(10); }
+      else { fb.className = 'feedback bad'; fb.innerHTML = '❌ Confirmation bias makes us trust agreeable info too easily. Always verify.'; drainEnergy(2); }
+      fb.style.display = 'block';
+      lockStage(9);
+    });
+  });
+  $('#stage-9 [data-next]').addEventListener('click', ()=>{
+    state.stages[9].mini = $('#mini-9').value.trim();
+    hide('#stage-9'); show('#stage-10'); save();
+  });
+
+  // Stage 10
+  $$('#stage-10 .btn.choice').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const correct = btn.hasAttribute('data-correct');
+      const fb = $('#fb-10');
+      state.stages[10].answered = true; state.stages[10].correct = correct;
+      if (correct){ fb.className = 'feedback good'; fb.innerHTML = '✅ Correct. Peer-review > wire services > personal blogs > influencers for scientific credibility.'; addScore(10); }
+      else { fb.className = 'feedback bad'; fb.innerHTML = '❌ Credibility hierarchy matters—peer review provides the strongest verification.'; drainEnergy(2); }
+      fb.style.display = 'block';
+      lockStage(10);
+    });
+  });
   $('#finish').addEventListener('click', ()=>{
-    state.stages[5].rationale = $('#mini-5').value.trim();
+    state.stages[10].rationale = $('#mini-10').value.trim();
     hideAllStages(); show('#results'); finalize(); save();
   });
 
   function finalize(){
-    // Score already accumulated: 5 stages × 20 pts each
+    // Score already accumulated: 10 stages × 10 pts each
     const finalScore = clamp(Math.round(state.score),0,100);
     const energy = clamp(Math.round(state.energy),0,100);
 
     setMeter('#meter-final', '#meter-final-txt', finalScore);
     setMeter('#meter-final-energy', '#meter-final-energy-txt', energy);
 
-    const passed = finalScore >= 60 && energy >= 70; // Adjusted pass condition to be more reasonable
+    const passed = finalScore >= 70 && energy >= 60; // Pass with 7/10 correct and reasonable energy
     const stagesAnswered = Object.values(state.stages).filter(s=>s.answered).length;
     const stagesCorrect = Object.values(state.stages).filter(s=>s.correct).length;
     const notesSaved = (state.stages[1].mini?1:0) + 
                       (state.stages[3].mini?1:0) + 
                       (state.stages[4].rewrite?1:0) + 
-                      (state.stages[5].rationale?1:0);
+                      (state.stages[5].mini?1:0) +
+                      (state.stages[6].mini?1:0) +
+                      (state.stages[7].mini?1:0) +
+                      (state.stages[8].mini?1:0) +
+                      (state.stages[9].mini?1:0) +
+                      (state.stages[10].rationale?1:0);
     
     console.log('Stage completion:', state.stages); // Debug log
     
     const summary = `
-      Stages cleared: ${stagesAnswered}/5 •
-      Correct: ${stagesCorrect}/5 •
+      Stages cleared: ${stagesAnswered}/10 •
+      Correct: ${stagesCorrect}/10 •
       Notes saved: ${notesSaved}
     `;
     $('#summary').textContent = summary;
@@ -723,7 +903,13 @@ breadcrumb: true
   });
 })();
 </script>
-    
+
+<script type="module">
+  import { initEndModuleProgression } from '{{site.baseurl}}/assets/js/digitalFamine/endModuleProgression.js';
+  
+  // Initialize progression system for this module
+  initEndModuleProgression();
+</script>
 
 
 

@@ -77,6 +77,13 @@ class GameLevel {
       }
     }
   }
+   loadPreviousLevel() {
+        if (typeof this.currentLevel === 'number' && this.currentLevel > 0) {
+            this.loadLevel(this.currentLevel - 1);
+        } else {
+            console.log('Already at first level or currentLevel not set');
+        }
+    }
 }
 
 export default GameLevel

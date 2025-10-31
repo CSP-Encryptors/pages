@@ -24,6 +24,11 @@ vendor/*
 package-lock.json
 private/
 .jekyll-metadata
+ijava/
+ijava-1.3.0.zip
+ijava.zip
+channel.json
+/IJava
 
 # DOCX conversion intermediate files
 images/docx/*.png

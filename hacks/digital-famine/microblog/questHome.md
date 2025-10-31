@@ -68,27 +68,27 @@ The system is now defunct, as humans took to the stars. We'll have the reestabli
 
     // create an array with nodes
     var nodes = new vis.DataSet([
-        {id: 1, label: 'Node 1', url: '{{ base.siteurl }}/digital-famine/microblog/submodule_1', title: 'Open Node 1',
+        {id: 1, label: 'API blog', url: '{{ base.siteurl }}/digital-famine/microblog/api/', title: 'Open Node 1',
          image: defaultImgUrl,
          longTitle: 'Comm Relay Alpha',
          description: 'Primary uplink relay. Repairs required to restore long-range comms.',
          tags: ['relay','priority-high']},
-        {id: 2, label: 'Node 2', url: '{{ base.siteurl }}/digital-famine/microblog/submodule_2', title: 'Open Node 2',
-         image: defaultImgUrl,
-         longTitle: 'Tactical Beacon Beta',
-         description: 'Short-range beacon used for local operative coordination.',
-         tags: ['beacon','local']},
-        {id: 3, label: 'Node 3', url: '{{ base.siteurl }}/digital-famine/microblog/submodule_3', title: 'Open Node 3',
+        {id: 2, label: 'Microblog', url: '{{ base.siteurl }}/digital-famine/microblog/microb/', title: 'Open Node 2',
          image: defaultImgUrl,
          longTitle: 'Orbital Hub Gamma',
          description: 'Orbital hub with degraded power systems.',
          tags: ['orbital','maintenance']},
-        {id: 4, label: 'Node 4', url: '{{ base.siteurl }}/digital-famine/microblog/submodule_4', title: 'Open Node 4',
+        {id: 3, label: 'PII quiz', url: '{{ base.siteurl }}/digital-famine/microblog/mcq/', title: 'Open Node 3',
+         image: defaultImgUrl,
+         longTitle: 'Tactical Beacon Beta',
+         description: 'Short-range beacon used for local operative coordination.',
+         tags: ['beacon','local']},
+        {id: 4, label: 'Hints', url: '{{ base.siteurl }}/digital-famine/microblog/hints/', title: 'Open Node 4',
          image: defaultImgUrl,
          longTitle: 'Ground Station Delta',
          description: 'Ground station for southern hemisphere coverage.',
          tags: ['ground','coverage']},
-        {id: 5, label: 'Node 5', url: '{{ base.siteurl }}/digital-famine/microblog/submodule_5', title: 'Open Node 5',
+        {id: 5, label: 'Decentralization', url: '{{ base.siteurl }}/digital-famine/microblog/decentralization', title: 'Open Node 5',
          image: defaultImgUrl,
          longTitle: 'Backup Array Epsilon',
          description: 'Cold backup array; bring spare modules to reactivate.',
@@ -97,10 +97,9 @@ The system is now defunct, as humans took to the stars. We'll have the reestabli
 
     // create an array with edges
     var edges = new vis.DataSet([
-        {from: 1, to: 3},
         {from: 1, to: 2},
-        {from: 2, to: 4},
-        {from: 2, to: 5}
+        {from: 2, to: 3},
+        {from: 3, to: 5}
     ]);
 
     // provide the data in the vis format
@@ -155,6 +154,85 @@ The system is now defunct, as humans took to the stars. We'll have the reestabli
             improvedLayout: true
         }
     };
+
+    // progression / locking
+    var LOCKED_COLOR = { background: '#555', border: 'transparent' }; // locked nodes
+    var UNLOCKED_COLOR = { background: 'grey', border: 'transparent' }; // unlocked but unvisited
+    var VISITED_COLOR = { background: '#4caf50', border: 'black' }; // visited
+
+    // build prereq map from edges: nodeId -> [prereqNodeIds]
+    function buildPrereqMap(edgesArray) {
+        var map = {};
+        edgesArray.forEach(function(e) {
+            // e.from must be visited before e.to unlocks
+            map[e.to] = map[e.to] || [];
+            map[e.to].push(e.from);
+            // ensure nodes with no incoming edges still exist in map (optional)
+            map[e.from] = map[e.from] || [];
+        });
+        return map;
+    }
+    var prereqMap = buildPrereqMap(edges.get()); // edges is a vis.DataSet
+
+    function isUnlocked(nodeId) {
+        nodeId = Number(nodeId);
+        // already visited -> considered unlocked
+        if (visitedMap && visitedMap[nodeId]) return true;
+        var prereqs = prereqMap[nodeId] || [];
+        if (prereqs.length === 0) return true; // no prereqs -> unlocked
+        return prereqs.every(function(p) { return !!visitedMap[p]; });
+    }
+
+    // apply lock/unlock visual state to all nodes
+    function updateLockedStates() {
+        nodes.forEach(function(n) {
+            var id = n.id;
+            if (visitedMap[id]) {
+                nodes.update({ id: id, color: VISITED_COLOR });
+            } else if (isUnlocked(id)) {
+                nodes.update({ id: id, color: UNLOCKED_COLOR });
+            } else {
+                nodes.update({ id: id, color: LOCKED_COLOR });
+            }
+        });
+    }
+
+    // restore visited state from localStorage and apply colors
+    var VISITED_KEY = 'microblog_visited_nodes';
+    function loadVisited() {
+        try { return JSON.parse(localStorage.getItem(VISITED_KEY)) || {}; }
+        catch (e) { return {}; }
+    }
+    function saveVisited(map) {
+        try { localStorage.setItem(VISITED_KEY, JSON.stringify(map)); }
+        catch (e) { /* ignore storage errors */ }
+    }
+    var visitedMap = loadVisited();
+
+    // helper: mark a node visually and persistently
+    function markVisited(nodeId) {
+        visitedMap[nodeId] = true;
+        saveVisited(visitedMap);
+        nodes.update({ id: nodeId, color: VISITED_COLOR });
+        updateLockedStates(); // unlock next nodes
+    }
+
+    // helper: reset (optional)
+    function clearVisited() {
+        visitedMap = {};
+        saveVisited(visitedMap);
+        // reset node colors back to default used in options / locked states
+        updateLockedStates();
+    }
+
+    // apply visited colors on load
+    Object.keys(visitedMap).forEach(function(id) {
+        if (visitedMap[id]) {
+            nodes.update({ id: Number(id), color: VISITED_COLOR });
+        }
+    });
+
+    updateLockedStates();
 
     // initialize network
     var network = new vis.Network(container, data, options);
@@ -219,7 +297,16 @@ The system is now defunct, as humans took to the stars. We'll have the reestabli
         if (params.nodes.length) {
             var nodeId = params.nodes[0];
             var node = nodes.get(nodeId);
+            if (!isUnlocked(nodeId)) {
+                // locked: do nothing (or give a subtle hint)
+                // small visual feedback: temporarily pulse border
+                nodes.update({ id: nodeId, color: { background: LOCKED_COLOR.background, border: 'red' } });
+                setTimeout(function(){ updateLockedStates(); }, 400);
+                return;
+            }
             if (node && node.url) {
+                // mark visited
+                markVisited(nodeId);
                 // navigate in same tab
                 window.location.href = node.url;
             }

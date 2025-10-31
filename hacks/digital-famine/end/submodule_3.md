@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "Autopilot Crash"
+microblog: True
 description: "Task 3 of the End Quest: Fix the crash of the autopilot element of the rocketship to get home safe."
 permalink: /digital-famine/end/submodule_3/
 parent: "End Quest"
@@ -9,536 +10,774 @@ submodule: 3
 categories: [CSP, Submodule, End]
 tags: [end, submodule, codemaxxers]
 author: "Maya"
+microblog: true
 date: 2025-10-21
 ---
-
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Rocket Repair — Quiz RPG</title>
-
 <style>
-  /* ---------- Layout & background ---------- */
-  :root{
-    --bg-overlay: rgba(6,8,14,0.55);
-    --card-bg: rgba(10,12,18,0.85);
-    --accent: linear-gradient(90deg,#7dd3fc,#a78bfa);
-    --text: #e6eef6;
-    --muted: #9aa3b2;
-  }
-  html,body{height:100%;margin:0;font-family:Inter,ui-sans-serif,system-ui,Segoe UI,Roboto,"Helvetica Neue",Arial;}
-  .game-root{
-    position:relative;
-    min-height:100vh;
-    background-image:url('assets/end-3.png'); /* <-- Replace path if needed */
-    background-size:cover;
-    background-position:center;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    color:var(--text);
-  }
-  .overlay{
-    position:absolute;inset:0;background:var(--bg-overlay);backdrop-filter: blur(3px);
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
   }
 
-  /* ---------- HUD card ---------- */
-  .hud-card{
-    z-index:20;
-    width:980px;
-    max-width:calc(100% - 32px);
-    border-radius:14px;
-    padding:18px;
-    background:linear-gradient(180deg, rgba(8,10,16,0.9), rgba(6,8,12,0.75));
-    box-shadow:0 8px 30px rgba(2,6,23,0.6);
-    display:grid;
-    gap:12px;
-  }
-  .title-row{display:flex;align-items:center;gap:12px;justify-content:space-between;}
-  .title-left h1{margin:0;font-size:18px;}
-  .title-left p{margin:0;color:var(--muted);font-size:13px;}
-
-  /* ---------- Meters ---------- */
-  .hud{display:flex;gap:12px;flex-wrap:wrap;}
-  .stat{flex:1;min-width:220px;border-radius:10px;padding:10px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.04);}
-  .stat strong{display:block;margin-bottom:6px;}
-  .meter{height:12px;background:#0c1116;border-radius:999px;overflow:hidden;}
-  .meter > span{display:block;height:100%;width:0%;transition:width .45s cubic-bezier(.2,.9,.2,1);background:linear-gradient(90deg,#7dd3fc,#a78bfa);}
-
-  /* ---------- Stage area ---------- */
-  .stage-area{display:flex;gap:16px;align-items:flex-start;}
-  .scene{
-    position:relative; flex:1; min-height:260px; border-radius:12px; padding:12px;
-    background:rgba(3,6,12,0.35); border:1px solid rgba(255,255,255,0.04);
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #0a0e1a;
+    color: #e0e6ed;
+    min-height: 100vh;
+    width: 100%;
+    overflow-x: hidden;
   }
 
-  /* ---------- Sprite ---------- */
-  .sprite{
-    position:absolute; right:22px; bottom:18px;
-    width:110px;height:110px; cursor:pointer; user-select:none;
-    display:flex; align-items:center; justify-content:center; border-radius:12px;
-    transition:transform .12s ease,box-shadow .12s ease;
-    box-shadow:0 8px 24px rgba(2,6,23,0.6);
-    background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-  }
-  .sprite img{width:92%;height:92%;object-fit:contain;pointer-events:none;}
-  .sprite:hover{transform:translateY(-6px); box-shadow:0 14px 40px rgba(0,0,0,0.6);}
-
-  /* ---------- Popup quiz modal ---------- */
-  .modal-backdrop{
-    position:fixed; inset:0; display:none; align-items:center; justify-content:center; z-index:999;
-    background:rgba(0,0,0,0.55);
-  }
-  .modal{
-    width:860px; max-width:calc(100% - 32px);
-    background:var(--card-bg); border-radius:12px; padding:18px; color:var(--text);
-    box-shadow:0 12px 40px rgba(2,6,23,0.7);
-  }
-  .modal .prompt{font-weight:700;margin-bottom:12px;}
-  .choices{display:grid;gap:8px;margin-bottom:10px;}
-  .choice-btn{
-    text-align:left;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.05);
-    background:transparent;color:var(--text);cursor:pointer;
-  }
-  .choice-btn:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(0,0,0,0.45)}
-  .btn-row{display:flex;gap:8px;justify-content:flex-end;margin-top:12px;}
-
-  /* ---------- small helpers ---------- */
-  .mini{font-size:13px;color:var(--muted);}
-  .pill{display:inline-block;padding:4px 8px;border-radius:999px;background:rgba(255,255,255,0.02);font-size:12px;border:1px solid rgba(255,255,255,0.03);}
-
-  /* ---------- Result board ---------- */
-  .result{
-    margin-top:12px;padding:12px;border-radius:10px;background:rgba(0,0,0,0.35);border:1px solid rgba(255,255,255,0.03);
+  @media (max-width: 768px) {
+    body {
+      font-size: 14px;
+    }
   }
 
-  /* ---------- small responsive tweaks ---------- */
-  @media (max-width:720px){
-    .sprite{right:12px;bottom:12px;width:86px;height:86px;}
+  .main-container {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    background: url('{{ '/images/digital-famine/end-3.png' | relative_url }}') center/cover no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  .backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(10, 14, 26, 0.85);
+  }
+
+  .computer-terminal {
+    position: absolute;
+    right: 50%;
+    bottom: 20%;
+    transform: translateX(50%);
+    width: 140px;
+    height: 140px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    filter: drop-shadow(0 0 30px rgba(125, 211, 252, 0.6));
+  }
+
+  @media (max-width: 768px) {
+    .computer-terminal {
+      width: 100px;
+      height: 100px;
+      bottom: 15%;
+    }
+  }
+
+  .computer-terminal:hover {
+    transform: scale(1.15) rotate(5deg);
+    filter: drop-shadow(0 0 40px rgba(125, 211, 252, 1));
+  }
+
+  .computer-terminal img {
+    width: 100%;
+    height: 100%;
+  }
+
+  .repair-interface {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    backdrop-filter: blur(5px);
+    background: rgba(0, 0, 0, 0.8);
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+  }
+
+  .repair-panel {
+    width: 95%;
+    max-width: 1200px;
+    height: 95vh;
+    background: linear-gradient(135deg, #1a1f3a 0%, #0f1629 100%);
+    border: 2px solid #7dd3fc;
+    border-radius: 20px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+  }
+
+  @media (max-width: 768px) {
+    .repair-panel {
+      width: 100%;
+      height: 100vh;
+      margin: 0;
+      border-radius: 0;
+    }
+  }
+
+  .panel-header {
+    background: linear-gradient(90deg, #7dd3fc 0%, #0ea5e9 100%);
+    padding: 15px 20px;
+    color: #000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  @media (max-width: 768px) {
+    .panel-header h2 {
+      font-size: 18px;
+    }
+  }
+
+  .panel-header h2 {
+    font-size: 24px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .close-button {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.3);
+    color: white;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+  }
+
+  .close-button:hover {
+    background: rgba(0, 0, 0, 0.5);
+    transform: rotate(90deg);
+  }
+
+  .panel-body {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-height: calc(95vh - 140px);
+  }
+
+  @media (max-width: 768px) {
+    .panel-body {
+      padding: 15px;
+      gap: 15px;
+      max-height: calc(100vh - 130px);
+    }
+  }
+
+  .stage-progress {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+
+  .stage-dot {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #2a3451;
+    border: 3px solid #4a5578;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    transition: all 0.3s ease;
+  }
+
+  .stage-dot.active {
+    background: #7dd3fc;
+    border-color: #0ea5e9;
+    color: #000;
+    transform: scale(1.2);
+  }
+
+  .stage-dot.completed {
+    background: #10b981;
+    border-color: #059669;
+    color: white;
+  }
+
+  .instructions-box {
+    background: rgba(125, 211, 252, 0.1);
+    border: 1px solid #7dd3fc;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  .sorting-area {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    gap: 30px;
+    flex: 1;
+  }
+
+  @media (max-width: 768px) {
+    .sorting-area {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+  }
+
+  .prompt-source {
+    background: rgba(30, 41, 59, 0.5);
+    border: 2px dashed #475569;
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-height: 500px;
+    overflow-y: auto;
+  }
+
+  @media (max-width: 768px) {
+    .prompt-source {
+      max-height: 300px;
+    }
+  }
+
+  .prompt-card {
+    background: linear-gradient(135deg, #3b4a6b 0%, #2c3e5f 100%);
+    border: 2px solid #4a5578;
+    border-radius: 10px;
+    padding: 18px;
+    cursor: move;
+    transition: all 0.3s ease;
+    font-size: 14px;
+    line-height: 1.4;
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    box-sizing: border-box;
+    white-space: normal; /* allow wrapping */
+    word-break: break-word;
+    min-height: 64px; /* taller by default */
+    display: flex;
+    align-items: flex-start; /* align multi-line content at top */
+  }
+
+  .prompt-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(125, 211, 252, 0.3), transparent);
+    transition: left 0.5s ease;
+  }
+
+  .prompt-card:hover::before {
+    left: 100%;
+  }
+
+  .prompt-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    border-color: #7dd3fc;
+  }
+
+  .prompt-card.dragging {
+    opacity: 0.5;
+    transform: rotate(5deg);
+  }
+
+  .prompt-card p {
+    margin: 0;
+    width: 100%;
+  }
+
+  .category-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  @media (max-width: 768px) {
+    .category-grid {
+      grid-template-columns: 1fr;
+      gap: 15px;
+    }
+  }
+
+  .category-box {
+    background: rgba(30, 41, 59, 0.3);
+    border: 2px solid #475569;
+    border-radius: 12px;
+    padding: 20px;
+    min-height: 200px;
+    transition: all 0.3s ease;
+    position: relative;
+  }
+
+  @media (max-width: 768px) {
+    .category-box {
+      min-height: 150px;
+      padding: 15px;
+    }
+  }
+
+  .category-box.drag-over {
+    background: rgba(125, 211, 252, 0.1);
+    border-color: #7dd3fc;
+    transform: scale(1.02);
+  }
+
+  .category-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #475569;
+  }
+
+  .category-icon {
+    font-size: 24px;
+  }
+
+  .category-title {
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+
+  .category-effective { background: rgba(34, 197, 94, 0.1); border-color: #10b981; }
+  .category-ineffective { background: rgba(239, 68, 68, 0.1); border-color: #ef4444; }
+
+  .category-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-height: 100px;
+    align-items: stretch; /* ensure children stretch to container width */
+  }
+
+  .control-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    padding: 20px;
+    background: rgba(30, 41, 59, 0.3);
+    border-top: 1px solid #475569;
+  }
+
+  @media (max-width: 768px) {
+    .control-buttons {
+      flex-direction: column;
+      padding: 15px;
+    }
+  }
+
+  .action-btn {
+    padding: 15px 30px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    position: relative;
+    overflow: hidden;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  @media (max-width: 768px) {
+    .action-btn {
+      width: 100%;
+      padding: 12px 20px;
+      font-size: 14px;
+    }
+  }
+
+  .action-btn::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.5s ease, height 0.5s ease;
+  }
+
+  .action-btn:hover::before {
+    width: 300px;
+    height: 300px;
+  }
+
+  .action-btn.primary {
+    background: linear-gradient(135deg, #7dd3fc 0%, #0ea5e9 100%);
+    color: #000;
+  }
+
+  .action-btn.secondary {
+    background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+    color: #fff;
+  }
+
+  .action-btn.success {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: #fff;
+    display: none;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+
+  .action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+  }
+
+  .action-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .feedback-message {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: linear-gradient(135deg, #1a1f3a 0%, #0f1629 100%);
+    border: 3px solid #7dd3fc;
+    border-radius: 15px;
+    padding: 30px;
+    text-align: center;
+    z-index: 2000;
+    display: none;
+    animation: slideIn 0.5s ease;
+  }
+
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translate(-50%, -60%);
+    }
+    to {
+      opacity: 1;
+      transform: translate(-50%, -50%);
+    }
+  }
+
+  .feedback-message h3 {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+
+  .feedback-success { border-color: #10b981; }
+  .feedback-error { border-color: #ef4444; }
+
+  .prompt-counter {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(125, 211, 252, 0.2);
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 12px;
   }
 </style>
-</head>
-<body>
 
-<div class="game-root" id="gameRoot">
-  <div class="overlay"></div>
+<div class="main-container">
+  <div class="backdrop"></div>
+  
+  <div class="computer-terminal" onclick="openRepairInterface()">
+    <img src="{{ '/images/digital-famine/end-3-computer.png' | relative_url }}" alt="Repair Terminal">
+  </div>
 
-  <div class="hud-card" role="main" aria-labelledby="gameTitle">
-    <div class="title-row">
-      <div class="title-left">
-        <h1 id="gameTitle">🚀 Rocket Repair — Autopilot Failure (Quiz RPG)</h1>
-        <p class="mini">Click the ship sprite to approach the console and run diagnostic quizzes. Complete questions to repair systems.</p>
+  <div class="repair-interface" id="repairInterface">
+    <div class="repair-panel">
+      <div class="panel-header">
+        <h2>🤖 AI Prompt Effectiveness Analyzer</h2>
+        <button class="close-button" onclick="closeRepairInterface()">✕</button>
       </div>
-      <div class="title-right mini" style="text-align:right;">
-        <div><span class="pill">Single-page</span> <span class="pill">Popup Quiz</span></div>
-        <div style="margin-top:6px;"><button id="saveBtn" class="pill" style="border:none;cursor:pointer;background:transparent;color:var(--muted)">Save</button></div>
-      </div>
-    </div>
 
-    <div class="hud" aria-hidden="false">
-      <div class="stat">
-        <strong>Shield Integrity</strong>
-        <div class="meter"><span id="shieldMeter"></span></div>
-        <div class="mini" id="shieldTxt">0%</div>
-      </div>
-      <div class="stat">
-        <strong>System Energy</strong>
-        <div class="meter"><span id="energyMeter"></span></div>
-        <div class="mini" id="energyTxt">100%</div>
-      </div>
-      <div class="stat">
-        <strong>Quizzes Completed</strong>
-        <div style="font-size:18px;margin-top:8px" id="qCount">0 / 0</div>
-        <div class="mini">Correct answers increase integrity; wrong answers drain energy.</div>
-      </div>
-    </div>
+      <div class="panel-body">
+        <div class="instructions-box" id="instructions">
+          <strong>🎯 AI PROMPT TRAINING MODULE</strong><br>
+          Help train the ship's AI by categorizing prompts as either effective or ineffective.<br>
+          Sort the prompts into the correct categories to restore optimal AI performance.<br>
+          ✅ <strong>Effective Prompts</strong> | ❌ <strong>Ineffective Prompts</strong>
+        </div>
 
-    <div class="stage-area" style="margin-top:12px;">
-      <div class="scene" aria-label="rocket cockpit">
-        <div class="mini">Cockpit — Exterior view</div>
-        <p style="margin-top:8px;" class="mini">Approach the diagnostic console (sprite) to run a quiz about the broken autopilot. You will get feedback immediately in the popup. The page doesn't navigate away; the quiz is a modal overlay.</p>
+        <div class="sorting-area">
+          <div class="prompt-source" id="promptSource">
+            <div class="prompt-counter" id="promptCounter">8 prompts</div>
+            <!-- Prompts will be added here -->
+          </div>
 
-        <!-- sprite (clickable) -->
-        <div class="sprite" id="spriteBtn" role="button" aria-pressed="false" title="Click to approach console">
-          <!-- Replace sprite.png with your sprite path -->
-          <img src="assets/end-3-computer.png" alt="Console sprite (click to run diagnostic)" id="spriteImg">
+          <div class="category-grid">
+            <div class="category-box category-effective" data-category="effective">
+              <div class="category-header">
+                <span class="category-icon">✅</span>
+                <span class="category-title">Effective Prompts</span>
+              </div>
+              <div class="category-content" id="effective-content"></div>
+            </div>
+
+            <div class="category-box category-ineffective" data-category="ineffective">
+              <div class="category-header">
+                <span class="category-icon">❌</span>
+                <span class="category-title">Ineffective Prompts</span>
+              </div>
+              <div class="category-content" id="ineffective-content"></div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="scene" style="min-width:280px;">
-        <div class="mini"><strong>Mission</strong></div>
-        <div style="margin-top:8px;" class="mini">Autopilot status: <span id="apStatus">BROKEN</span></div>
-        <div class="result" id="lastFeedback">No diagnostics run yet.</div>
+      <div class="control-buttons">
+        <button class="action-btn primary" onclick="verifySort()">Verify Categories</button>
+        <button class="action-btn secondary" onclick="resetStage()">Reset Stage</button>
+        <button class="action-btn success" id="returnBtn" onclick="window.history.back()">
+          🚀 Autopilot Restored - Return to Mission
+        </button>
       </div>
     </div>
-
-    <div style="margin-top:12px;text-align:right;">
-      <small class="mini">Tip: Replace `questions` array below with your quiz templates (see comments inside script).</small>
-    </div>
   </div>
-</div>
 
-<!-- Modal overlay for quiz -->
-<div class="modal-backdrop" id="modalBackdrop" aria-hidden="true">
-  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-    <h2 id="modalTitle" style="margin:0 0 8px">🛠️ Diagnostic Console</h2>
-    <div id="questionArea">
-      <!-- dynamic content -->
-    </div>
-
-    <div class="btn-row">
-      <button id="closeModal" class="choice-btn" style="background:transparent;border:1px solid rgba(255,255,255,0.04)">Close</button>
-      <button id="nextBtn" class="choice-btn" style="background:var(--card-bg);">Next</button>
-    </div>
+  <div class="feedback-message" id="feedbackMessage">
+    <h3 id="feedbackTitle"></h3>
+    <p id="feedbackText"></p>
   </div>
 </div>
 
 <script>
-(() => {
-  // ----------------------
-  // Configuration / Questions
-  // ----------------------
-  // Replace the sample questions below with your own quiz data.
-  // Each question object:
-  //  - id: (string or number) unique
-  //  - prompt: string (HTML allowed)
-  //  - choices: array of { id, text }
-  //  - correct: id (the id of the correct choice)
-  //  - type: 'single' | 'multi' (defaults to single) — multi will render checkboxes
-  //  - onCorrectPoints: integer (how many shield points to add)
-  //  - onWrongEnergyDrain: integer (how much energy to drain)
-  //
-  // You can also include additional free-text prompts; the template below shows where
-  // to attach a textarea for optional notes (the game will save it).
-  const questions = [
-    {
-      id: 'q1',
-      prompt: 'Diagnostic subroutine A: Which action should you take first when you see an unknown autopilot command sequence?',
-      choices: [
-        {id:'a', text:'Immediately reboot autopilot (power cycle).'},
-        {id:'b', text:'Isolate the command source and check command provenance.'},
-        {id:'c', text:'Ignore it and continue flight.'},
-        {id:'d', text:'Broadcast the command to all nearby vessels.'}
-      ],
-      correct: 'b',
-      type: 'single',
-      onCorrectPoints: 20,
-      onWrongEnergyDrain: 5,
-      allowNotes: true
-    },
-    {
-      id: 'q2',
-      prompt: 'Diagnostic subroutine B: Which log file is most useful for checking recent autopilot inputs?',
-      choices: [
-        {id:'a', text:'telemetry.log (input commands + timestamps)'},
-        {id:'b', text:'user-interface.log (UI clicks only)'},
-        {id:'c', text:'audio-recording.mp3'},
-      ],
-      correct: 'a',
-      onCorrectPoints: 20,
-      onWrongEnergyDrain: 5
-    },
-    {
-      id: 'q3',
-      prompt: 'Select the two indicators that most likely indicate a compromised autopilot instruction (choose two):',
-      choices: [
-        {id:'c1', text:'Unusual timestamps outside mission window'},
-        {id:'c2', text:'IP/source provenance from a trusted mission node'},
-        {id:'c3', text:'Payload commands that request manual override without authorization'},
-        {id:'c4', text:'Perfectly formatted JSON matching expected schema'}
-      ],
-      correct: ['c1','c3'],
-      type: 'multi',
-      onCorrectPoints: 30,
-      onWrongEnergyDrain: 6
-    }
-  ];
+const prompts = [
+  { text: "Create a detailed marketing strategy for a new eco-friendly product line, including target audience analysis, competitive positioning, and specific promotional channels", category: "effective" },
+  { text: "make me a website", category: "ineffective" },
+  { text: "Design a Python function that processes customer data to identify buying patterns and generate personalized recommendations. Include error handling and documentation", category: "effective" },
+  { text: "fix my code", category: "ineffective" },
+  { text: "Write a comprehensive analysis of the latest climate change research paper, focusing on methodology, key findings, and implications for policy makers", category: "effective" },
+  { text: "do my homework", category: "ineffective" },
+  { text: "Develop a step-by-step workout plan for someone recovering from a knee injury, including exercise descriptions, progression timeline, and safety considerations", category: "effective" },
+  { text: "tell me what to do", category: "ineffective" },
+  { text: "Create a detailed recipe for a vegan chocolate cake, including ingredients with exact measurements, preparation steps, baking instructions, and presentation tips", category: "effective" },
+  { text: "idk just help me", category: "ineffective" }
+];
 
-  // --- End of configuration ---
+let currentStage = 1;
+let draggedElement = null;
 
-  // State
-  const state = {
-    shield: 0, // 0..100
-    energy: 100,
-    idx: 0, // current question index
-    answers: {}, // questionId -> { correct:true/false, notes?, selected:? }
-    savedKey: 'rocket-repair-save-v1'
-  };
+function shuffle(array) {
+  const arr = [...array];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
 
-  // DOM helpers
-  const $ = (s) => document.querySelector(s);
-  const $$ = (s) => Array.from(document.querySelectorAll(s));
-
-  // UI nodes
-  const spriteBtn = $('#spriteBtn');
-  const modalBackdrop = $('#modalBackdrop');
-  const questionArea = $('#questionArea');
-  const nextBtn = $('#nextBtn');
-  const closeModal = $('#closeModal');
-  const shieldMeter = $('#shieldMeter');
-  const energyMeter = $('#energyMeter');
-  const shieldTxt = $('#shieldTxt');
-  const energyTxt = $('#energyTxt');
-  const qCount = $('#qCount');
-  const lastFeedback = $('#lastFeedback');
-  const saveBtn = $('#saveBtn');
-
-  // Initialize HUD
-  function clamp(v, a=0,b=100){ return Math.max(a, Math.min(b, v)); }
-  function refreshHUD(){
-    shieldMeter.style.width = clamp(Math.round(state.shield)) + '%';
-    energyMeter.style.width = clamp(Math.round(state.energy)) + '%';
-    shieldTxt.textContent = Math.round(state.shield) + '%';
-    energyTxt.textContent = Math.round(state.energy) + '%';
-    qCount.textContent = `${Object.keys(state.answers).length} / ${questions.length}`;
+  function openRepairInterface() {
+    document.getElementById('repairInterface').style.display = 'flex';
+    loadPrompts();
   }
 
-  // Save/load simple snapshot
-  function saveState(){
-    const payload = {
-      shield: state.shield,
-      energy: state.energy,
-      idx: state.idx,
-      answers: state.answers,
-      savedAt: new Date().toISOString()
-    };
-    try {
-      localStorage.setItem(state.savedKey, JSON.stringify(payload));
-      lastFeedback.innerHTML = `<div class="mini">Saved at ${new Date().toLocaleString()}</div>`;
-    } catch (e) {
-      console.warn('Save failed', e);
-    }
-  }
-  function loadState(){
-    const raw = localStorage.getItem(state.savedKey);
-    if (!raw) return false;
-    try {
-      const p = JSON.parse(raw);
-      state.shield = p.shield ?? state.shield;
-      state.energy = p.energy ?? state.energy;
-      state.idx = p.idx ?? state.idx;
-      state.answers = p.answers ?? state.answers;
-      lastFeedback.innerHTML = `<div class="mini">Loaded save from ${p.savedAt ?? 'unknown'}</div>`;
-      return true;
-    } catch(e){ return false; }
-  }
-  saveBtn.addEventListener('click', saveState);
-
-  // Sprite click opens modal and shows current question
-  spriteBtn.addEventListener('click', () => {
-    openModal();
+  function closeRepairInterface() {
+    document.getElementById('repairInterface').style.display = 'none';
+  }function loadPrompts() {
+  // Clear all areas
+  document.getElementById('promptSource').innerHTML = '<div class="prompt-counter" id="promptCounter"></div>';
+  ['effective', 'ineffective'].forEach(cat => {
+    document.getElementById(`${cat}-content`).innerHTML = '';
   });
-
-  function openModal(startIndex = state.idx){
-    state.idx = typeof startIndex === 'number' ? startIndex : state.idx;
-    renderCurrentQuestion();
-    modalBackdrop.style.display = 'flex';
-    modalBackdrop.setAttribute('aria-hidden','false');
-  }
-  function closeModalFn(){
-    modalBackdrop.style.display = 'none';
-    modalBackdrop.setAttribute('aria-hidden','true');
-    saveState();
-    refreshHUD();
-  }
-  closeModal.addEventListener('click', closeModalFn);
-  modalBackdrop.addEventListener('click', (e) => {
-    if (e.target === modalBackdrop) closeModalFn();
+  
+  // Load and shuffle prompts
+  const shuffled = shuffle(prompts);
+  
+  shuffled.forEach((prompt, index) => {
+    const card = createPromptCard(prompt.text, prompt.category, index);
+    document.getElementById('promptSource').appendChild(card);
   });
+  
+  updatePromptCounter();
+  document.getElementById('returnBtn').style.display = 'none';
+}
 
-  // Render a question
-  function renderCurrentQuestion(){
-    const q = questions[state.idx];
-    if (!q){
-      // end screen inside modal
-      questionArea.innerHTML = `
-        <div class="prompt">All diagnostics run.</div>
-        <div class="mini">Shield: ${state.shield}% · Energy: ${state.energy}%</div>
-        <div style="margin-top:12px;" class="mini">You can close this dialog and run diagnostics again or try to save/export.</div>
-      `;
-      nextBtn.textContent = 'Close';
-      nextBtn.onclick = closeModalFn;
+function createPromptCard(text, category, index) {
+  const card = document.createElement('div');
+  card.className = 'prompt-card';
+  card.draggable = true;
+  card.textContent = text;
+  card.dataset.category = category;
+  card.dataset.id = `prompt-${index}`;
+  
+  // Drag events
+  card.addEventListener('dragstart', handleDragStart);
+  card.addEventListener('dragend', handleDragEnd);
+  
+  // Click to move (mobile friendly)
+  card.addEventListener('click', handleCardClick);
+  
+  return card;
+}
+
+function handleDragStart(e) {
+  draggedElement = e.target;
+  e.target.classList.add('dragging');
+  e.dataTransfer.effectAllowed = 'move';
+}
+
+function handleDragEnd(e) {
+  e.target.classList.remove('dragging');
+  draggedElement = null;
+  updatePromptCounter();
+}
+
+function handleCardClick(e) {
+  const card = e.target;
+  if (card.parentElement.id === 'promptSource') {
+    // Auto-place in first category (mobile-friendly)
+    const categories = ['effective', 'ineffective'];
+    for (let cat of categories) {
+      const content = document.getElementById(`${cat}-content`);
+      // place into the first category (keeps behavior simple on tap)
+      content.appendChild(card);
+      updatePromptCounter();
+      break;
+    }
+  } else {
+    // Return to source
+    document.getElementById('promptSource').appendChild(card);
+    updatePromptCounter();
+  }
+}
+
+// Setup drop zones
+document.querySelectorAll('.category-box').forEach(box => {
+  box.addEventListener('dragover', e => {
+    e.preventDefault();
+    box.classList.add('drag-over');
+  });
+  
+  box.addEventListener('dragleave', () => {
+    box.classList.remove('drag-over');
+  });
+  
+  box.addEventListener('drop', e => {
+    e.preventDefault();
+    box.classList.remove('drag-over');
+    
+    if (draggedElement) {
+      const content = box.querySelector('.category-content');
+      content.appendChild(draggedElement);
+    }
+  });
+});
+
+// Allow dropping back to source
+document.getElementById('promptSource').addEventListener('dragover', e => {
+  e.preventDefault();
+});
+
+document.getElementById('promptSource').addEventListener('drop', e => {
+  e.preventDefault();
+  if (draggedElement) {
+    document.getElementById('promptSource').appendChild(draggedElement);
+  }
+});
+
+function updatePromptCounter() {
+  const remaining = document.getElementById('promptSource').querySelectorAll('.prompt-card').length;
+  document.getElementById('promptCounter').textContent = `${remaining} prompts`;
+}
+
+  function verifySort() {
+    const categories = ['effective', 'ineffective'];
+    let allCorrect = true;
+    let totalCards = 0;
+    
+    // Check if all prompts are sorted
+    const remaining = document.getElementById('promptSource').querySelectorAll('.prompt-card').length;
+    if (remaining > 0) {
+      showFeedback('error', '⚠️ Incomplete', `Please sort all ${remaining} remaining prompts!`);
       return;
     }
-
-    // If already answered, show feedback and selected
-    const answered = state.answers[q.id];
-    let html = `<div class="prompt">${q.prompt}</div>`;
-    html += `<div class="mini" style="margin-bottom:8px">Type: ${q.type === 'multi' ? 'multiple-choice (multi)' : 'multiple-choice (single)'}</div>`;
-
-    if (q.type === 'multi') {
-      html += `<div class="choices">`;
-      q.choices.forEach(c => {
-        const checked = answered && Array.isArray(answered.selected) && answered.selected.includes(c.id) ? 'checked' : '';
-        html += `<label class="choice-btn"><input type="checkbox" data-choice="${c.id}" ${checked} style="margin-right:8px"/> ${c.text}</label>`;
+    
+    // Check each category
+    categories.forEach(cat => {
+      const content = document.getElementById(`${cat}-content`);
+      const cards = content.querySelectorAll('.prompt-card');
+      
+      cards.forEach(card => {
+        totalCards++;
+        if (card.dataset.category !== cat) {
+          allCorrect = false;
+          card.style.border = '2px solid #ef4444';
+          setTimeout(() => {
+            card.style.border = '';
+          }, 2000);
+        }
       });
-      html += `</div>`;
+    });
+    
+    if (allCorrect) {
+      showFeedback('success', '🎉 Training Complete!', 'All prompts correctly categorized! The AI is now optimized.');
+      setTimeout(() => {
+        document.getElementById('returnBtn').style.display = 'block';
+      }, 2000);
     } else {
-      html += `<div class="choices">`;
-      q.choices.forEach(c => {
-        const checked = answered && answered.selected === c.id ? 'checked' : '';
-        html += `<label class="choice-btn"><input type="radio" name="choice" data-choice="${c.id}" ${checked} style="margin-right:8px"/> ${c.text}</label>`;
-      });
-      html += `</div>`;
-    }
-
-    // Optional notes
-    if (q.allowNotes || q.allowNotes === undefined) {
-      const notes = (answered && answered.notes) ? answered.notes : '';
-      html += `<div style="margin-top:8px"><textarea id="q-notes" rows="3" style="width:100%;border-radius:8px;border:1px solid rgba(255,255,255,0.03);background:transparent;color:var(--text);padding:8px" placeholder="Optional notes...">${escapeHtml(notes)}</textarea></div>`;
-    }
-
-    // If already answered, show feedback block
-    if (answered) {
-      html += `<div style="margin-top:10px;padding:10px;border-radius:8px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.02)"><strong>Last result:</strong><div class="mini" style="margin-top:6px">${answered.correct ? '✅ Correct' : '❌ Incorrect'}</div></div>`;
-    }
-
-    questionArea.innerHTML = html;
-
-    nextBtn.textContent = (answered ? (state.idx < questions.length - 1 ? 'Next Question' : 'Finish') : 'Submit');
-    nextBtn.onclick = onSubmitOrNext;
-  }
-
-  function onSubmitOrNext(){
-    const q = questions[state.idx];
-    if (!q){
-      closeModalFn();
-      return;
-    }
-
-    const answered = state.answers[q.id];
-    // If already answered and user clicked Next, advance
-    if (answered){
-      if (state.idx < questions.length - 1){
-        state.idx++;
-        renderCurrentQuestion();
-        return;
-      } else {
-        // all done
-        questionArea.innerHTML = `<div class="prompt">Diagnostics complete.</div>`;
-        nextBtn.textContent = 'Close';
-        return;
-      }
-    }
-
-    // Gather selected
-    if (q.type === 'multi'){
-      const checked = Array.from(questionArea.querySelectorAll('input[type="checkbox"]:checked')).map(i => i.getAttribute('data-choice'));
-      evaluateAnswer(q, checked);
-    } else {
-      const sel = questionArea.querySelector('input[type="radio"]:checked');
-      const selectedId = sel ? sel.getAttribute('data-choice') : null;
-      evaluateAnswer(q, selectedId);
+      showFeedback('error', '❌ Incorrect', 'Some prompts are in the wrong categories. Try again!');
     }
   }
 
-  // Evaluate answer: update state, meters, save notes
-  function evaluateAnswer(q, selected){
-    // normalize selected
-    let isCorrect = false;
-    if (q.type === 'multi'){
-      const correctArr = Array.isArray(q.correct) ? q.correct.slice().sort() : [q.correct].sort();
-      const selArr = Array.isArray(selected) ? selected.slice().sort() : [];
-      // require exact match to reward full points
-      isCorrect = JSON.stringify(correctArr) === JSON.stringify(selArr);
-    } else {
-      isCorrect = selected === q.correct;
-    }
+function resetStage() {
+  // Reload the shuffled prompts for the single-stage AI prompt game
+  loadPrompts();
+}
 
-    // record answer
-    state.answers[q.id] = {
-      correct: isCorrect,
-      selected,
-      notes: (questionArea.querySelector('#q-notes') ? questionArea.querySelector('#q-notes').value.trim() : '')
-    };
+function showFeedback(type, title, text) {
+  const msg = document.getElementById('feedbackMessage');
+  const titleEl = document.getElementById('feedbackTitle');
+  const textEl = document.getElementById('feedbackText');
+  
+  msg.className = `feedback-message feedback-${type}`;
+  titleEl.textContent = title;
+  textEl.textContent = text;
+  
+  msg.style.display = 'block';
+  
+  setTimeout(() => {
+    msg.style.display = 'none';
+  }, 3000);
+}
 
-    // apply effects
-    if (isCorrect){
-      state.shield = clamp(state.shield + (q.onCorrectPoints ?? 10));
-      lastFeedback.innerHTML = `<div class="mini">✅ Correct — +${q.onCorrectPoints ?? 10} integrity.</div>`;
-    } else {
-      state.energy = clamp(state.energy - (q.onWrongEnergyDrain ?? 5));
-      lastFeedback.innerHTML = `<div class="mini">❌ Incorrect — -${q.onWrongEnergyDrain ?? 5}% energy.</div>`;
-    }
-
-    // mark question answered; update HUD and re-render to show feedback
-    refreshHUD();
-    // Small delay so user sees the saved feedback
-    setTimeout(() => {
-      // after answering, auto-advance to show result and allow Next
-      renderCurrentQuestion();
-    }, 200);
+// Keyboard shortcuts
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    closeRepairInterface();
   }
-
-  // Utility
-  function escapeHtml(s=''){
-    return (s+'').replace(/[&<>"]/g, (m)=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[m]));
-  }
-
-  // Allow keyboard submit: Enter to submit if modal open
-  document.addEventListener('keydown', (e) => {
-    if (modalBackdrop.style.display === 'flex' && e.key === 'Enter'){
-      e.preventDefault();
-      nextBtn.click();
-    }
-  });
-
-  // Initialize
-  (function init(){
-    // restore save if present
-    loadState();
-    refreshHUD();
-    // if some questions already answered, set idx to first unanswered
-    let firstUn = questions.findIndex(q => !(state.answers && state.answers[q.id]));
-    if (firstUn >= 0) state.idx = firstUn;
-    else state.idx = questions.length; // all done
-    // show counts
-    refreshHUD();
-  })();
-
-  // Small confetti on full repair (optional)
-  function miniConfetti(){
-    const N = 60;
-    for (let i=0;i<N;i++){
-      const el = document.createElement('div');
-      el.style.position = 'fixed';
-      el.style.left = Math.random()*100 + 'vw';
-      el.style.top = '-10px';
-      el.style.width = '8px';
-      el.style.height = '12px';
-      el.style.borderRadius = '2px';
-      el.style.zIndex = '9999';
-      el.style.background = `hsl(${Math.floor(Math.random()*360)}, 80%, 60%)`;
-      document.body.appendChild(el);
-      const dur = 1800 + Math.random()*1400;
-      const dx = (Math.random()*2-1)*120;
-      el.animate([
-        { transform: 'translate(0,0) rotate(0deg)', opacity:1 },
-        { transform: `translate(${dx}px, 100vh) rotate(${Math.random()*720-360}deg)`, opacity:0.95 }
-      ], { duration: dur, easing: 'cubic-bezier(.2,.8,.2,1)', fill:'forwards' });
-      setTimeout(()=>el.remove(), dur+80);
-    }
-  }
-
-  // Expose a check to see if fully repaired
-  window.checkForVictory = function(){
-    if (state.shield >= 80 && state.energy >= 50 && Object.keys(state.answers).length >= questions.length){
-      lastFeedback.innerHTML = `<div class="mini">🛡️ Shields nominal. Autopilot stabilized. Congratulations!</div>`;
-      miniConfetti();
-    }
-  };
-
-  // Periodic save every 30s
-  setInterval(saveState, 30000);
-
-  // Try to detect when user completes all questions and apply victory
-  setInterval(window.checkForVictory, 2000);
-
-})();
+});
 </script>
 
-</body>
-</html>
-
+<script type="module">
+  import { initEndModuleProgression } from '{{site.baseurl}}/assets/js/digitalFamine/endModuleProgression.js';
+  
+  // Initialize progression system for this module
+  initEndModuleProgression();
+</script>

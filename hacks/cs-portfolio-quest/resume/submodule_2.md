@@ -56,7 +56,7 @@ date: 2025-10-21
     <h2 class="text-xl font-semibold">Contact — Name & Email</h2>
     <div>
       <label class="block text-sm font-medium">Full Name *</label>
-      <input id="fullName" class="w-full border rounded px-3 py-2" placeholder="Ada Lovelace">
+      <input id="fullName" class="w-full border rounded px-3 py-2" placeholder="Mary Jane">
     </div>
     <div>
       <label class="block text-sm font-medium">Email *</label>
@@ -120,7 +120,7 @@ date: 2025-10-21
     <h2 class="text-xl font-semibold">Skills (code-related)</h2>
     <div id="skillsGrid" class="grid grid-cols-2 md:grid-cols-3 gap-2 text-sm"></div>
     <div class="flex gap-2">
-      <input id="customSkill" class="flex-1 border rounded px-3 py-2" placeholder="Add custom skill (e.g., GraphQL)">
+      <input id="customSkill" class="flex-1 border rounded px-3 py-2" placeholder="Add custom skill (ex: Teamwork•)">
       <button id="addSkillBtn" class="px-3 py-2 border rounded">Add</button>
     </div>
     <div id="skillTags" class="flex flex-wrap gap-2"></div>

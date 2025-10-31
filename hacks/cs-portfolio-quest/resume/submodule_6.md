@@ -11,9 +11,8 @@ tags: [resume, submodule, grinders]
 author: "Grinders Team"
 date: 2025-10-29
 ---
-<!DOCTYPE html>
+
 <html lang="en">
-<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Interview Preparation with ELIO</title>
@@ -217,7 +216,6 @@ date: 2025-10-29
             min-height: 100px;
         }
     </style>
-</head>
     <div class="max-w-4xl mx-auto p-4">
         <h1 class="text-3xl font-bold mb-2 text-center text-white">Complete Interview Preparation Guide</h1>
         <p class="text-gray-400 mb-6 text-center">Master every aspect of interviewing, then practice with ELIO</p>
@@ -640,7 +638,7 @@ date: 2025-10-29
         // ============================================
         // ELIO INTERVIEW BOT LOGIC
         // ============================================
-        let apiKey = 'YOUR_API_KEY_HERE'; // Replace with your Gemini API key
+        let apiKey = 'YOUR_API_KEY_HERE'; 
         let conversationHistory = [];
         let interviewActive = false;
         let currentQuestionIndex = 0;

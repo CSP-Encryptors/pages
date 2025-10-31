@@ -20,6 +20,33 @@ class MansionLevel1 {
         mode: 'contain',
     };
 
+    //////////new code start
+    // Update your objective_sprite_data to be more compatible with a Sprite/Npc class:
+    const objective_sprite_data = {
+        id: 'ObjectiveIcon',
+        greeting: "Objective Icon: Find ingredients!",
+        src: path + "/images/gamify/Objective.png",
+        
+        // Npc/Sprite required properties
+        SCALE_FACTOR: 2.5, 
+        STEP_FACTOR: 0, 
+        ANIMATION_RATE: 0, 
+    
+        // Positioning
+        INIT_POSITION: { x: 300, y: 50 }, 
+    
+        // Image info
+        pixels: {height: 315, width: 363}, 
+        orientation: {rows: 1, columns: 1}, 
+        down: {row: 0, start: 0, columns: 1}, // Required for Npc/Sprite animation initialization
+        hitbox: {widthPercentage: 1.0, heightPercentage: 1.0}, // Basic hitbox
+
+        // keypress (optional, but good to set if the Npc class expects it)
+        keypress: {} 
+    };
+
+    ////////// new code end
+    
     const sprite_src_mc = path + "/images/gamify/spookMcWalk.png"; // be sure to include the path
         const MC_SCALE_FACTOR = 6;
         const sprite_data_mc = {
@@ -119,6 +146,7 @@ class MansionLevel1 {
     // List of objects definitions for this level
     this.classes = [
       { class: GameEnvBackground, data: image_data_background },
+      { class: Npc, data: objective_sprite_data },
       { class: Player, data: sprite_data_mc },
       { class: Npc, data: sprite_data_pantrydoor }
     ];

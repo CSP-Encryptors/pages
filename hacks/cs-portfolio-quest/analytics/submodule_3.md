@@ -503,240 +503,288 @@ date: 2025-10-21
   </div>
 </div>
 
-<script>
-  const students = [
-    {
-      id: 1,
-      name: 'Anderson, Emily',
-      modules: {
-        'Module 1': { progress: 100, lessons: [95, 88, 92, 100, 85] },
-        'Module 2': { progress: 75, lessons: [90, 85, 78, 0, 0] },
-        'Module 3': { progress: 40, lessons: [82, 88, 0, 0, 0] },
-        'Module 4': { progress: 0, lessons: [0, 0, 0, 0, 0] }
-      }
-    },
-    {
-      id: 2,
-      name: 'Chen, David',
-      modules: {
-        'Module 1': { progress: 100, lessons: [100, 95, 98, 92, 90] },
-        'Module 2': { progress: 100, lessons: [95, 92, 88, 90, 94] },
-        'Module 3': { progress: 60, lessons: [85, 90, 88, 0, 0] },
-        'Module 4': { progress: 0, lessons: [0, 0, 0, 0, 0] }
-      }
-    },
-    {
-      id: 3,
-      name: 'Johnson, Sarah',
-      modules: {
-        'Module 1': { progress: 100, lessons: [78, 82, 85, 80, 88] },
-        'Module 2': { progress: 100, lessons: [82, 85, 80, 78, 84] },
-        'Module 3': { progress: 100, lessons: [88, 90, 85, 82, 87] },
-        'Module 4': { progress: 25, lessons: [90, 0, 0, 0, 0] }
-      }
-    },
-    {
-      id: 4,
-      name: 'Martinez, Carlos',
-      modules: {
-        'Module 1': { progress: 100, lessons: [92, 88, 90, 94, 91] },
-        'Module 2': { progress: 50, lessons: [88, 85, 0, 0, 0] },
-        'Module 3': { progress: 20, lessons: [80, 0, 0, 0, 0] },
-        'Module 4': { progress: 0, lessons: [0, 0, 0, 0, 0] }
-      }
-    },
-    {
-      id: 5,
-      name: 'Patel, Priya',
-      modules: {
-        'Module 1': { progress: 100, lessons: [98, 95, 100, 92, 96] },
-        'Module 2': { progress: 100, lessons: [94, 96, 92, 98, 95] },
-        'Module 3': { progress: 80, lessons: [90, 92, 95, 88, 0] },
-        'Module 4': { progress: 40, lessons: [85, 90, 0, 0, 0] }
-      }
-    },
-    {
-      id: 6,
-      name: 'Williams, Tyler',
-      modules: {
-        'Module 1': { progress: 100, lessons: [70, 75, 78, 72, 80] },
-        'Module 2': { progress: 25, lessons: [75, 0, 0, 0, 0] },
-        'Module 3': { progress: 0, lessons: [0, 0, 0, 0, 0] },
-        'Module 4': { progress: 0, lessons: [0, 0, 0, 0, 0] }
+<!-- Flask data pull -->
+
+<!-- <script type="module">
+  import { javaURI } from '{{ site.baseurl }}/assets/js/api/config.js';
+  import { pythonURI, fetchOptions } from '{{ site.baseurl }}/assets/js/api/config.js';
+
+  async function fetchPeople() {
+    for (let id = 1; id <= 2; id++) {
+      try {
+        const res = await fetch(`${pythonURI}/api/user`, {
+          ...fetchOptions,
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json"
+          },
+        });
+
+        console.log(`Request for ID ${id} → Status: ${res.status}`);
+
+        if (res.status === 404) {
+          console.log(`ID ${id} not found. Terminating loop.`);
+          break; // stop loop if 404
+        }
+
+        if (res.ok) {
+          const data = await res.json();
+          console.log(`Data for ID ${id}:`, data);
+        } else {
+          console.warn(`Request failed for ID ${id} with status ${res.status}`);
+        }
+
+      } catch (err) {
+        console.error(`Error fetching ID ${id}:`, err);
+        break; // optional: stop on network or fetch error
       }
     }
-  ];
-
-  let currentSort = { key: 'name', direction: 'asc' };
-  let expandedRow = null;
-
-  function calculateModuleAverage(moduleData) {
-    const completed = moduleData.lessons.filter(s => s > 0);
-    if (completed.length === 0) return 0;
-    return Math.round(completed.reduce((a, b) => a + b, 0) / completed.length);
   }
 
-  function calculateOverallAverage(modules) {
-    let total = 0, count = 0;
-    Object.values(modules).forEach(m => {
-      m.lessons.forEach(s => {
-        if (s > 0) { total += s; count++; }
-      });
-    });
-    return count > 0 ? Math.round(total / count) : 0;
-  }
+  fetchPeople();
+</script> -->
 
-  function getGradeClass(score) {
-    if (score >= 90) return 'grade-a';
-    if (score >= 80) return 'grade-b';
-    if (score >= 70) return 'grade-c';
-    if (score >= 60) return 'grade-d';
-    if (score > 0) return 'grade-f';
-    return 'grade-none';
-  }
+<script type="module">
+  import { javaURI } from '{{ site.baseurl }}/assets/js/api/config.js';
+  import { pythonURI, fetchOptions } from '{{ site.baseurl }}/assets/js/api/config.js';
 
-  function renderTable() {
-    const tbody = document.getElementById('tableBody');
-    tbody.innerHTML = '';
+  async function fetchPeople() {
+    const students = [];
+    
+    for (let id = 1; id <= 100; id++) {
+      try {
+        const res = await fetch(`${javaURI}/api/person/${id}`, {
+          ...fetchOptions,
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json"
+          },
+        });
 
-    const sorted = [...students].sort((a, b) => {
-      if (currentSort.key === 'name') {
-        return currentSort.direction === 'asc' 
-          ? a.name.localeCompare(b.name)
-          : b.name.localeCompare(a.name);
-      } else {
-        const moduleKey = 'Module ' + currentSort.key.slice(-1);
-        const avgA = calculateModuleAverage(a.modules[moduleKey]);
-        const avgB = calculateModuleAverage(b.modules[moduleKey]);
-        return currentSort.direction === 'asc' ? avgA - avgB : avgB - avgA;
+        console.log(`Request for ID ${id} → Status: ${res.status}`);
+
+        if (res.status === 404) {
+          console.log(`ID ${id} not found. Terminating loop.`);
+          break;
+        }
+
+        if (res.ok) {
+          const data = await res.json();
+          console.log(`Fetched person:`, data);
+
+          // Create random lesson and module data
+          const randomLessons = () =>
+            Array.from({ length: 5 }, () => Math.floor(Math.random() * 21) * 5); // random 0–100 in steps of 5
+
+          const randomProgress = () =>
+            Math.floor(Math.random() * 5) * 25; // random 0, 25, 50, 75, 100
+
+          const modules = {
+            "Module 1": { progress: randomProgress(), lessons: randomLessons() },
+            "Module 2": { progress: randomProgress(), lessons: randomLessons() },
+            "Module 3": { progress: randomProgress(), lessons: randomLessons() },
+            "Module 4": { progress: randomProgress(), lessons: randomLessons() },
+          };
+
+          students.push({
+            id: data.id,
+            name: data.name,
+            modules
+          });
+
+        } else {
+          console.warn(`Request failed for ID ${id} with status ${res.status}`);
+        }
+
+      } catch (err) {
+        console.error(`Error fetching ID ${id}:`, err);
+        break;
       }
-    });
+    }
 
-    sorted.forEach(student => {
-      const overall = calculateOverallAverage(student.modules);
-      const isExpanded = expandedRow === student.id;
-      
-      const row = document.createElement('tr');
-      row.onclick = () => toggleDetails(student.id);
-      if (isExpanded) row.classList.add('expanded');
-      
-      let html = `
-        <td>
-          <span class="expand-icon">${isExpanded ? '▼' : '▶'}</span>
-          <span class="student-name">${student.name}</span>
-        </td>
-      `;
-      
-      Object.entries(student.modules).forEach(([name, data]) => {
-        const avg = calculateModuleAverage(data);
-        html += `
-          <td class="center">
-            <div class="grade-display ${getGradeClass(avg)}">
-              ${avg > 0 ? avg + '%' : '--'}
-            </div>
-            <div class="progress-bar-container">
-              <div class="progress-bar" style="width: ${data.progress}%"></div>
-            </div>
-            <div class="progress-info">${data.progress}% Complete</div>
+    console.log("✅ Final students array:", students);
+    return students;
+  }
+
+  fetchPeople();
+
+  async function main() {
+    const students = await fetchPeople();
+    console.log("Students array:", students);
+
+    let currentSort = { key: 'name', direction: 'asc' };
+    let expandedRow = null;
+
+    function calculateModuleAverage(moduleData) {
+      const completed = moduleData.lessons.filter(s => s > 0);
+      if (completed.length === 0) return 0;
+      return Math.round(completed.reduce((a, b) => a + b, 0) / completed.length);
+    }
+
+    function calculateOverallAverage(modules) {
+      let total = 0, count = 0;
+      Object.values(modules).forEach(m => {
+        m.lessons.forEach(s => {
+          if (s > 0) { total += s; count++; }
+        });
+      });
+      return count > 0 ? Math.round(total / count) : 0;
+    }
+
+    function getGradeClass(score) {
+      if (score >= 90) return 'grade-a';
+      if (score >= 80) return 'grade-b';
+      if (score >= 70) return 'grade-c';
+      if (score >= 60) return 'grade-d';
+      if (score > 0) return 'grade-f';
+      return 'grade-none';
+    }
+
+    function renderTable() {
+      const tbody = document.getElementById('tableBody');
+      tbody.innerHTML = '';
+
+      const sorted = [...students].sort((a, b) => {
+        if (currentSort.key === 'name') {
+          return currentSort.direction === 'asc' 
+            ? a.name.localeCompare(b.name)
+            : b.name.localeCompare(a.name);
+        } else {
+          const moduleKey = 'Module ' + currentSort.key.slice(-1);
+          const avgA = calculateModuleAverage(a.modules[moduleKey]);
+          const avgB = calculateModuleAverage(b.modules[moduleKey]);
+          return currentSort.direction === 'asc' ? avgA - avgB : avgB - avgA;
+        }
+      });
+
+      sorted.forEach(student => {
+        const overall = calculateOverallAverage(student.modules);
+        const isExpanded = expandedRow === student.id;
+        
+        const row = document.createElement('tr');
+        row.onclick = () => toggleDetails(student.id);
+        if (isExpanded) row.classList.add('expanded');
+        
+        let html = `
+          <td>
+            <span class="expand-icon">${isExpanded ? '▼' : '▶'}</span>
+            <span class="student-name">${student.name}</span>
           </td>
         `;
-      });
-      
-      html += `
-        <td class="center">
-          <div class="grade-display ${getGradeClass(overall)}" style="font-size: 1.2rem;">
-            ${overall}%
-          </div>
-        </td>
-      `;
-      
-      row.innerHTML = html;
-      tbody.appendChild(row);
-      
-      const detailRow = document.createElement('tr');
-      detailRow.className = 'detail-row';
-      if (isExpanded) detailRow.classList.add('active');
-      detailRow.id = `detail-${student.id}`;
-      detailRow.innerHTML = `
-        <td colspan="6">
-          <div class="detail-content">
-            <div class="detail-header">Grade Details - ${student.name}</div>
-            <div class="modules-grid">
-              ${Object.entries(student.modules).map(([name, data]) => `
-                <div class="module-box">
-                  <h4>${name}</h4>
-                  ${data.lessons.map((score, i) => `
-                    <div class="lesson-item">
-                      <span class="lesson-label">Lesson ${i + 1}</span>
-                      <span class="grade-display ${getGradeClass(score)}">
-                        ${score > 0 ? score + '%' : 'Not Started'}
+        
+        Object.entries(student.modules).forEach(([name, data]) => {
+          const avg = calculateModuleAverage(data);
+          html += `
+            <td class="center">
+              <div class="grade-display ${getGradeClass(avg)}">
+                ${avg > 0 ? avg + '%' : '--'}
+              </div>
+              <div class="progress-bar-container">
+                <div class="progress-bar" style="width: ${data.progress}%"></div>
+              </div>
+              <div class="progress-info">${data.progress}% Complete</div>
+            </td>
+          `;
+        });
+        
+        html += `
+          <td class="center">
+            <div class="grade-display ${getGradeClass(overall)}" style="font-size: 1.2rem;">
+              ${overall}%
+            </div>
+          </td>
+        `;
+        
+        row.innerHTML = html;
+        tbody.appendChild(row);
+        
+        const detailRow = document.createElement('tr');
+        detailRow.className = 'detail-row';
+        if (isExpanded) detailRow.classList.add('active');
+        detailRow.id = `detail-${student.id}`;
+        detailRow.innerHTML = `
+          <td colspan="6">
+            <div class="detail-content">
+              <div class="detail-header">Grade Details - ${student.name}</div>
+              <div class="modules-grid">
+                ${Object.entries(student.modules).map(([name, data]) => `
+                  <div class="module-box">
+                    <h4>${name}</h4>
+                    ${data.lessons.map((score, i) => `
+                      <div class="lesson-item">
+                        <span class="lesson-label">Lesson ${i + 1}</span>
+                        <span class="grade-display ${getGradeClass(score)}">
+                          ${score > 0 ? score + '%' : 'Not Started'}
+                        </span>
+                      </div>
+                    `).join('')}
+                    <div class="module-summary">
+                      <span>Module Average:</span>
+                      <span class="${getGradeClass(calculateModuleAverage(data))}">
+                        ${calculateModuleAverage(data) > 0 ? calculateModuleAverage(data) + '%' : '--'}
                       </span>
                     </div>
-                  `).join('')}
-                  <div class="module-summary">
-                    <span>Module Average:</span>
-                    <span class="${getGradeClass(calculateModuleAverage(data))}">
-                      ${calculateModuleAverage(data) > 0 ? calculateModuleAverage(data) + '%' : '--'}
-                    </span>
                   </div>
-                </div>
-              `).join('')}
+                `).join('')}
+              </div>
             </div>
-          </div>
-        </td>
-      `;
-      tbody.appendChild(detailRow);
-    });
-  }
-
-  function toggleDetails(id) {
-    if (expandedRow === id) {
-      expandedRow = null;
-    } else {
-      expandedRow = id;
+          </td>
+        `;
+        tbody.appendChild(detailRow);
+      });
     }
+
+    function toggleDetails(id) {
+      if (expandedRow === id) {
+        expandedRow = null;
+      } else {
+        expandedRow = id;
+      }
+      renderTable();
+    }
+
+    function sortTable(key) {
+      if (currentSort.key === key) {
+        currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
+      } else {
+        currentSort = { key, direction: 'asc' };
+      }
+      
+      document.querySelectorAll('th').forEach(th => th.classList.remove('active'));
+      document.getElementById('th-' + key).classList.add('active');
+      
+      renderTable();
+    }
+
+    function downloadReport() {
+      let csv = 'Student Name,Overall Average,Module 1 Progress,Module 1 Average,Module 2 Progress,Module 2 Average,Module 3 Progress,Module 3 Average,Module 4 Progress,Module 4 Average\n';
+      
+      students.forEach(s => {
+        const overall = calculateOverallAverage(s.modules);
+        csv += [
+          s.name,
+          overall,
+          s.modules['Module 1'].progress + '%',
+          calculateModuleAverage(s.modules['Module 1']),
+          s.modules['Module 2'].progress + '%',
+          calculateModuleAverage(s.modules['Module 2']),
+          s.modules['Module 3'].progress + '%',
+          calculateModuleAverage(s.modules['Module 3']),
+          s.modules['Module 4'].progress + '%',
+          calculateModuleAverage(s.modules['Module 4'])
+        ].join(',') + '\n';
+      });
+
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'studentvue_analytics_report.csv';
+      a.click();
+    }
+
     renderTable();
   }
 
-  function sortTable(key) {
-    if (currentSort.key === key) {
-      currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
-    } else {
-      currentSort = { key, direction: 'asc' };
-    }
-    
-    document.querySelectorAll('th').forEach(th => th.classList.remove('active'));
-    document.getElementById('th-' + key).classList.add('active');
-    
-    renderTable();
-  }
-
-  function downloadReport() {
-    let csv = 'Student Name,Overall Average,Module 1 Progress,Module 1 Average,Module 2 Progress,Module 2 Average,Module 3 Progress,Module 3 Average,Module 4 Progress,Module 4 Average\n';
-    
-    students.forEach(s => {
-      const overall = calculateOverallAverage(s.modules);
-      csv += [
-        s.name,
-        overall,
-        s.modules['Module 1'].progress + '%',
-        calculateModuleAverage(s.modules['Module 1']),
-        s.modules['Module 2'].progress + '%',
-        calculateModuleAverage(s.modules['Module 2']),
-        s.modules['Module 3'].progress + '%',
-        calculateModuleAverage(s.modules['Module 3']),
-        s.modules['Module 4'].progress + '%',
-        calculateModuleAverage(s.modules['Module 4'])
-      ].join(',') + '\n';
-    });
-
-    const blob = new Blob([csv], { type: 'text/csv' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'studentvue_analytics_report.csv';
-    a.click();
-  }
-
-  renderTable();
+  main();
 </script>

@@ -42,7 +42,7 @@ date: 2025-10-21
       margin-top: 40px;
     }
     .stat-card {
-      background: #fff;
+      background: #b6b6b6ff;
       padding: 20px;
       border-radius: 16px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
@@ -138,6 +138,26 @@ date: 2025-10-21
     }
     .open {
       animation: fadeIn 0.4s ease forwards;
+    }
+
+    /* ✅ Added styling for Next Module button */
+    .next-module {
+      display: flex;
+      justify-content: center;
+      margin-top: 50px;
+    }
+    .next-module a {
+      background-color: #4f46e5;
+      color: #fff;
+      padding: 15px 30px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 1.2em;
+      transition: background 0.3s ease;
+    }
+    .next-module a:hover {
+      background-color: #3730a3;
     }
   </style>
 
@@ -385,6 +405,12 @@ date: 2025-10-21
 <div class="footer-quote">
       “Your resume is your first interview — make it unforgettable.”
     </div>
+
+    <!-- ✅ Added Next Module Button -->
+  <div class="next-module">
+      <a href="{{site.baseurl}}/cs-portfolio-quest/resume/submodule_2/">Next Module →</a>
+    </div>
+
   </div>
 
   <script>
@@ -393,4 +419,3 @@ date: 2025-10-21
       content.classList.toggle("open");
     }
   </script>
-

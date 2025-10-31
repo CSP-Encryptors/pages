@@ -1,7 +1,18 @@
 {%- include themes/minima/base.html -%}
 
 <!-- Microblog Layout: For lesson pages with microblog overlay/side panel -->
-{%- if page.microblog %}
+<!-- Enable microblogging on all pages by default -->
+{%- assign enable_microblog = true -%}
+{%- if page.layout == 'page' or page.layout == 'post' -%}
+  {%- assign enable_microblog = true -%}
+{%- endif -%}
+{%- if page.microblog == true -%}
+  {%- assign enable_microblog = true -%}
+{%- endif -%}
+{%- if page.microblog == false -%}
+  {%- assign enable_microblog = false -%}
+{%- endif -%}
+{%- if enable_microblog %}
 <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">

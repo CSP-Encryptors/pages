@@ -10,50 +10,85 @@ lxdData:
   Title: "AI Usage Modules"
   Description: "Master AI tools and prompting techniques for efficient development!"
   Topics:
-    - Title: "Resume & Interview Prep"
+    - Title: "Prompt Engineering"
       Genre: "Assessment"
       Level: 1
-      Description: "Learn to rewrite resume bullets with metrics using STAR format and prepare for the three most common interview questions by recording and analyzing your responses."
+      Description: "Master the art of specific prompts by including context, the problem, what you've tried, and desired outcomes. Practice iterative refinement to get better AI responses."
       Categories: ["ChatGPT", "Prompting", "Vibe Coding"]
       Video: "/cs-portfolio-quest/ai/submodule_1-video"
       Lessons: "/cs-portfolio-quest/ai/submodule_1/"
-      Image: "/images/cs-portfolio-quest/ai.svg"
+      Image: "/images/cs-portfolio-quest/ai/submodule1.png"
       Alt: "AI Submodule 1"
-    - Title: "Prompt Engineering"
+    - Title: "Coding with AI"
       Genre: "Assessment"
       Level: 2
-      Description: "Master the art of specific prompts by including context, the problem, what you've tried, and desired outcomes. Practice iterative refinement to get better AI responses."
+      Description: "Practice writing SPEC prompts for code generation, debugging, and security best practices to get the most accurate AI-generated code."
       Categories: ["ChatGPT", "Prompting", "Vibe Coding"]
       Video: "/cs-portfolio-quest/ai/submodule_2-video"
       Lessons: "/cs-portfolio-quest/ai/submodule_2/"
-      Image: "/images/cs-portfolio-quest/ai.svg"
+      Image: "/images/cs-portfolio-quest/ai/submodule2.png"
       Alt: "AI Submodule 2"
-    - Title: "Real Project Example"
+    - Title: "Resume & Interview Prep"
       Genre: "Assessment"
       Level: 3
-      Description: "A walkthrough of simplifying a Flask/Spring backend into Flask-only using AI assistance, broken into phases: understanding the system, planning migration, implementing changes, and debugging."
+      Description: "Learn to rewrite resume bullets with metrics using STAR format and prepare for the three most common interview questions by recording and analyzing your responses."
       Categories: ["ChatGPT", "Prompting", "Vibe Coding"]
       Video: "/cs-portfolio-quest/ai/submodule_3-video"
       Lessons: "/cs-portfolio-quest/ai/submodule_3/"
-      Image: "/images/cs-portfolio-quest/ai.svg"
+      Image: "/images/cs-portfolio-quest/ai/submodule3.png"
       Alt: "AI Submodule 3"
-    - Title: "Coding with AI - The Realistic Version"
+    - Title: "AI Usage Certification"
       Genre: "Assessment"
       Level: 4
-      Description: "Use the SPEC framework for code generation, follow a debugging template, and always run security checks. The key principle: understand and verify before using any AI-generated code."
+      Description: "Complete your AI Usage Quest and earn your official certification from Open Coding Society. Add it to your LinkedIn profile to showcase your skills."
       Categories: ["ChatGPT", "Prompting", "Vibe Coding"]
       Video: "/cs-portfolio-quest/ai/submodule_4-video"
       Lessons: "/cs-portfolio-quest/ai/submodule_4/"
-      Image: "/images/cs-portfolio-quest/ai.svg"
+      Image: "/images/cs-portfolio-quest/ai/submodule4.png"
       Alt: "AI Submodule 4"
-    - Title: "Gemini/Workspace Integration"
-      Genre: "Assessment"
-      Level: 5
-      Description: "When AI integration helps: summarizing documents, extracting action items, basic data work. When it doesn't: technical content, legal documents, anything requiring perfect accuracy. Includes warning signs for unreliable output."
-      Categories: ["ChatGPT", "Prompting", "Vibe Coding"]
-      Video: "/cs-portfolio-quest/ai/submodule_5-video"
-      Lessons: "/cs-portfolio-quest/ai/submodule_5/"
-      Image: "/images/cs-portfolio-quest/ai.svg"
-      Alt: "AI Submodule 5"
 ---
 {%- include tailwind/cs-portfolio-mini_quest_info.html -%}
+
+<!-- FRQ: Placeholder -->
+<div class="frq-box" id="quest-frq" style="border:1px solid #2c2c2e; padding:1rem; border-radius:8px; margin:1.5rem 0; background:#1c1c1e; color:#e5e5ea; font-weight:300;">
+  <b>FRQ:</b> <span id="frq-question">Placeholder FRQ: Describe how you will use AI to assist this quest (prompting or tooling).</span><br><br>
+  <textarea id="frq-answer" rows="5" placeholder="Type your response here..." style="width:100%; border-radius:6px; border:1px solid #3a3a3c; padding:0.5rem; margin-top:0.5rem; background:#2c2c2e; color:#f2f2f7;"></textarea>
+  <p></p>
+  <button id="frq-grade-btn" style="margin-top:10px; background:#2c2c2e; color:#e5e5ea; border:1px solid #3a3a3c; padding:0.4rem 0.75rem; border-radius:6px;">Grade</button>
+  <div id="frq-feedback"></div>
+</div>
+
+<script type="module">
+  import { javaURI } from '../../../assets/js/api/config.js';
+
+  const btn = document.getElementById('frq-grade-btn');
+  btn.addEventListener('click', async () => {
+    const q = document.getElementById('frq-question').textContent.trim();
+    const a = document.getElementById('frq-answer').value.trim();
+    const fb = document.getElementById('frq-feedback');
+    if (!a) { fb.innerHTML = '<span style="color:red;">Please enter your response before submitting.</span>'; return; }
+    btn.disabled = true;
+    fb.innerHTML = 'Grading...';
+    try {
+      const res = await fetch(`${javaURI}/api/grade`, {
+        method: 'POST',
+        mode: 'cors',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ question: q, answer: a })
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const result = await res.json();
+      let feedbackText = '';
+      try {
+        feedbackText = result.candidates?.[0]?.content?.parts?.[0]?.text || result.feedback || JSON.stringify(result);
+      } catch(_) {}
+      const formatted = (feedbackText || 'No feedback returned.').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g,'<br>');
+      fb.innerHTML = formatted;
+    } catch (e) {
+      fb.innerHTML = `<span style="color:red;">An error occurred while grading. Please try again. (${e.message})</span>`;
+    } finally {
+      btn.disabled = false;
+    }
+  });
+</script>

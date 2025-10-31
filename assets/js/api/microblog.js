@@ -84,3 +84,49 @@ export async function updatePost(postData) {
         throw error;
     }
 }
+
+/**
+ * Create a reply to a microblog post
+ * @param {Object} replyData - { postId, content, topicPath }
+ * @returns {Promise<Object>} - Created reply or error
+ */
+export async function createReply(replyData) {
+    const apiUrl = pythonURI + '/api/microblog/reply';
+    const options = {
+        ...fetchOptions,
+        method: 'POST',
+        body: JSON.stringify(replyData)
+    };
+    try {
+        const response = await fetch(apiUrl, options);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return await response.json();
+    } catch (error) {
+        throw error;
+    }
+}
+
+/**
+ * Fetch replies for a specific post
+ * @param {number|string} postId - Post ID to fetch replies for
+ * @returns {Promise<Array>} - Array of replies or error
+ */
+export async function fetchReplies(postId) {
+    const apiUrl = pythonURI + `/api/microblog/reply?postId=${postId}`;
+    const options = {
+        ...fetchOptions,
+        method: 'GET',
+    };
+    try {
+        const response = await fetch(apiUrl, options);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        throw error;
+    }
+}
