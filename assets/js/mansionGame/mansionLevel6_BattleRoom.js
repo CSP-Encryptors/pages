@@ -272,12 +272,13 @@ class MansionLevel6_BattleRoom {
         // Create health bar when battle room loads
         if (typeof window !== 'undefined') {
             createBossHealthBar();
+            createPlayerHealthBar();
         }
 
     }
 }
 
-// Create the boss health bar
+// ~~~~~~~~~~~~~ BOSS HEALTH BAR ~~~~~~~~~~~~~
 function createBossHealthBar() {
     // Create the main container that will hold both label and health bar
     const container = document.createElement('div');
@@ -342,6 +343,75 @@ function createBossHealthBar() {
 // Remove the boss health bar
 function removeBossHealthBar() {
     const bar = document.getElementById('boss-health-bar');
+    if (bar && bar.parentNode) {
+        bar.parentNode.removeChild(bar);
+    }
+}
+
+// ~~~~~~~~~~~~ PLAYER HEALTH BAR ~~~~~~~~~~~~
+function createPlayerHealthBar() {
+    // Create the main container that will hold both label and health bar
+    const container = document.createElement('div');
+    container.id = 'player-health-container';
+    Object.assign(container.style, {
+        position: 'absolute',
+        bottom: '20px',
+        left: '20px',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'flex-start',
+        gap: '5px',
+        width: '8%',
+        zIndex: '100'
+    });
+
+    // Create the label
+    const label = document.createElement('div');
+    label.textContent = "Reaper's HP";
+    Object.assign(label.style, {
+        color: '#FF0000',
+        fontFamily: "'Press Start 2P', sans-serif",
+        fontSize: '16px',
+        textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)',
+        marginBottom: '5px'
+    });
+
+    // Create the health bar container
+    const barContainer = document.createElement('div');
+    barContainer.id = 'player-health-bar';
+    Object.assign(barContainer.style, {
+        width: '100%',
+        height: '25px',
+        backgroundColor: '#222',
+        border: '2px solid #FF0000',
+        borderRadius: '8px',
+        boxShadow: '0 0 10px rgba(255, 0, 0, 0.5)'
+    });
+
+    // Create the health fill
+    const fill = document.createElement('div');
+    fill.id = 'player-health-fill';
+    Object.assign(fill.style, {
+        height: '100%',
+        width: '100%',
+        backgroundColor: '#FF0000',
+        borderRadius: '6px',
+        transition: 'width 0.3s ease'
+    });
+
+    // Assemble the components
+    barContainer.appendChild(fill);
+    container.appendChild(label);
+    container.appendChild(barContainer);
+    
+    // Find the game canvas/container and append our health bar to it
+    const gameContainer = document.querySelector('canvas')?.parentElement || document.body;
+    gameContainer.appendChild(container);
+}
+
+// Remove the player health bar
+function removePlayerHealthBar() {
+    const bar = document.getElementById('player-health-bar');
     if (bar && bar.parentNode) {
         bar.parentNode.removeChild(bar);
     }
