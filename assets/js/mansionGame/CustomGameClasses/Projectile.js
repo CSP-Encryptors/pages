@@ -1,5 +1,6 @@
 import Character from '../GameEngine/Character.js';
 import showDeathScreen from './DeathScreen.js';
+import updatePlayerHealthBar from './CustomGameClasses/HealthBars.js';
 
 class Projectile extends Character {
     constructor(gameEnv = null, targetx, targety, sourcex, sourcey, type) {
@@ -164,6 +165,9 @@ class Projectile extends Character {
                 showDeathScreen(nearest);
             }
         }
+
+        // Update the player health bar to accuratly show the new health
+        updatePlayerHealthBar();
     }
 
     // Function to execute death
