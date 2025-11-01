@@ -1,4 +1,17 @@
 /* Microblog Modal (Create/Reply) */
+#microblog-panel,
+#microblog-modal-panel {
+  background: #2563eb !important;
+  color: #fff !important;
+}
+
+
+/* Modal overlay background: dark semi-transparent */
+#microblog-modal,
+#reply-modal {
+  background: rgba(0,0,0,0.5);
+  z-index: 1200;
+}
 #microblog-modal,
 #reply-modal {
   position: fixed;
@@ -14,8 +27,10 @@
 #reply-modal.hidden {
   display: none;
 }
-.microblog-modal-content {
+/* Modal Panel: matches microblog panel pattern */
+.microblog-modal-panel {
   background: #2563eb;
+  color: #fff;
   border-radius: 0.5rem;
   box-shadow: 0 10px 15px rgba(0,0,0,0.1);
   width: 100%;
@@ -23,7 +38,16 @@
   margin: 0 0.5rem;
   padding: 1.5rem;
   position: relative;
-  color: #fff;
+  display: flex;
+  flex-direction: column;
+}
+
+.microblog-modal-content {
+  /* Remove background and color, handled by .microblog-modal-panel */
+  width: 100%;
+  padding: 0;
+  background: none;
+  color: inherit;
 }
 .microblog-modal-close {
   position: absolute;
@@ -153,8 +177,6 @@
   /* Remove space-between to left-align title after X */
   padding: 1rem;
   border-bottom: 1px solid #e5e7eb;
-  background: #2563eb;
-  color: #fff;
 }
 .microblog-panel-title {
   margin: 0;
@@ -193,24 +215,6 @@
     border-radius: 50%;
     box-shadow: 0 2px 12px rgba(0,0,0,0.18);
   }
-}
-/* Microblog styles moved from inline or <style> tags. Add custom styles here as needed. */
-
-/* Example: Modal overlay background */
-#microblog-modal,
-#reply-modal {
-  background: rgba(0,0,0,0.5);
-  z-index: 50;
-}
-
-/* Example: Modal content */
-#microblog-modal .bg-blue-500,
-#reply-modal .bg-blue-500 {
-  border-radius: 0.5rem;
-  box-shadow: 0 10px 15px rgba(0,0,0,0.1);
-  max-width: 32rem;
-  margin: 0 auto;
-  padding: 1.5rem;
 }
 
 /* Example: Scrollable table container */
