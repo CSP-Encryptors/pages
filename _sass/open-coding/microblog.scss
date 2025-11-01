@@ -184,7 +184,8 @@
   right: 0;
   width: 400px;
   max-width: 90vw;
-  height: calc(100vh - 5rem);
+  height: calc(100vh - 5rem - 3rem); /* leave 3rem for footer */
+  margin-bottom: 3rem;
   box-shadow: -2px 0 12px rgba(0,0,0,0.12);
   z-index: 1100;
   transform: translateX(100%);
