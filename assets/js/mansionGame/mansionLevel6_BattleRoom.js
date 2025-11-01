@@ -47,7 +47,123 @@ class MansionLevel6_BattleRoom {
             health: 100  // We define the health here
         };
 
+        // Add the Reaper
+        const sprite_src_enemy = path + "/images/mansionGame/Reaper.png";
+        const sprite_data_enemy = {
+            id: 'Reaper',
+            greeting: "You feel a dark presence...",
+            src: sprite_src_enemy,
+            SCALE_FACTOR: 4,
+            ANIMATION_RATE: 50,
+            pixels: {height: 104, width: 132},
+            INIT_POSITION: {x: width / 2, y: height / 2},
+            orientation: {rows: 1, columns: 1},
+            down: {row: 0, start: 0, columns: 1},
+            hitbox: {widthPercentage: 0.4, heightPercentage: 0.4},
+            zIndex: 10,
+            isKilling: false, // Flag to prevent multiple kills
+            
+            // The update method with all functionality inline
+            update: function() {
+                // Skip update if already in killing process
+                if (this.isKilling) {
+                    return;
+                }
+                
+                // Don't move until battle room fade is complete
+                if (!window.__battleRoomFadeComplete) {
+                    return;
+                }
+
+                // Find all player objects
+                const players = this.gameEnv.gameObjects.filter(obj => 
+                    obj.constructor.name === 'Player'
+                );
+                
+                if (players.length === 0) return;
+                
+                // Find nearest player
+                let nearest = players[0];
+                let minDist = Infinity;
+
+                for (const player of players) {
+                    const dx = player.position.x - this.position.x;
+                    const dy = player.position.y - this.position.y;
+                    const dist = Math.sqrt(dx*dx + dy*dy);
+                    if (dist < minDist) {
+                        minDist = dist;
+                        nearest = player;
+                    }
+                }
+
+                // Move towards nearest player
+                const speed = 0.3; // Adjust speed as needed
+                const dx = nearest.position.x - this.position.x;
+                const dy = nearest.position.y - this.position.y;
+                const angle = Math.atan2(dy, dx);
+                
+                // Update position
+                this.position.x += Math.cos(angle) * speed;
+                this.position.y += Math.sin(angle) * speed;
+                
+                // Check for collision with any player
+                for (const player of players) {
+                    // Calculate distance for hitbox collision
+                    const playerX = player.position.x + player.width / 2;
+                    const playerY = player.position.y + player.height / 2;
+                    const enemyX = this.position.x + this.width / 2;
+                    const enemyY = this.position.y + this.height / 2;
+                    
+                    const dx = playerX - enemyX;
+                    const dy = playerY - enemyY;
+                    const distance = Math.sqrt(dx*dx + dy*dy);
+                    
+                    // Hitbox collision - adjust values as needed
+                    const collisionThreshold = (player.width * player.hitbox.widthPercentage + 
+                                            this.width * this.hitbox.widthPercentage) / 2;
+                    
+                    if (distance < collisionThreshold) {
+                        // Set killing flag to prevent repeated kills
+                        this.isKilling = true;
+                        // Disable player input/movement without modifying the engine:
+                        try {
+                            // 'player' is the local variable in this loop
+                            if (!player._inputDisabled) {
+                                player._inputDisabled = true;
+
+                                // Clear any pressed keys and update velocity
+                                try { player.pressedKeys = {}; } catch (e) {}
+                                try { if (typeof player.updateVelocityAndDirection === 'function') player.updateVelocityAndDirection(); } catch (e) {}
+                                try { if (player.velocity) { player.velocity.x = 0; player.velocity.y = 0; } } catch (e) {}
+
+                                // Replace key handlers with no-ops so bound listeners do nothing
+                                try {
+                                    if (player.handleKeyDown && !player._origHandleKeyDown) {
+                                        player._origHandleKeyDown = player.handleKeyDown;
+                                        player.handleKeyDown = function(){};
+                                    }
+                                    if (player.handleKeyUp && !player._origHandleKeyUp) {
+                                        player._origHandleKeyUp = player.handleKeyUp;
+                                        player.handleKeyUp = function(){};
+                                    }
+                                } catch (e) {}
+
+                                // Hide touch controls if present
+                                try { if (player.touchControls && typeof player.touchControls.hide === 'function') player.touchControls.hide(); } catch (e) {}
+                            }
+                        } catch (e) { /* ignore */ }
+                        
+                        // Execute the death
+                        showDeathScreen(nearest);
+                        break;
+                    }
+                }
+            }
+        };
+
+        
         // --- Reaper Boss ---
+        /*
         const BOSS_SCALE_FACTOR = 2;
         const sprite_src_body = path + "/images/mansionGame/ReaperMainBody.png";
         const sprite_boss_data = {
@@ -141,120 +257,7 @@ class MansionLevel6_BattleRoom {
                 // Leave it blank for now
             }
         };
-
-        // Add the Reaper
-        const sprite_src_enemy = path + "/images/mansionGame/Reaper.png";
-        const sprite_data_enemy = {
-            id: 'Reaper',
-            greeting: "You feel a dark presence...",
-            src: sprite_src_enemy,
-            SCALE_FACTOR: 4,
-            ANIMATION_RATE: 50,
-            pixels: {height: 104, width: 132},
-            INIT_POSITION: {x: width / 2, y: height / 2},
-            orientation: {rows: 1, columns: 1},
-            down: {row: 0, start: 0, columns: 1},
-            hitbox: {widthPercentage: 0.4, heightPercentage: 0.4},
-            zIndex: 10,
-            isKilling: false, // Flag to prevent multiple kills
-            
-            // The update method with all functionality inline
-            update: function() {
-                // Skip update if already in killing process
-                if (this.isKilling) {
-                    return;
-                }
-                
-                // Don't move until battle room fade is complete
-                if (!window.__battleRoomFadeComplete) {
-                    return;
-                }
-
-                // Find all player objects
-                const players = this.gameEnv.gameObjects.filter(obj => 
-                    obj.constructor.name === 'Player'
-                );
-                
-                if (players.length === 0) return;
-                
-                // Find nearest player
-                let nearest = players[0];
-                let minDist = Infinity;
-
-                for (const player of players) {
-                    const dx = player.position.x - this.position.x;
-                    const dy = player.position.y - this.position.y;
-                    const dist = Math.sqrt(dx*dx + dy*dy);
-                    if (dist < minDist) {
-                        minDist = dist;
-                        nearest = player;
-                    }
-                }
-
-                // Move towards nearest player
-                const speed = 0.5; // Adjust speed as needed
-                const dx = nearest.position.x - this.position.x;
-                const dy = nearest.position.y - this.position.y;
-                const angle = Math.atan2(dy, dx);
-                
-                // Update position
-                this.position.x += Math.cos(angle) * speed;
-                this.position.y += Math.sin(angle) * speed;
-                
-                // Check for collision with any player
-                for (const player of players) {
-                    // Calculate distance for hitbox collision
-                    const playerX = player.position.x + player.width / 2;
-                    const playerY = player.position.y + player.height / 2;
-                    const enemyX = this.position.x + this.width / 2;
-                    const enemyY = this.position.y + this.height / 2;
-                    
-                    const dx = playerX - enemyX;
-                    const dy = playerY - enemyY;
-                    const distance = Math.sqrt(dx*dx + dy*dy);
-                    
-                    // Hitbox collision - adjust values as needed
-                    const collisionThreshold = (player.width * player.hitbox.widthPercentage + 
-                                            this.width * this.hitbox.widthPercentage) / 2;
-                    
-                    if (distance < collisionThreshold) {
-                        // Set killing flag to prevent repeated kills
-                        this.isKilling = true;
-                        // Disable player input/movement without modifying the engine:
-                        try {
-                            // 'player' is the local variable in this loop
-                            if (!player._inputDisabled) {
-                                player._inputDisabled = true;
-
-                                // Clear any pressed keys and update velocity
-                                try { player.pressedKeys = {}; } catch (e) {}
-                                try { if (typeof player.updateVelocityAndDirection === 'function') player.updateVelocityAndDirection(); } catch (e) {}
-                                try { if (player.velocity) { player.velocity.x = 0; player.velocity.y = 0; } } catch (e) {}
-
-                                // Replace key handlers with no-ops so bound listeners do nothing
-                                try {
-                                    if (player.handleKeyDown && !player._origHandleKeyDown) {
-                                        player._origHandleKeyDown = player.handleKeyDown;
-                                        player.handleKeyDown = function(){};
-                                    }
-                                    if (player.handleKeyUp && !player._origHandleKeyUp) {
-                                        player._origHandleKeyUp = player.handleKeyUp;
-                                        player.handleKeyUp = function(){};
-                                    }
-                                } catch (e) {}
-
-                                // Hide touch controls if present
-                                try { if (player.touchControls && typeof player.touchControls.hide === 'function') player.touchControls.hide(); } catch (e) {}
-                            }
-                        } catch (e) { /* ignore */ }
-                        
-                        // Execute the death
-                        showDeathScreen(nearest);
-                        break;
-                    }
-                }
-            }
-        };
+        */
 
         this.classes = [
             {class: GameEnvBackground, data: image_data_floor},
