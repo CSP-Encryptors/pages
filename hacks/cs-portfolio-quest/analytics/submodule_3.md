@@ -547,8 +547,8 @@ author: "Curators Team"
 
   async function fetchPeople() {
     const students = [];
-    
-    for (let id = 1; id <= 100; id++) {
+
+    for (let id = 1; id <= 200; id++) {
       try {
         const res = await fetch(`${javaURI}/api/person/${id}`, {
           ...fetchOptions,
@@ -558,16 +558,13 @@ author: "Curators Team"
           },
         });
 
-        console.log(`Request for ID ${id} → Status: ${res.status}`);
-
+        // silently skip 404s and continue
         if (res.status === 404) {
-          console.log(`ID ${id} not found. Terminating loop.`);
-          break;
+          continue;
         }
 
         if (res.ok) {
           const data = await res.json();
-          console.log(`Fetched person:`, data);
 
           // Create random lesson and module data
           const randomLessons = () =>
@@ -590,21 +587,19 @@ author: "Curators Team"
           });
 
         } else {
+          // log non-404 failures for visibility
           console.warn(`Request failed for ID ${id} with status ${res.status}`);
         }
 
       } catch (err) {
+        // network/other errors are logged but do not stop the loop
         console.error(`Error fetching ID ${id}:`, err);
-        break;
       }
     }
 
     console.log("✅ Final students array:", students);
     return students;
   }
-
-  fetchPeople();
-
   async function main() {
     const students = await fetchPeople();
     console.log("Students array:", students);
