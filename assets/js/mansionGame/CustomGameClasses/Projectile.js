@@ -1,6 +1,6 @@
 import Character from '../GameEngine/Character.js';
 import showDeathScreen from './DeathScreen.js';
-import updatePlayerHealthBar from './CustomGameClasses/HealthBars.js';
+import updatePlayerHealthBar from './HealthBars.js';
 
 class Projectile extends Character {
     constructor(gameEnv = null, targetx, targety, sourcex, sourcey, type) {
