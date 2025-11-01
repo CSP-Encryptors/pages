@@ -34,6 +34,7 @@ class Projectile extends Character {
             this.height = 25;
             this.spriteSheet.onload = () => this.imageLoaded = true;
             this.spriteSheet.src = path + "/images/mansionGame/arrow.png";
+            this.isAnimated = false;
         } else if (type === "FIREBALL") {
             this.spriteSheet = new Image();
             this.frameIndex = 0;
@@ -43,13 +44,14 @@ class Projectile extends Character {
             this.width = 64;
             this.height = 64;
             this.spriteSheet.onload = () => this.imageLoaded = true;
-            this.spriteSheet.src = path + "/images/mansionGame/fireball.png";
+            this.spriteSheet.src = path + "/images/mansionGame/staticfireball.png";
             this.frameIndex = 0;
             this.frameCount = 4; // 2x2 grid
             this.frameCols = 2;
             this.frameRows = 2;
             this.width = 64;
             this.height = 64;
+            this.isAnimated = false;
         }
 
         // Start at source position
@@ -85,7 +87,7 @@ class Projectile extends Character {
             return;  // Don't try to draw until image is loaded
         }
 
-        if (this.type === "FIREBALL" && this.spriteSheet.complete) {
+        if (this.isAnimated && this.spriteSheet.complete) {
             // Animate 2x2 sprite sheet
             const frameWidth = this.spriteSheet.width / this.frameCols;
             const frameHeight = this.spriteSheet.height / this.frameRows;
