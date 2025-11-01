@@ -1,0 +1,140 @@
+<section class="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
+  <div class="rounded-3xl border border-rose-500/30 bg-slate-900/80 p-8 shadow-2xl shadow-rose-500/20">
+    <div class="flex items-center gap-3 text-rose-200">
+      <span class="text-2xl">🛰️</span>
+      <h3 class="text-xl font-semibold md:text-2xl">Wormhole Simulator</h3>
+    </div>
+    <p class="mt-3 text-sm text-slate-300 md:text-base">
+      Spin up the wormhole, copy the intruders, then flip to secure mode to shut them out.
+    </p>
+
+    <form id="breach-form" class="mt-6 space-y-6">
+      <div class="grid gap-4 md:grid-cols-2">
+        <div class="space-y-2">
+          <label
+            class="text-xs font-semibold uppercase tracking-[0.22em] text-slate-400"
+            for="codename"
+          >
+            Codename
+          </label>
+          <input
+            id="codename"
+            name="codename"
+            placeholder="GhostWolf"
+            required
+            class="w-full rounded-2xl border border-slate-700/70 bg-slate-950/70 px-4 py-3 text-slate-100 placeholder:text-slate-500 focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-500/40"
+          />
+        </div>
+        <div class="space-y-2">
+          <label
+            class="text-xs font-semibold uppercase tracking-[0.22em] text-slate-400"
+            for="passcode"
+          >
+            Passcode
+          </label>
+          <input
+            id="passcode"
+            name="passcode"
+            placeholder="hunter2"
+            required
+            class="w-full rounded-2xl border border-slate-700/70 bg-slate-950/70 px-4 py-3 text-slate-100 placeholder:text-slate-500 focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-500/40"
+          />
+        </div>
+      </div>
+
+      <div class="flex flex-wrap gap-3">
+        <button
+          type="button"
+          id="btn-inject-payload"
+          class="flex items-center gap-2 rounded-2xl border border-rose-500/40 bg-rose-500/10 px-4 py-2 text-sm font-semibold text-rose-100 transition hover:border-rose-400/70 hover:bg-rose-500/20"
+        >
+          <span>💥</span>
+          Load Alien Payload
+        </button>
+        <button
+          type="button"
+          id="btn-load-agent"
+          class="flex items-center gap-2 rounded-2xl border border-cyan-500/40 bg-cyan-500/10 px-4 py-2 text-sm font-semibold text-cyan-100 transition hover:border-cyan-400/70 hover:bg-cyan-500/20"
+        >
+          <span>🛡️</span>
+          Load Agent Credentials
+        </button>
+        <button
+          type="button"
+          id="btn-clear-log"
+          class="flex items-center gap-2 rounded-2xl border border-slate-600/60 bg-slate-800/60 px-4 py-2 text-sm font-semibold text-slate-200 transition hover:bg-slate-700/70"
+        >
+          <span>🔄</span>
+          Reset Console
+        </button>
+      </div>
+
+      <label
+        class="flex items-center gap-4 rounded-2xl border border-slate-700/60 bg-slate-950/60 px-4 py-3 text-sm text-slate-300"
+        for="secure-toggle"
+      >
+        <input
+          type="checkbox"
+          id="secure-toggle"
+          class="h-5 w-5 rounded border-slate-600 bg-slate-900 text-emerald-400 focus:ring-emerald-500"
+        />
+        <div>
+          <p class="text-sm font-semibold text-slate-200">Secure Mode</p>
+          <p class="text-xs text-slate-400">Prepared statement shields the query. Payload text stays data.</p>
+        </div>
+      </label>
+
+      <button
+        type="submit"
+        class="w-full rounded-2xl bg-cyan-500 px-5 py-3 font-semibold text-slate-900 shadow-lg shadow-cyan-500/30 transition hover:bg-cyan-400"
+      >
+        Execute Query
+      </button>
+    </form>
+
+    <div class="mt-8 grid gap-3 rounded-2xl border border-rose-400/20 bg-rose-950/20 p-6 text-sm text-rose-100">
+      <h4 class="text-xs font-semibold uppercase tracking-[0.28em] text-rose-200">Alien Command Tips</h4>
+      <ul class="space-y-2 text-rose-100/90">
+        <li>💣 Payload: <code class="text-rose-200">' OR '1'='1</code> forces the WHERE clause true.</li>
+        <li>🧊 Secure mode: swaps the string for placeholders so the payload stays harmless text.</li>
+        <li>🎯 Goal: Show both results—breach wide open, then fully sealed.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="rounded-3xl border border-slate-700/60 bg-slate-900/80 p-8 shadow-2xl shadow-slate-900/40">
+    <div class="flex items-center gap-3 text-cyan-200">
+      <span class="text-2xl">📟</span>
+      <h3 class="text-xl font-semibold md:text-2xl">SQL Console Output</h3>
+    </div>
+    <pre
+      id="console-log"
+      class="mt-4 h-56 overflow-y-auto rounded-2xl border border-slate-700/70 bg-slate-950/70 p-4 text-sm text-slate-200"
+    >$ Awaiting input…</pre>
+
+    <h4 class="mt-6 text-xs font-semibold uppercase tracking-[0.28em] text-slate-400">Indicators</h4>
+    <ul class="mt-4 space-y-3">
+      <li
+        id="indicator-breach"
+        data-base-class="rounded-2xl border px-4 py-3 text-sm font-semibold transition-colors"
+        class="rounded-2xl border border-slate-700 bg-slate-900/60 px-4 py-3 text-sm font-semibold text-slate-300 transition-colors"
+      >
+        Breach Status: Unknown
+      </li>
+      <li
+        id="indicator-telemetry"
+        data-base-class="rounded-2xl border px-4 py-3 text-sm font-medium transition-colors"
+        class="rounded-2xl border border-slate-700 bg-slate-900/60 px-4 py-3 text-sm font-medium text-slate-300 transition-colors"
+      >
+        Telemetry: No anomalies
+      </li>
+    </ul>
+
+    <div
+      id="mission-transmission"
+      class="mt-8 rounded-2xl border border-cyan-400/30 bg-cyan-500/10 p-5 text-sm text-cyan-100"
+    >
+      🛰️ HQ Transmission: Trigger the payload first. Then lock it down in secure mode.
+    </div>
+  </div>
+</section>
