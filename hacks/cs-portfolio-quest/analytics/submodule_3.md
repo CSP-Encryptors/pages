@@ -592,11 +592,13 @@ author: "Curators Team"
         }
 
       } catch (err) {
-        // network/other errors are logged but do not stop the loop
-        console.error(`Error fetching ID ${id}:`, err);
+        // suppress 404-like errors; log others
+        const errText = String(err || '');
+        if (!/404/.test(errText)) {
+          console.error(`Error fetching ID ${id}:`, err);
+        }
       }
     }
-
     console.log("✅ Final students array:", students);
     return students;
   }
