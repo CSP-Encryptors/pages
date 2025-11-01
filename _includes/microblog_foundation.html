@@ -46,9 +46,9 @@ microblogCloseBtn.onclick = closeMicroblogPanel;
         <label class="block text-sm font-medium text-gray-700">Topic</label>
         <input id="topic-id" name="topicId" type="text" class="mt-1 block w-full border border-gray-300 rounded-md p-2" readonly>
       </div>
-      <div>
-        <label class="block text-sm font-medium text-gray-700">Content <span class="text-red-500">*</span></label>
-        <textarea id="content" name="content" rows="3" required class="mt-1 block w-full border border-gray-300 rounded-md p-2"></textarea>
+      <div class="microblog-form-group">
+        <label for="content" class="microblog-form-label">Content <span class="required">*</span></label>
+        <textarea id="content" name="content" required class=""></textarea>
       </div>
       <div class="flex justify-end space-x-2">
         <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Save</button>
@@ -66,9 +66,9 @@ microblogCloseBtn.onclick = closeMicroblogPanel;
     </div>
     <form id="reply-form" class="space-y-4">
       <input type="hidden" id="reply-post-id" name="postId">
-      <div>
-        <label class="block text-sm font-medium text-gray-700">Content <span class="text-red-500">*</span></label>
-        <textarea id="reply-content" name="content" rows="3" required class="mt-1 block w-full border border-gray-300 rounded-md p-2"></textarea>
+      <div class="microblog-form-group">
+        <label for="reply-content" class="microblog-form-label">Content <span class="required">*</span></label>
+        <textarea id="reply-content" name="content" required class=""></textarea>
       </div>
       <div class="flex justify-end space-x-2">
         <button type="button" id="reply-cancel-btn" class="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500">Cancel</button>
