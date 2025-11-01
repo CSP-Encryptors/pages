@@ -1,0 +1,27 @@
+/* Microblog styles moved from inline or <style> tags. Add custom styles here as needed. */
+
+/* Example: Modal overlay background */
+#microblog-modal,
+#reply-modal {
+  background: rgba(0,0,0,0.5);
+  z-index: 50;
+}
+
+/* Example: Modal content */
+#microblog-modal .bg-blue-500,
+#reply-modal .bg-blue-500 {
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+  max-width: 32rem;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+/* Example: Scrollable table container */
+#microblog-playground .max-h-\[45vh\],
+#microblog-playground .max-h-\[60vh\],
+#microblog-playground .max-h-\[70vh\] {
+  overflow-y: auto;
+}
+
+/* Add more microblog-specific styles as needed */

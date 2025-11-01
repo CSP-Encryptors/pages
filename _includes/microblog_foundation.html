@@ -1,13 +1,140 @@
-<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+<!-- Floating Microblog Button (upper right, below header) -->
+<button id="microblog-toggle-btn" class="microblog-fab microblog-fab-top" aria-label="Open Microblog">💬 Microblog</button>
 
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<!-- Microblog Side Panel -->
+<aside id="microblog-panel" class="microblog-panel" tabindex="-1" aria-label="Microblog panel">
+  <div class="microblog-panel-header">
+    <button id="microblog-close-btn" class="microblog-close-btn" aria-label="Close Microblog">&times;</button>
+    <h2 class="microblog-panel-title" style="margin-left:1rem;">Microblog</h2>
+  </div>
+  <div class="microblog-panel-content">
+    <!-- MicroBlog Container -->
+    <div id="microblog-playground">
+      <em>Loading microblog posts...</em>
+    </div>
+  </div>
+</aside>
 
-<!-- MicroBlog Container -->
-<div id="microblog-playground">
-  <em>Loading microblog posts...</em>
-</div>
+
+
+<style>
+/* Floating Action Button */
+
+.microblog-fab {
+  position: fixed;
+  top: 5rem;
+  right: 2rem;
+  z-index: 1050;
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 1rem 1.5rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.microblog-fab:hover {
+  background: #1e40af;
+}
+
+@media (max-width: 600px) {
+  .microblog-fab {
+    right: 1rem;
+    top: 1rem;
+    padding: 1.2rem 2.2rem;
+    font-size: 1.5rem;
+    min-width: 56px;
+    min-height: 56px;
+    border-radius: 50%;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+  }
+}
+
+/* Side Panel */
+.microblog-panel {
+  position: fixed;
+  top: 5rem;
+  right: 0;
+  width: 400px;
+  max-width: 90vw;
+  height: calc(100vh - 5rem);
+  box-shadow: -2px 0 12px rgba(0,0,0,0.12);
+  z-index: 1100;
+  transform: translateX(100%);
+  transition: transform 0.3s cubic-bezier(.4,0,.2,1);
+  display: flex;
+  flex-direction: column;
+}
+.microblog-panel.open {
+  transform: translateX(0);
+}
+.microblog-panel-header {
+  display: flex;
+  align-items: center;
+  /* Remove space-between to left-align title after X */
+  padding: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+  background: #2563eb;
+  color: #fff;
+}
+.microblog-panel-title {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+.microblog-close-btn {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 2rem;
+  cursor: pointer;
+  padding: 0 0.5rem;
+  line-height: 1;
+}
+.microblog-panel-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem;
+}
+@media (max-width: 600px) {
+  .microblog-panel {
+    width: 100vw;
+    max-width: 100vw;
+    top: 1rem;
+    height: calc(100vh - 1rem);
+  }
+  .microblog-fab {
+    right: 1rem;
+    top: 1rem;
+    padding: 1.2rem 2.2rem;
+    font-size: 1.5rem;
+    min-width: 56px;
+    min-height: 56px;
+    border-radius: 50%;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+  }
+}
+</style>
+<script>
+// Microblog panel open/close logic
+const microblogPanel = document.getElementById('microblog-panel');
+const microblogFab = document.getElementById('microblog-toggle-btn');
+const microblogCloseBtn = document.getElementById('microblog-close-btn');
+
+function openMicroblogPanel() {
+  microblogPanel.classList.add('open');
+  microblogFab.style.display = 'none';
+}
+function closeMicroblogPanel() {
+  microblogPanel.classList.remove('open');
+  microblogFab.style.display = '';
+}
+microblogFab.onclick = openMicroblogPanel;
+microblogCloseBtn.onclick = closeMicroblogPanel;
+</script>
 
 <!-- Create/Edit Modal Overlay using Tailwind -->
 <div id="microblog-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
@@ -130,7 +257,7 @@ async function loadRepliesForPost(postId) {
         const repliesHtml = replies.map(reply => {
           const replyDate = reply.timestamp ? new Date(reply.timestamp).toLocaleString() : '';
           return `
-            <div class="reply-item ml-4 mt-2 p-2 bg-gray-100 rounded border-l-4 border-green-500">
+            <div class="reply-item ml-4 mt-2 p-2 rounded border-l-4 border-green-500">
               <div class="text-sm text-gray-600">
                 ${reply.userName || 'Anonymous'} - ${replyDate}
               </div>
