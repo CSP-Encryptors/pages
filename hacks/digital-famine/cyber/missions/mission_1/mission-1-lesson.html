@@ -298,7 +298,10 @@ footer:
                     <div class="bg-blue-900/20 border border-blue-500/30 rounded-lg p-6">
                         <h3 class="text-xl font-semibold text-blue-300 mb-3">🎯 Your Mission</h3>
                         <p class="mb-4">Write the SQL to create the <b>Agents</b> table below. When ready, click <b>Run SQL</b> to build your table.</p>
-                        <textarea id="agents-sql" class="w-full text-white bg-slate-900 p-3 rounded-lg font-mono mb-2" rows="4" placeholder="CREATE TABLE Agents (agent_id INTEGER PRIMARY KEY, codename TEXT UNIQUE, clearance_level INTEGER, location TEXT, status TEXT);" disabled></textarea>
+                        <div class="flex gap-2 mb-2">
+                            <textarea id="agents-sql" class="w-full text-white bg-slate-900 p-3 rounded-lg font-mono" rows="4" placeholder="CREATE TABLE Agents (agent_id INTEGER PRIMARY KEY, codename TEXT UNIQUE, clearance_level INTEGER, location TEXT, status TEXT);" disabled></textarea>
+                            <button id="agents-hint-btn" type="button" class="rounded-lg px-4 py-2 font-semibold bg-blue-700 hover:bg-blue-800" style="min-width:110px;" disabled onclick="showAgentsHint()">Show Hint</button>
+                        </div>
                         <button id="run-agents-sql" onclick="runAgentsSQL()" class="w-full py-3 rounded-lg font-semibold bg-blue-600 hover:bg-blue-700 mb-2" disabled>Run SQL</button>
                         <div id="agents-sql-loading" class="text-blue-300 font-semibold mb-2">Loading database...</div>
                         <div id="agents-sql-feedback" class="text-red-400 font-semibold mb-2"></div>
@@ -334,7 +337,10 @@ footer:
                     <div class="bg-red-900/20 border border-red-500/30 rounded-lg p-6">
                         <h3 class="text-xl font-semibold text-red-300 mb-3">🎯 Your Mission</h3>
                         <p class="mb-4">Write the SQL to create the <b>Alien_Sightings</b> table below. When ready, click <b>Run SQL</b> to build your table.</p>
-                        <textarea id="sightings-sql" class="w-full text-white bg-slate-900 p-3 rounded-lg font-mono mb-2" rows="5" placeholder="CREATE TABLE Alien_Sightings (sighting_id INTEGER PRIMARY KEY, timestamp TEXT, location TEXT, threat_level INTEGER, description TEXT, verified_by INTEGER);" disabled></textarea>
+                        <div class="flex gap-2 mb-2">
+                            <textarea id="sightings-sql" class="w-full text-white bg-slate-900 p-3 rounded-lg font-mono" rows="5" placeholder="CREATE TABLE Alien_Sightings (sighting_id INTEGER PRIMARY KEY, timestamp TEXT, location TEXT, threat_level INTEGER, description TEXT, verified_by INTEGER);" disabled></textarea>
+                            <button id="sightings-hint-btn" type="button" class="rounded-lg px-4 py-2 font-semibold bg-red-700 hover:bg-red-800" style="min-width:110px;" disabled onclick="showSightingsHint()">Show Hint</button>
+                        </div>
                         <button id="run-sightings-sql" onclick="runSightingsSQL()" class="w-full py-3 rounded-lg font-semibold bg-red-600 hover:bg-red-700 mb-2" disabled>Run SQL</button>
                         <div id="sightings-sql-loading" class="text-red-300 font-semibold mb-2">Loading database...</div>
                         <div id="sightings-sql-feedback" class="text-red-400 font-semibold mb-2"></div>
@@ -386,6 +392,30 @@ footer:
 
     <script>
         let db = null;
+
+        function showAgentsHint() {
+            document.getElementById('agents-sql').value =
+`CREATE TABLE Agents (
+    agent_id,
+    codename,
+    clearance_level,
+    location,
+    status
+);`;
+        }
+
+        function showSightingsHint() {
+            document.getElementById('sightings-sql').value =
+`CREATE TABLE Alien_Sightings (
+    sighting_id,
+    timestamp,
+    location,
+    threat_level,
+    description,
+    verified_by
+);`;
+        }
+
         async function initDatabase() {
             try {
                 const SQL = await initSqlJs({
@@ -396,9 +426,11 @@ footer:
                 document.getElementById('agents-sql').disabled = false;
                 document.getElementById('run-agents-sql').disabled = false;
                 document.getElementById('agents-sql-loading').style.display = 'none';
+                document.getElementById('agents-hint-btn').disabled = false;
                 document.getElementById('sightings-sql').disabled = false;
                 document.getElementById('run-sightings-sql').disabled = false;
                 document.getElementById('sightings-sql-loading').style.display = 'none';
+                document.getElementById('sightings-hint-btn').disabled = false;
             } catch (e) {
                 console.error(e);
                 document.getElementById('agents-sql-loading').textContent = 'Failed to load database.';
