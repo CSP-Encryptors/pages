@@ -1,6 +1,6 @@
 import Character from '../GameEngine/Character.js';
 import showDeathScreen from './DeathScreen.js';
-import updatePlayerHealthBar from './HealthBars.js';
+import { updatePlayerHealthBar } from './HealthBars.js';
 
 class Projectile extends Character {
     constructor(gameEnv = null, targetx, targety, sourcex, sourcey, type) {
@@ -168,8 +168,15 @@ class Projectile extends Character {
             }
         }
 
-        // Update the player health bar to accuratly show the new health
-        updatePlayerHealthBar();
+        // Update the player health bar to accurately show the new health (if available)
+        try {
+            if (nearest && nearest.data && typeof updatePlayerHealthBar === 'function') {
+                const pct = Math.max(0, Math.min(100, nearest.data.health || 0));
+                updatePlayerHealthBar(pct);
+            }
+        } catch (e) {
+            console.warn('Failed to update player health bar:', e);
+        }
     }
 
     // Function to execute death
