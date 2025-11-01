@@ -50,15 +50,13 @@
   color: inherit;
 }
 .microblog-modal-close {
-  position: absolute;
-  top: 0.75rem;
-  right: 0.75rem;
   background: none;
   border: none;
   color: #e5e7eb;
   font-size: 2rem;
   cursor: pointer;
   transition: color 0.2s;
+  margin-right: 0.5rem;
 }
 .microblog-modal-close:hover {
   color: #fff;
@@ -66,7 +64,7 @@
 .microblog-modal-title {
   font-size: 1.3rem;
   font-weight: 700;
-  margin-bottom: 1rem;
+  margin-bottom: 0;
 }
 .microblog-form {
   display: flex;
@@ -171,18 +169,24 @@
 .microblog-panel.open {
   transform: translateX(0);
 }
-.microblog-panel-header {
+.microblog-panel-header,
+.microblog-modal-header {
   display: flex;
   align-items: center;
-  /* Remove space-between to left-align title after X */
+  flex-wrap: nowrap;
   padding: 1rem;
   border-bottom: 1px solid #e5e7eb;
 }
-.microblog-panel-title {
+.microblog-panel-title,
+.microblog-modal-title {
   margin: 0;
   font-size: 1.2rem;
   font-weight: 700;
   margin-left: 1rem;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .microblog-close-btn {
   background: none;

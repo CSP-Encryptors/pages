@@ -36,8 +36,10 @@ microblogCloseBtn.onclick = closeMicroblogPanel;
 <!-- Create/Edit Modal Overlay using Tailwind -->
 <div id="microblog-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
   <div class="microblog-modal-panel">
-    <button id="modal-close" class="absolute top-2 right-2 text-gray-400 hover:text-gray-700 text-2xl">&times;</button>
-    <h2 id="modal-title" class="text-xl font-bold mb-4">Create Microblog Post</h2>
+    <div class="microblog-modal-header">
+      <button id="modal-close" class="microblog-modal-close" aria-label="Close Modal">&times;</button>
+      <h2 id="modal-title" class="microblog-modal-title">Create Microblog Post</h2>
+    </div>
     <form id="microblog-form" class="space-y-4">
       <input type="hidden" id="post-id" name="id">
       <div>
@@ -58,8 +60,10 @@ microblogCloseBtn.onclick = closeMicroblogPanel;
 <!-- Reply Modal -->
 <div id="reply-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
   <div class="microblog-modal-panel">
-    <button id="reply-modal-close" class="absolute top-2 right-2 text-gray-400 hover:text-gray-700 text-2xl">&times;</button>
-    <h2 id="reply-modal-title" class="text-xl font-bold mb-4">Reply to Post</h2>
+    <div class="microblog-modal-header">
+      <button id="reply-modal-close" class="microblog-modal-close" aria-label="Close Reply Modal">&times;</button>
+      <h2 id="reply-modal-title" class="microblog-modal-title">Reply to Post</h2>
+    </div>
     <form id="reply-form" class="space-y-4">
       <input type="hidden" id="reply-post-id" name="postId">
       <div>
