@@ -5,7 +5,7 @@ title: Submodule 4- Cybersecurity planet
 description: >
   Learn how to develop blogs and projects that convey information effectively and are visually appealing
 author: CSA 2025-26
-permalink: /digital-famine/cybersecurity-game/
+permalink: /digital-famine/cybersecurity-gam/
 breadcrumb: true
 lxdData:
   Title: "Frontend Development Modules"
