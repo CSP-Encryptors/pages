@@ -104,6 +104,10 @@ footer:
   </div>
 </div>
 
+<div style="text-align:center; margin-top:20px;">
+  <button id="reset-quiz" class="retry-btn">🔁 Restart & Reshuffle Quiz</button>
+</div>
+
 <script>
 const questions = [
   // Mission 1
@@ -291,6 +295,15 @@ function restartQuiz() {
 
   showQuestion();
 }
+
+document.getElementById("reset-quiz").addEventListener("click", () => {
+  // Clear all saved progress and reshuffle
+  localStorage.removeItem('vaultQuizProgress');
+  localStorage.removeItem('vaultQuizQuestions');
+  alert("Quiz progress cleared and questions reshuffled!");
+  location.reload(); // Reload the page to start fresh
+});
+
 
 loadProgress();
 
