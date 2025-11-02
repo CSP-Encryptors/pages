@@ -364,6 +364,32 @@ date: 2025-10-22
                 console.log("All data", data);
                 const filtered = data.filter(item => item.username === username);
                 console.log(`Data for ${username}:`, filtered);
+                const totalTime = filtered.reduce((sum, item) => sum + (item.time || 0), 0);
+                console.log(`Total time spent:`, totalTime);
+                console.log(`Modules Completed:`, filtered.length);
+                console.log(`Modules Incomplete:`, 25 - filtered.length);
+
+                const modules = [
+                    'AI Usage',
+                    'Backend Development',
+                    'Data Visualization',
+                    'Frontend Development',
+                    'Resume Building'
+                ];
+
+                // Initialize an object to store total time per module
+                const moduleTimes = {};
+                modules.forEach(m => moduleTimes[m] = 0);
+
+                // Sum times per module
+                filtered.forEach(item => {
+                    const mod = item.module;
+                    if (modules.includes(mod)) {
+                        moduleTimes[mod] += item.time || 0;
+                    }
+                });
+
+                console.log(`Total times per module for ${username}:`, moduleTimes);
             } else {
                 console.log(`Request failed with status ${res.status}`);
             }
@@ -374,9 +400,6 @@ date: 2025-10-22
 
   getLessonData();
 
-</script>
-
-<script>
   // Weekly Study Time Chart
   const weeklyCtx = document.getElementById('weeklyChart').getContext('2d');
   new Chart(weeklyCtx, {
