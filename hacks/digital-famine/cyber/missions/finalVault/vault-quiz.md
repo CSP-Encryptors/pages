@@ -132,6 +132,46 @@ const questions = [
   {question:"If you hash 'ALPHA-001' today and tomorrow, will the hashes match?",options:["No - hashes change daily","Yes - hashing is deterministic (same input = same output)","Only if using the same computer","Depends on the time of day"],correct:1,hint:"Is hashing deterministic or random?",mission:3,lessonUrl:"/digital-famine/cyber/submodule_3"},
   {question:"What is 'salt' in password hashing?",options:["A secret decryption key","Random data added to passwords before hashing to prevent rainbow table attacks","A specific type of hashing algorithm","A compression method for long passwords"],correct:1,hint:"Random data added to defeat pre-computed hash tables.",mission:3,lessonUrl:"/digital-famine/cyber/mission-3-lesson/"}
 ];
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
+function prepareShuffledQuestions() {
+  // Group by mission
+  const missions = [1, 2, 3];
+  let shuffledAll = [];
+
+  missions.forEach(missionNum => {
+    let missionQs = questions.filter(q => q.mission === missionNum);
+    missionQs = shuffleArray(missionQs);
+
+    // Shuffle options for each question
+    missionQs.forEach(q => {
+      const optionIndexes = q.options.map((_, idx) => idx);
+      const shuffledIndexes = shuffleArray(optionIndexes);
+      const shuffledOpts = shuffledIndexes.map(i => q.options[i]);
+      const newCorrect = shuffledIndexes.indexOf(q.correct);
+      q.options = shuffledOpts;
+      q.correct = newCorrect;
+    });
+
+    shuffledAll = shuffledAll.concat(missionQs);
+  });
+
+  return shuffledAll;
+}
+
+// Load or initialize shuffled question order
+let shuffledQuestions = JSON.parse(localStorage.getItem('vaultQuizQuestions'));
+
+if (!shuffledQuestions) {
+  shuffledQuestions = prepareShuffledQuestions();
+  localStorage.setItem('vaultQuizQuestions', JSON.stringify(shuffledQuestions));
+}
 
 let currentQuestion = 0;
 let score = 0;
@@ -144,6 +184,8 @@ function saveProgress() {
     retryMode
   };
   localStorage.setItem('vaultQuizProgress', JSON.stringify(progress));
+  localStorage.setItem('vaultQuizQuestions', JSON.stringify(shuffledQuestions));
+
 }
 
 function loadProgress() {
@@ -160,7 +202,7 @@ function clearProgress() {
 }
 
 function showQuestion() {
-  const q = questions[currentQuestion];
+  const q = shuffledQuestions[currentQuestion];
   document.getElementById("progress").textContent = `Question ${currentQuestion + 1} of ${questions.length} | Score: ${score}`;
   document.getElementById("question").textContent = q.question;
 
@@ -179,7 +221,7 @@ function showQuestion() {
 }
 
 function checkAnswer(selected) {
-  const q = questions[currentQuestion];
+  const q = shuffledQuestions[currentQuestion];
   const feedback = document.getElementById("feedback");
 
   if (selected === q.correct) {
