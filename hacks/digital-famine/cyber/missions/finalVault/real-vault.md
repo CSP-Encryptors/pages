@@ -350,6 +350,18 @@ footer:
         if (input.value.toUpperCase() === correctMasterCode) {
             document.getElementById('stage3').classList.add('hidden');
             document.getElementById('success').classList.remove('hidden');
+
+            let progress = JSON.parse(localStorage.getItem('planetProgression')) || {
+                microblog: false,
+                medialit: false,
+                ai: false,
+                cyber: false,
+                current: 'microblog'
+            };
+
+            progress.cyber = true; // this page = Cyber planet
+
+            localStorage.setItem('planetProgression', JSON.stringify(progress));
         } else {
             attempts--;
             document.getElementById('attempts').textContent = `ATTEMPTS REMAINING: ${attempts}`;
