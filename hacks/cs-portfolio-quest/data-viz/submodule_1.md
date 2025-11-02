@@ -1,6 +1,6 @@
 ---
 layout: cs-portfolio-lesson
-title: "Submodule 1"
+title: "Submodule 1: Building Company Profiles with Spring Boot & REST APIs"
 description: "Spring Boot RESTful Company Profile System"
 permalink: /cs-portfolio-quest/data-viz/submodule_1/
 parent: "Data Visualization"
@@ -28,11 +28,12 @@ h1{margin:16px 0 8px;border-bottom:1px solid var(--b);padding-bottom:8px}
 }
 .nav button.active{border-color:#aaa}
 
-.card{border:1px solid var(--b);border-radius:10px;padding:14px;margin:12px 0;background:transparent}
+.card{border:1px solid var(--b);border-radius:12px;padding:14px;margin:12px 0;background:var(--p1)}
 label{color:var(--muted);display:block;margin:10px 0 4px}
 input,textarea,select{
   width:100%; padding:10px; border:1px solid var(--b); border-radius:8px;
-  background:var(--p2); color:var(--fg); font-family:ui-monospace,SFMono-Regular,Consolas
+  background:var(--p2); color:var(--fg);
+  font-family:ui-monospace,SFMono-Regular,Consolas,monospace
 }
 textarea{min-height:110px}
 pre{
@@ -122,7 +123,7 @@ hr{border:none;border-top:1px solid var(--b);margin:18px 0}
       <button class="btn" onclick="checkKata()">Check</button>
       <span id="kataMsg" style="margin-left:8px"></span>
     </div>
-    <details style="margin-top:10px"><summary>💡 Hint</summary><small class="hint">Use Spring Data naming: <code>findBy&lt;Field&gt;GreaterThan(param)</code>.</small></details>
+    <details style="margin-top:10px"><summary>Hint</summary><small class="hint">Use Spring Data naming: <code>findBy&lt;Field&gt;GreaterThan(param)</code>.</small></details>
   </section>
 
   <!-- QUIZ -->
@@ -149,7 +150,7 @@ hr{border:none;border-top:1px solid var(--b);margin:18px 0}
   <!-- SPRING SNIPS (kept tiny; look & feel unchanged) -->
   <section id="snips" class="card hidden">
     <details open>
-      <summary>🔗 Repository</summary>
+      <summary> Repository</summary>
       <pre>public interface CompanyRepository extends JpaRepository&lt;Company, Long&gt; {
   List&lt;Company&gt; findByIndustry(String industry);
   List&lt;Company&gt; findBySizeGreaterThan(Integer minSize);
@@ -181,20 +182,57 @@ spring.jpa.show-sql=true</pre>
   </section>
 
   <hr/>
-  <small class="hint">Styling background preserved; content trimmed; interactions unchanged.</small>
 </div>
 
 <script>
 // Tabs (UI behavior unchanged)
-document.querySelectorAll('.nav button').forEach(btn=>{
-  btn.onclick=()=>{
-    document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    const t=btn.dataset.tab;
-    document.querySelectorAll('section').forEach(s=>s.classList.add('hidden'));
-    document.getElementById(t).classList.remove('hidden');
-  };
+const nav = document.querySelector('.nav');
+const underline = document.querySelector('.nav-underline');
+const tabButtons = [...document.querySelectorAll('.nav button')];
+const sections = [...document.querySelectorAll('section')];
+
+function moveUnderline(btn) {
+  const { offsetLeft: x, offsetWidth: w } = btn;
+  underline.style.width = w + 'px';
+  underline.style.transform = `translateX(${x}px)`;
+}
+
+function setActive(btn) {
+  tabButtons.forEach(b => {
+    b.classList.remove('active');
+    b.setAttribute('aria-selected', 'false');
+  });
+  btn.classList.add('active');
+  btn.setAttribute('aria-selected', 'true');
+  const t = btn.dataset.tab;
+  sections.forEach(s => s.classList.add('hidden'));
+  document.getElementById(t).classList.remove('hidden');
+  moveUnderline(btn);
+}
+
+tabButtons.forEach(btn => {
+  btn.addEventListener('click', () => setActive(btn));
+  btn.addEventListener('keydown', e => {
+    const i = tabButtons.indexOf(document.querySelector('.nav button.active'));
+    if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      setActive(tabButtons[(i + 1) % tabButtons.length]);
+    }
+    if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      setActive(tabButtons[(i - 1 + tabButtons.length) % tabButtons.length]);
+    }
+    if (e.key === 'Home') {
+      e.preventDefault();
+      setActive(tabButtons[0]);
+    }
+    if (e.key === 'End') {
+      e.preventDefault();
+      setActive(tabButtons[tabButtons.length - 1]);
+    }
+  });
 });
+
 
 // In-memory DB (for Simulator + Builder)
 let db=[
