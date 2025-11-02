@@ -198,6 +198,10 @@ hr{border:none;border-top:1px solid var(--b);margin:18px 0}
           <option>PUT /api/companies/{id}</option>
           <option>DELETE /api/companies/{id}</option>
         </select>
+        <p class="tab-desc sub">
+  <strong>Request Setup:</strong> Choose your endpoint and, if needed, specify the path parameter. This defines what operation the API will perform.
+</p>
+
       </div>
       <div id="pidWrap" class="hidden">
         <label>Path <span class="kbd">{id}</span></label>
@@ -207,6 +211,9 @@ hr{border:none;border-top:1px solid var(--b);margin:18px 0}
 
     <div id="bodyWrap" class="card" style="margin-top:10px">
       <label>Body (JSON)</label>
+      <p class="tab-desc sub">
+  <strong>Request Body:</strong> Enter or modify the JSON payload that will be sent to the API for POST and PUT operations.
+</p>
       <textarea id="body">{
   "name": "TechCorp",
   "industry": "Software",
@@ -220,11 +227,18 @@ hr{border:none;border-top:1px solid var(--b);margin:18px 0}
         <button class="btn" onclick="resetDB()">Reset DB</button>
       </div>
       <label style="margin-top:10px">Response <small id="status" class="hint"></small></label>
+      <p class="tab-desc sub">
+  <strong>Data Returned:</strong> The simulated server response showing either the object created, retrieved, or an error message.
+</p>
+
       <pre id="out" class="out">Try a request!</pre>
     </div>
 
     <div class="card">
       <label>Current Companies</label>
+      <p class="tab-desc sub">
+  <strong>Database Snapshot:</strong> View all company records currently stored in the in-memory dataset after your requests.
+</p>
       <div id="list"></div>
     </div>
   </section>
@@ -239,11 +253,17 @@ hr{border:none;border-top:1px solid var(--b);margin:18px 0}
 
 
     <p><strong>One-liner:</strong> Derived query returning companies where <code>size &gt; minSize</code>.</p>
+    <p class="tab-desc sub">
+  <strong>Code Input:</strong> Write a Spring Data JPA derived query that matches the described condition. Press “Check” to validate syntax.
+</p>
     <input id="kataIn" placeholder="List<Company> findBySizeGreaterThan(Integer minSize);" />
     <div style="margin-top:8px">
       <button class="btn" onclick="checkKata()">Check</button>
       <span id="kataMsg" style="margin-left:8px"></span>
     </div>
+    <p class="tab-desc sub">
+  <strong>Hint Section:</strong> Expand for guidance on correct naming conventions used by Spring Data repositories.
+</p>
     <details style="margin-top:10px"><summary>Hint</summary><small class="hint">Use Spring Data naming: <code>findBy&lt;Field&gt;GreaterThan(param)</code>.</small></details>
   </section>
 
@@ -269,6 +289,9 @@ hr{border:none;border-top:1px solid var(--b);margin:18px 0}
   <span class="learn"><strong>Learning Objective:</strong> Explore how frontend inputs become structured JSON requests, how POST payloads are formatted, and how backend APIs would process entity creation and persistence.</span>
 </p>
 
+<p class="tab-desc sub">
+  <strong>Form Inputs:</strong> Fill out the company details below or click “Cheat Fill” to auto-populate realistic sample data.
+</p>
     <div class="grid grid-2">
       <div><label>Name</label><input id="bName" placeholder="Acme Inc"/></div>
       <div><label>Industry</label><select id="bInd"><option>Software</option><option>AI</option><option>Healthcare</option><option>Finance</option></select></div>
@@ -281,6 +304,9 @@ hr{border:none;border-top:1px solid var(--b);margin:18px 0}
       <button class="btn" onclick="cheatFill()">Cheat Fill</button>
       <button class="btn" onclick="builderAdd()">Add</button>
     </div>
+    <p class="tab-desc sub">
+  <strong>Data Returned:</strong> Displays the exact JSON object that would be sent in a real POST request to the backend API.
+</p>
     <pre id="bOut" class="out"></pre>
   </section>
 
