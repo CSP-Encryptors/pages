@@ -320,6 +320,62 @@ date: 2025-10-22
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<script type="module">
+  import { javaURI, fetchOptions } from '{{ site.baseurl }}/assets/js/api/config.js';
+  import { pythonURI } from '{{ site.baseurl }}/assets/js/api/config.js';
+
+  async function getCredentials() {
+        try {
+            const res = await fetch(`${pythonURI}/api/id`, {
+                ...fetchOptions,
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+            });
+
+            if (res.ok) {
+                const data = await res.json();
+                const username = data.uid;
+                console.log(username);
+                return username;
+            } else {
+                console.log(`Request failed for with status ${res.status}`);
+            }
+        } catch (err) {
+            console.log(`Error: ${err}`);
+        }
+  }
+
+  async function getLessonData() {
+        const username = await getCredentials();
+        try {
+            const res = await fetch(`${javaURI}/api/stats`, {
+                ...fetchOptions,
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+            });
+
+            if (res.ok) {
+                const data = await res.json();
+                console.log("All data", data);
+                const filtered = data.filter(item => item.username === username);
+                console.log(`Data for ${username}:`, filtered);
+            } else {
+                console.log(`Request failed with status ${res.status}`);
+            }
+        } catch (err) {
+            console.log(`Error: ${err}`);
+        }
+  }
+
+  getLessonData();
+
+</script>
+
 <script>
   // Weekly Study Time Chart
   const weeklyCtx = document.getElementById('weeklyChart').getContext('2d');
