@@ -349,54 +349,76 @@ date: 2025-10-22
   }
 
   async function getLessonData() {
-        const username = await getCredentials();
-        try {
-            const res = await fetch(`${javaURI}/api/stats`, {
-                ...fetchOptions,
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-            });
+      const username = await getCredentials();
+      try {
+          const res = await fetch(`${javaURI}/api/stats`, {
+              ...fetchOptions,
+              method: "GET",
+              headers: {
+                  "Content-Type": "application/json"
+              },
+          });
 
-            if (res.ok) {
-                const data = await res.json();
-                console.log("All data", data);
-                const filtered = data.filter(item => item.username === username);
-                console.log(`Data for ${username}:`, filtered);
-                const totalTime = filtered.reduce((sum, item) => sum + (item.time || 0), 0);
-                console.log(`Total time spent:`, totalTime);
-                console.log(`Modules Completed:`, filtered.length);
-                console.log(`Modules Incomplete:`, 25 - filtered.length);
+          if (!res.ok) {
+              console.log(`Request failed with status ${res.status}`);
+              return;
+          }
 
-                const modules = [
-                    'AI Usage',
-                    'Backend Development',
-                    'Data Visualization',
-                    'Frontend Development',
-                    'Resume Building'
-                ];
+          const data = await res.json();
+          console.log("All data", data);
 
-                // Initialize an object to store total time per module
-                const moduleTimes = {};
-                modules.forEach(m => moduleTimes[m] = 0);
+          const filtered = data.filter(item => item.username === username);
+          console.log(`Data for ${username}:`, filtered);
 
-                // Sum times per module
-                filtered.forEach(item => {
-                    const mod = item.module;
-                    if (modules.includes(mod)) {
-                        moduleTimes[mod] += item.time || 0;
-                    }
-                });
+          const totalTime = filtered.reduce((sum, item) => sum + (item.time || 0), 0);
+          console.log(`Total time spent:`, totalTime);
+          console.log(`Modules Completed:`, filtered.filter(i => i.finished).length);
+          console.log(`Modules Incomplete:`, 25 - filtered.filter(i => i.finished).length);
 
-                console.log(`Total times per module for ${username}:`, moduleTimes);
-            } else {
-                console.log(`Request failed with status ${res.status}`);
-            }
-        } catch (err) {
-            console.log(`Error: ${err}`);
-        }
+          // Define modules and total submodules
+          const modules = {
+              'AI Usage': 4,
+              'Backend Development': 6,
+              'Data Visualization': 3,
+              'Frontend Development': 6,
+              'Resume Building': 6
+          };
+
+          // Initialize result object
+          const moduleStats = {};
+          Object.keys(modules).forEach(m => {
+              moduleStats[m] = { time: 0, percentComplete: 0 };
+          });
+
+          // Sum time and count finished submodules per module
+          const finishedCounts = {};
+          Object.keys(modules).forEach(m => finishedCounts[m] = 0);
+
+          filtered.forEach(item => {
+              const mod = item.module;
+              if (modules[mod] !== undefined) {
+                  // Sum time
+                  moduleStats[mod].time += item.time || 0;
+
+                  // Count finished submodules
+                  if (item.finished) finishedCounts[mod] += 1;
+              }
+          });
+
+          // Compute percent completion per module
+          Object.keys(modules).forEach(m => {
+              const totalSubmodules = modules[m];
+              const finished = finishedCounts[m];
+              moduleStats[m].percentComplete = (finished / totalSubmodules) * 100;
+          });
+
+          console.log(`Module stats for ${username}:`, moduleStats);
+
+      } catch (err) {
+          console.log(`Error: ${err}`);
+      }
   }
+
 
   getLessonData();
 
