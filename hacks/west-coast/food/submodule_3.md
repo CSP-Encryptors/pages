@@ -265,6 +265,56 @@ summary {
 details[open] > summary {
     list-style-type: '▼ ';
 }
+
+/* Itinerary Foods Display */
+.itinerary-foods {
+  background: linear-gradient(135deg, rgba(255,140,0,0.15), rgba(255,69,0,0.1));
+  border: 2px solid rgba(255,140,0,0.3);
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  margin: 1.5rem 0;
+  box-shadow: 0 8px 30px rgba(255,140,0,0.2);
+}
+
+.itinerary-foods h3 {
+  color: #ffa500;
+  margin: 0 0 1rem 0;
+  font-size: 1.3rem;
+  text-align: center;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.food-item {
+  background: rgba(15, 23, 42, 0.8);
+  border-left: 4px solid #ffa500;
+  border-radius: 10px;
+  padding: 1rem;
+  margin: 0.75rem 0;
+  transition: transform 0.2s ease;
+}
+
+.food-item:hover {
+  transform: translateX(4px);
+}
+
+.food-item h4 {
+  color: #ffa500;
+  margin: 0 0 0.5rem 0;
+  font-size: 1.1rem;
+}
+
+.food-item p {
+  color: var(--muted);
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.no-itinerary-msg {
+  text-align: center;
+  color: var(--muted);
+  padding: 2rem;
+  font-style: italic;
+}
 </style>
 
 # 🌉 San Francisco — UPDATE (CRUD Submodule 3)
@@ -278,6 +328,12 @@ Welcome! This interactive page lets learners *actually* update dishes, ingredien
 <!-- Dark mode toggle -->
 <div style="display:flex; justify-content:flex-end; gap:0.5rem; margin-bottom:0.75rem;">
   <button id="themeToggleBtn" class="sq-btn" title="Toggle dark / light">🌙 Dark</button>
+</div>
+
+<!-- Itinerary Foods Display -->
+<div class="itinerary-foods">
+  <h3>🍽️ Your San Francisco Food Selections</h3>
+  <div id="itinerary-foods-display"></div>
 </div>
 
 <!-- Progress Tracker -->
@@ -302,7 +358,7 @@ Welcome! This interactive page lets learners *actually* update dishes, ingredien
 
 <!-- Unlock Notification -->
 <div id="unlockNotification" class="unlock-notification">
-  🎉 Portland Unlocked!<br>
+  🎉 Seattle Unlocked!<br>
   <small style="font-size: 13px; opacity: 0.95;">You can now continue to the next city!</small>
 </div>
 
@@ -320,6 +376,7 @@ Welcome! This interactive page lets learners *actually* update dishes, ingredien
 - Running code appends output to the terminal area under the task.
 - The page includes a **mock backend** (`MockAPI`) that simulates `PUT /api/dishes/{id}`, `PUT /api/dishes/bulk`, and `GET /api/dishes?city=sf`. Data is stored in `localStorage` so progress persists across refreshes.
 - On success when updating Sourdough, a **toast** shows `+50 XP`.
+- **NEW:** The page now reads your itinerary from localStorage and displays only your selected San Francisco foods!
 
 ---
 
@@ -424,14 +481,14 @@ Welcome! This interactive page lets learners *actually* update dishes, ingredien
         setTimeout(() => notification.style.display = 'none', 4000);
       }
       unlockNextCity();
-      console.log('🎉 San Francisco module completed! Portland should now be unlocked.');
+      console.log('🎉 San Francisco module completed! Seattle should now be unlocked.');
     }
   }
 
   // Fallback unlock methods
   function unlockNextCity() {
     try {
-      const saved = localStorage.getItem('mchopiee_city_progress');
+      const saved = localStorage.getItem('city_progress');
       let gameProgress = saved ? JSON.parse(saved) : { unlockedCities:[0,1,2], completedCities:[], totalCitiesCompleted:0 };
       if (!gameProgress.completedCities.includes(2)) {
         gameProgress.completedCities.push(2);
@@ -440,10 +497,46 @@ Welcome! This interactive page lets learners *actually* update dishes, ingredien
       if (!gameProgress.unlockedCities.includes(3)) {
         gameProgress.unlockedCities.push(3);
       }
-      localStorage.setItem('mchopiee_city_progress', JSON.stringify(gameProgress));
+      localStorage.setItem('city_progress', JSON.stringify(gameProgress));
       console.log('✅ Progress updated:', gameProgress);
     } catch (e) {
       console.error('Unlock failed:', e);
+    }
+  }
+
+  // Load and display itinerary foods
+  function loadItineraryFoods() {
+    const itineraryData = localStorage.getItem('westCoastItinerary');
+    const displayElement = document.getElementById('itinerary-foods-display');
+    
+    if (!itineraryData) {
+      displayElement.innerHTML = '<div class="no-itinerary-msg">No itinerary found. Please complete the trip planner quiz first!</div>';
+      return;
+    }
+
+    try {
+      const itinerary = JSON.parse(itineraryData);
+      const sfFoods = itinerary.cities['San Francisco']?.foods || [];
+      
+      if (sfFoods.length === 0) {
+        displayElement.innerHTML = '<div class="no-itinerary-msg">No foods selected for San Francisco in your itinerary.</div>';
+        return;
+      }
+
+      let html = '';
+      sfFoods.forEach((food, index) => {
+        html += `
+          <div class="food-item">
+            <h4>🍽️ ${food}</h4>
+            <p>Selected food #${index + 1} from your personalized itinerary</p>
+          </div>
+        `;
+      });
+      
+      displayElement.innerHTML = html;
+    } catch (e) {
+      console.error('Error loading itinerary:', e);
+      displayElement.innerHTML = '<div class="no-itinerary-msg">Error loading itinerary data.</div>';
     }
   }
 
@@ -515,6 +608,27 @@ Welcome! This interactive page lets learners *actually* update dishes, ingredien
       return newIng;
     }
 
+    // Simulates POST /api/dishes (for seeding)
+    async postDish(payload) {
+      if (!payload || !payload.name || !payload.category || !Array.isArray(payload.ingredients) || isNaN(payload.calories))
+        return { status:400, body:{error:"Missing required fields"} };
+      const dish = { id:t(), ...payload, createdAt:new Date().toISOString() };
+      this.db.dishes.push(dish);
+      this.db.save();
+      return { status:201, body:dish };
+    }
+
+    async postBulk(dishesArray) {
+      if (!Array.isArray(dishesArray)) return { status:400, body:{error:"Expected array"} };
+      const created = [];
+      for (const d of dishesArray) {
+        const res = await this.postDish(d);
+        if (res.status !== 201) return { status:500, body:{error:"Bulk insert failed"} };
+        created.push(res.body);
+      }
+      return { status:201, body:created };
+    }
+
     // Simulates PUT /api/dishes/{id}
     async putDish(id, payload) {
       // server-side validation
@@ -570,7 +684,27 @@ Welcome! This interactive page lets learners *actually* update dishes, ingredien
     // GET /api/dishes?city=sf
     async getDishes(query = {}) {
       const city = (query.city || 'sf').toLowerCase();
-      return this.db.dishes.filter(d => (d.city || 'sf').toLowerCase() === city);
+      const itineraryData = localStorage.getItem('westCoastItinerary');
+      
+      // If itinerary exists, filter to show only selected foods
+      if (itineraryData) {
+        try {
+          const itinerary = JSON.parse(itineraryData);
+          const selectedFoods = itinerary.cities['San Francisco']?.foods || [];
+          
+          if (selectedFoods.length > 0) {
+            return this.db.dishes.filter(d => 
+              (d.city||'sf').toLowerCase() === city && 
+              selectedFoods.some(food => d.name.includes(food) || food.includes(d.name.split(' ')[0]))
+            );
+          }
+        } catch (e) {
+          console.error('Error filtering by itinerary:', e);
+        }
+      }
+      
+      // Default: return all dishes for the city
+      return this.db.dishes.filter(d => (d.city||'sf').toLowerCase()===city);
     }
 
     // reset
@@ -602,6 +736,9 @@ Welcome! This interactive page lets learners *actually* update dishes, ingredien
   } else {
     window.logTo('terminal-init', '[MockAPI] DB loaded from localStorage.');
   }
+
+  loadTaskProgress();
+  loadItineraryFoods();
 })();
 </script>
 
@@ -918,9 +1055,9 @@ window.runUnitTest = async function() {
 window.seedPantry = async function() {
   clearTerm('terminal-seed');
   const seed = [
-    { name: "Sourdough Bread", category: "Bread", calories: 180, ingredients: [{name:"flour", qty:"3", unit:"cups"}], city:'sf' },
-    { name: "Cioppino", category: "Seafood", calories: 450, ingredients: [{name:"fish", qty:"1", unit:"lb"}], city:'sf' },
-    { name: "Dim Sum", category: "Chinese", calories: 600, ingredients: [{name:"flour", qty:"2", unit:"cups"}], city:'sf' },
+    { name: "Clam Chowder in Sourdough Bread Bowl", category: "Bread", calories: 180, ingredients: [{name:"flour", qty:"3", unit:"cups"}], city:'sf' },
+    { name: "Mission Burrito", category: "Seafood", calories: 450, ingredients: [{name:"fish", qty:"1", unit:"lb"}], city:'sf' },
+    { name: "Dungeness Crab", category: "Chinese", calories: 600, ingredients: [{name:"flour", qty:"2", unit:"cups"}], city:'sf' },
   ];
   logTo('terminal-seed', '[Client] Sending bulk seed...');
   const res = await window.MockAPIInstance.postBulk(seed);
@@ -968,8 +1105,8 @@ Congratulations! You've successfully completed **CRUD: UPDATE** in San Francisco
 
 Your **Sourdough** update earned you **+50 XP** and the **"First Update"** badge! 🏆  
 
-The next city awaits: **Portland — DELETE module unlocked!** 🌲  
-Click through to begin exploring **removing dishes and cleaning up records** in PDX.
+The next city awaits: **Seattle — DELETE module unlocked!** 🌲  
+Click through to begin exploring **removing dishes and cleaning up records** in Seattle.
 
 <script>
 /* utilities used by editors */
