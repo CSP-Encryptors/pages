@@ -286,18 +286,18 @@ date: 2025-10-22
 
   <!-- Weekly Study Time Chart -->
   <div class="chart-card">
-    <div class="chart-title">Weekly Study Time</div>
+    <div class="chart-title">Study Time by Module</div>
     <div class="chart-container">
-      <canvas id="weeklyChart"></canvas>
+      <canvas id="timeChart"></canvas>
     </div>
   </div>
 
   <!-- Bottom Charts Grid -->
   <div class="bottom-grid">
     <div class="chart-card">
-      <div class="chart-title">Accuracy Per Module</div>
+      <div class="chart-title">Completion Per Module</div>
       <div class="chart-container">
-        <canvas id="accuracyChart"></canvas>
+        <canvas id="completionChart"></canvas>
       </div>
     </div>
     <div class="chart-card">
@@ -428,114 +428,93 @@ date: 2025-10-22
       }
   }
 
-  // getLessonData();
-  async function updateAnalytics() {
-    const lessonData = await getLessonData();
-    if (!lessonData) return;
+  function createCharts(timeData, completionData) {
+    console.log("In create charts function")
+    const maxTime = Math.max(...timeData);
+    const weeklyCtx = document.getElementById('timeChart').getContext('2d');
+    new Chart(weeklyCtx, {
+      type: 'line',
+      data: {
+        labels: ['Frontend Dev.', 'Backend Dev.', 'Data Viz.', 'Resume', 'AI Usage'],
+        datasets: [{
+          label: 'Time (minutes)',
+          data: timeData,
+          borderColor: '#ea8c33',
+          backgroundColor: 'rgba(234, 140, 51, 0.1)',
+          tension: 0.4,
+          pointRadius: 6,
+          pointBackgroundColor: '#ea8c33',
+          pointBorderColor: '#fff',
+          pointBorderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: '#ea8c33',
+            titleColor: '#fff',
+            bodyColor: '#fff',
+            padding: 12,
+            cornerRadius: 8
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: maxTime * 1.1,
+            grid: { color: 'rgba(255, 255, 255, 0.1)' },
+            ticks: { color: '#b0b0b0' }
+          },
+          x: {
+            grid: { display: false },
+            ticks: { color: '#b0b0b0' }
+          }
+        }
+      }
+    });
 
-    // Update total study time
-    const totalTimeEl = document.getElementById("total-studytime");
-    if (totalTimeEl) {
-        totalTimeEl.innerText = `${lessonData.totalTime.toFixed(1)}h`; // rounds to 1 decimal place
-    }
-
-    // Update modules complete
-    const modulesCompleteEl = document.getElementById("modules-complete");
-    if (modulesCompleteEl) {
-        modulesCompleteEl.innerText = lessonData.modulesComplete;
-    }
-
-    // Update modules incomplete
-    const modulesIncompleteEl = document.getElementById("modules-incomplete");
-    if (modulesIncompleteEl) {
-        modulesIncompleteEl.innerText = `${lessonData.modulesIncomplete} in progress`;
-    }
+    // Completion Per Module Chart
+    const accuracyCtx = document.getElementById('completionChart').getContext('2d');
+    new Chart(accuracyCtx, {
+      type: 'bar',
+      data: {
+        labels: ['Frontend Dev.', 'Backend Dev.', 'Data Viz.', 'Resume', 'AI Usage'],
+        datasets: [{
+          data: completionData,
+          backgroundColor: '#ea8c33',
+          borderRadius: 8
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: '#ea8c33',
+            padding: 12,
+            cornerRadius: 8
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 100,
+            grid: { color: 'rgba(255, 255, 255, 0.1)' },
+            ticks: { color: '#b0b0b0' }
+          },
+          x: {
+            grid: { display: false },
+            ticks: { color: '#b0b0b0' }
+          }
+        }
+      }
+    });
   }
 
-  updateAnalytics();
-
-  // Weekly Study Time Chart
-  const weeklyCtx = document.getElementById('weeklyChart').getContext('2d');
-  new Chart(weeklyCtx, {
-    type: 'line',
-    data: {
-      labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-      datasets: [{
-        label: 'Study Hours',
-        data: [3.5, 4.2, 2.7, 5, 4.5, 6.5, 6],
-        borderColor: '#ea8c33',
-        backgroundColor: 'rgba(234, 140, 51, 0.1)',
-        tension: 0.4,
-        pointRadius: 6,
-        pointBackgroundColor: '#ea8c33',
-        pointBorderColor: '#fff',
-        pointBorderWidth: 2
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          backgroundColor: '#ea8c33',
-          titleColor: '#fff',
-          bodyColor: '#fff',
-          padding: 12,
-          cornerRadius: 8
-        }
-      },
-      scales: {
-        y: {
-          beginAtZero: true,
-          max: 8,
-          grid: { color: 'rgba(255, 255, 255, 0.1)' },
-          ticks: { color: '#b0b0b0' }
-        },
-        x: {
-          grid: { display: false },
-          ticks: { color: '#b0b0b0' }
-        }
-      }
-    }
-  });
-  // Accuracy Per Module Chart
-  const accuracyCtx = document.getElementById('accuracyChart').getContext('2d');
-  new Chart(accuracyCtx, {
-    type: 'bar',
-    data: {
-      labels: ['Python', 'Data Analysis', 'Web Dev', 'ML Basics', 'Algorithms'],
-      datasets: [{
-        data: [92, 88, 89, 78, 91],
-        backgroundColor: '#ea8c33',
-        borderRadius: 8
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          backgroundColor: '#ea8c33',
-          padding: 12,
-          cornerRadius: 8
-        }
-      },
-      scales: {
-        y: {
-          beginAtZero: true,
-          max: 100,
-          grid: { color: 'rgba(255, 255, 255, 0.1)' },
-          ticks: { color: '#b0b0b0' }
-        },
-        x: {
-          grid: { display: false },
-          ticks: { color: '#b0b0b0' }
-        }
-      }
-    }
-  });
   // Question Categories Chart
   const categoriesCtx = document.getElementById('categoriesChart').getContext('2d');
   new Chart(categoriesCtx, {
@@ -566,6 +545,46 @@ date: 2025-10-22
       }
     }
   });
+
+  // getLessonData();
+  async function updateAnalytics() {
+    const lessonData = await getLessonData();
+    if (!lessonData) return;
+
+    // Update total study time
+    const totalTimeEl = document.getElementById("total-studytime");
+    if (totalTimeEl) {
+        totalTimeEl.innerText = `${lessonData.totalTime.toFixed(1)}h`; // rounds to 1 decimal place
+    }
+
+    // Update modules complete
+    const modulesCompleteEl = document.getElementById("modules-complete");
+    if (modulesCompleteEl) {
+        modulesCompleteEl.innerText = lessonData.modulesComplete;
+    }
+
+    // Update modules incomplete
+    const modulesIncompleteEl = document.getElementById("modules-incomplete");
+    if (modulesIncompleteEl) {
+        modulesIncompleteEl.innerText = `${lessonData.modulesIncomplete} in progress`;
+    }
+
+    // update charts data
+    const moduleStats = lessonData.moduleStats
+    const frontendTime = moduleStats["Frontend Development"].time, frontendCompletion = moduleStats["Frontend Development"].percentComplete
+    const backendTime = moduleStats["Backend Development"].time, backendCompletion = moduleStats["Backend Development"].percentComplete
+    const datavizTime = moduleStats["Data Visualization"].time, datavizCompletion = moduleStats["Data Visualization"].percentComplete
+    const resumeTime = moduleStats["Resume Building"].time, resumeCompletion = moduleStats["Resume Building"].percentComplete
+    const aiTime = moduleStats["AI Usage"].time, aiCompletion = moduleStats["AI Usage"].percentComplete
+    const timeData = [frontendTime, backendTime, datavizTime, resumeTime, aiTime]
+    const completionData = [frontendCompletion, backendCompletion, datavizCompletion, resumeCompletion, aiCompletion]
+    console.log("Time data", timeData)
+    console.log("Completion Data", completionData)
+    createCharts(timeData, completionData);
+  }
+
+  updateAnalytics();
+
   // PDF Download functionality
   const downloadBtn = document.getElementById('downloadBtn');
   downloadBtn.addEventListener('click', async function() {
