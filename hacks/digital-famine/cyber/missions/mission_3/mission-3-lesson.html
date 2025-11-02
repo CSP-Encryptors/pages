@@ -904,18 +904,370 @@ admin2024"></textarea>
             </div>
         </div>
 
-        <div class="success-box" style="margin-top: 40px;">
-            <h3>Mission Complete</h3>
-            <p>Once you've completed all exercises and downloaded the scripts, you'll earn:</p>
-            <div style="text-align: center; margin-top: 20px;">
-                <div style="background: rgba(19, 28, 48, 0.6); padding: 20px; border-radius: 1.25rem; display: inline-block;">
-                    <h2 style="color: #ffe58a; margin: 0;">Code Fragment: CHARLIE-2N5P</h2>
-                </div>
-            </div>
-        </div>
+                    </div>
     </div>
 
-    <script src="/hacks/digital-famine/cybersecurity-game/missions/mission_3/mission-3.js"></script>
+    <script>
+        // Mission progress tracking
+        let missionProgress = {
+            basics: false,
+            practice: 0,
+            quiz: 0,
+            challenges: 0
+        };
 
+        // Update mission progress
+        function updateProgress(type, value) {
+            switch(type) {
+                case 'basics':
+                    missionProgress.basics = value;
+                    document.getElementById('req-basics-check').textContent = value ? '✅' : '⭕';
+                    break;
+                case 'practice':
+                    missionProgress.practice = value;
+                    document.getElementById('req-practice-check').textContent = value >= 3 ? '✅' : '⭕';
+                    break;
+                case 'quiz':
+                    missionProgress.quiz = value;
+                    document.getElementById('req-quiz-check').textContent = value >= 6 ? '✅' : '⭕';
+                    break;
+                case 'challenges':
+                    missionProgress.challenges = value;
+                    document.getElementById('req-challenge-check').textContent = value >= 2 ? '✅' : '⭕';
+                    break;
+            }
+        }
+
+        // Run after completing exercises
+        function exercise1() {
+            // ... existing exercise1 code ...
+            missionProgress.practice++;
+            updateProgress('practice', missionProgress.practice);
+        }
+
+        function exercise2() {
+            // ... existing exercise2 code ...
+            missionProgress.practice++;
+            updateProgress('practice', missionProgress.practice);
+        }
+
+        // Update other exercise functions similarly
+
+        // Quiz answer checking with progress tracking
+        function checkAnswer(questionNum, choice, correct) {
+            // ... existing checkAnswer code ...
+            updateProgress('quiz', quizScore);
+        }
+
+        // Challenge completion tracking
+        function challenge1() {
+            // ... existing challenge1 code ...
+            missionProgress.challenges++;
+            updateProgress('challenges', missionProgress.challenges);
+        }
+
+        function challenge2() {
+            // ... existing challenge2 code ...
+            missionProgress.challenges++;
+            updateProgress('challenges', missionProgress.challenges);
+        }
+
+        // Mission validation
+        function runValidation() {
+            const validationResults = document.getElementById('validation-results');
+            const codeReward = document.getElementById('code-reward');
+            
+            // Check all requirements
+            const requirements = {
+                basics: missionProgress.basics,
+                practice: missionProgress.practice >= 3,
+                quiz: missionProgress.quiz >= 6,
+                challenges: missionProgress.challenges >= 2
+            };
+
+            const allComplete = Object.values(requirements).every(req => req);
+
+            if (allComplete) {
+                validationResults.innerHTML = `
+                    <div class="bg-green-900/20 border border-green-500/30 rounded-lg p-6">
+                        <h4 class="text-xl font-semibold text-green-300 mb-3">✅ All Requirements Complete!</h4>
+                        <p>You've demonstrated mastery of database security concepts.</p>
+                    </div>
+                `;
+                codeReward.classList.remove('section-hidden');
+            } else {
+                validationResults.innerHTML = `
+                    <div class="bg-red-900/20 border border-red-500/30 rounded-lg p-6">
+                        <h4 class="text-xl font-semibold text-red-300 mb-3">❌ Some Requirements Incomplete</h4>
+                        <ul class="list-disc pl-6">
+                            ${!requirements.basics ? '<li>Complete the hashing lab exercises</li>' : ''}
+                            ${!requirements.practice ? '<li>Complete at least 3 practice exercises</li>' : ''}
+                            ${!requirements.quiz ? '<li>Score at least 6/8 on the quiz</li>' : ''}
+                            ${!requirements.challenges ? '<li>Complete at least 2 coding challenges</li>' : ''}
+                        </ul>
+                    </div>
+                `;
+                codeReward.classList.add('section-hidden');
+            }
+            validationResults.classList.remove('section-hidden');
+        }
+
+        // Initialize the quiz score display and progress tracking
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('quizScore').textContent = quizScore;
+            // Initialize progress displays
+            updateProgress('basics', missionProgress.basics);
+            updateProgress('practice', missionProgress.practice);
+            updateProgress('quiz', missionProgress.quiz);
+            updateProgress('challenges', missionProgress.challenges);
+        });
+    </script>
+    </div>
+
+    <script>
+        // Tab switching functionality
+        function switchTab(tabName, event) {
+            // Update button states
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Update content visibility
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(tabName + '-tab').classList.add('active');
+        }
+
+        // Hash function for interactive demos
+        function sha256(text) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(text);
+            return crypto.subtle.digest('SHA-256', data).then(buffer => {
+                return Array.prototype.map.call(new Uint8Array(buffer), x => ('00' + x.toString(16)).slice(-2)).join('');
+            });
+        }
+
+        // Live hash demo functionality
+        async function liveHash() {
+            const input = document.getElementById('learnHashInput').value;
+            const output = document.getElementById('liveHashOutput');
+            const inputSpan = document.getElementById('liveInput');
+            const hashSpan = document.getElementById('liveHash');
+            const lengthSpan = document.getElementById('liveLength');
+
+            if (input) {
+                const hash = await sha256(input);
+                inputSpan.textContent = input;
+                hashSpan.textContent = hash;
+                lengthSpan.textContent = hash.length;
+                output.style.display = 'block';
+            } else {
+                output.style.display = 'none';
+            }
+        }
+
+        // Avalanche effect demo
+        async function demoAvalanche() {
+            const demo = document.getElementById('avalancheDemo');
+            const text = "Hello, World!";
+            const hash1 = await sha256(text);
+            const hash2 = await sha256(text + ".");
+
+            demo.innerHTML = `
+                <div class="info-box" style="margin-top: 15px;">
+                    <p><strong>Original Text:</strong> ${text}<br>
+                    <strong>Hash:</strong> ${hash1}</p>
+                    <hr style="border-color: rgba(120, 214, 255, 0.2); margin: 10px 0;">
+                    <p><strong>Changed Text:</strong> ${text}.<br>
+                    <strong>Hash:</strong> ${hash2}</p>
+                </div>
+            `;
+        }
+
+        // Exercise functions
+        async function exercise1() {
+            const input = document.getElementById('ex1Input').value;
+            const result = document.getElementById('ex1Result');
+            const hint = document.getElementById('ex1Hint');
+
+            if (input) {
+                const hash = await sha256(input);
+                result.innerHTML = `
+                    <div class="info-box" style="margin-top: 15px;">
+                        <strong>Input:</strong> ${input}<br>
+                        <strong>Hash:</strong> ${hash}
+                    </div>
+                `;
+                hint.style.display = 'block';
+            }
+        }
+
+        async function exercise2() {
+            const input1 = document.getElementById('ex2Input1').value;
+            const input2 = document.getElementById('ex2Input2').value;
+            const result = document.getElementById('ex2Result');
+
+            if (input1 && input2) {
+                const hash1 = await sha256(input1);
+                const hash2 = await sha256(input2);
+                const match = hash1 === hash2;
+
+                result.innerHTML = `
+                    <div class="info-box" style="margin-top: 15px;">
+                        <p><strong>First Input:</strong> ${input1}<br>
+                        <strong>Hash:</strong> ${hash1}</p>
+                        <hr style="border-color: rgba(120, 214, 255, 0.2); margin: 10px 0;">
+                        <p><strong>Second Input:</strong> ${input2}<br>
+                        <strong>Hash:</strong> ${hash2}</p>
+                        <hr style="border-color: rgba(120, 214, 255, 0.2); margin: 10px 0;">
+                        <p><strong>Result:</strong> ${match ? '✅ Hashes Match!' : '❌ Hashes Different!'}</p>
+                    </div>
+                `;
+            }
+        }
+
+        async function exercise3() {
+            const passwords = document.getElementById('ex3Passwords').value.split('\n');
+            const result = document.getElementById('ex3Result');
+            let output = '<div class="info-box" style="margin-top: 15px;"><h4>Password Hashes:</h4>';
+
+            for (const password of passwords) {
+                if (password.trim()) {
+                    const hash = await sha256(password.trim());
+                    output += `<p><strong>${password.trim()}:</strong><br>${hash}</p>`;
+                }
+            }
+
+            result.innerHTML = output + '</div>';
+        }
+
+        async function exercise4() {
+            const input1 = document.getElementById('ex4Input1').value;
+            const input2 = document.getElementById('ex4Input2').value;
+            const result = document.getElementById('ex4Result');
+
+            if (input1 && input2) {
+                const hash1 = await sha256(input1);
+                const hash2 = await sha256(input2);
+                const collision = hash1 === hash2;
+
+                result.innerHTML = `
+                    <div class="info-box" style="margin-top: 15px;">
+                        <p><strong>Input 1 Hash:</strong> ${hash1}</p>
+                        <p><strong>Input 2 Hash:</strong> ${hash2}</p>
+                        <p><strong>Result:</strong> ${collision ? '⚠️ Collision Found!' : '✅ No Collision'}</p>
+                    </div>
+                `;
+            }
+        }
+
+        async function exercise5() {
+            const content = document.getElementById('ex5FileContent').value;
+            const expected = document.getElementById('expectedHash').textContent;
+            const result = document.getElementById('ex5Result');
+
+            if (content) {
+                const hash = await sha256(content);
+                const match = hash === expected;
+
+                result.innerHTML = `
+                    <div class="info-box" style="margin-top: 15px;">
+                        <p><strong>Calculated Hash:</strong><br>${hash}</p>
+                        <p><strong>Verification:</strong> ${match ? '✅ File Intact!' : '❌ File Modified!'}</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Challenge functions
+        let quizScore = 0;
+        function checkAnswer(questionNum, choice, correct) {
+            const feedback = document.getElementById(`q${questionNum}Feedback`);
+            const options = document.querySelectorAll(`#quiz-tab .quiz-option`);
+            
+            options.forEach(option => {
+                if (option.textContent.startsWith(choice)) {
+                    if (correct) {
+                        option.classList.add('correct');
+                        if (!feedback.classList.contains('answered')) {
+                            quizScore++;
+                            document.getElementById('quizScore').textContent = quizScore;
+                        }
+                    } else {
+                        option.classList.add('incorrect');
+                    }
+                }
+            });
+            
+            feedback.classList.add('answered');
+            feedback.innerHTML = correct ? 
+                '<div class="success-box" style="margin-top: 10px;">✅ Correct!</div>' :
+                '<div class="alert-box" style="margin-top: 10px;">❌ Try Again!</div>';
+        }
+
+        function resetQuiz() {
+            quizScore = 0;
+            document.getElementById('quizScore').textContent = 0;
+            document.querySelectorAll('.quiz-option').forEach(option => {
+                option.classList.remove('correct', 'incorrect');
+            });
+            document.querySelectorAll('[id$="Feedback"]').forEach(feedback => {
+                feedback.innerHTML = '';
+                feedback.classList.remove('answered');
+            });
+        }
+
+        async function challenge1() {
+            const input = document.getElementById('ch1TestInput').value;
+            const result = document.getElementById('ch1Result');
+
+            if (input) {
+                const hash = await sha256(input);
+                result.innerHTML = `
+                    <div class="success-box" style="margin-top: 15px;">
+                        <p><strong>Input:</strong> ${input}</p>
+                        <p><strong>Hash:</strong> ${hash}</p>
+                        <p><strong>Length:</strong> ${hash.length} characters</p>
+                    </div>
+                `;
+            }
+        }
+
+        async function challenge2() {
+            const codes = document.getElementById('ch2Codes').value.split(',');
+            const result = document.getElementById('ch2Result');
+            const progress = document.getElementById('ch2Progress');
+            const progressFill = document.getElementById('ch2ProgressFill');
+
+            if (codes.length > 0) {
+                progress.style.display = 'block';
+                let output = '<div class="success-box" style="margin-top: 15px;"><h4>Batch Results:</h4>';
+
+                for (let i = 0; i < codes.length; i++) {
+                    const code = codes[i].trim();
+                    if (code) {
+                        const hash = await sha256(code);
+                        output += `<p><strong>${code}:</strong><br>${hash}</p>`;
+                        progressFill.style.width = `${((i + 1) / codes.length) * 100}%`;
+                        progressFill.textContent = `${Math.round(((i + 1) / codes.length) * 100)}%`;
+                    }
+                }
+
+                result.innerHTML = output + '</div>';
+            }
+        }
+
+        function downloadFile(type) {
+            // In a real implementation, this would trigger a file download
+            alert(`Downloading ${type} file...`);
+        }
+
+        // Initialize the quiz score display
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('quizScore').textContent = quizScore;
+        });
+    </script>
 </body>
 </html>
