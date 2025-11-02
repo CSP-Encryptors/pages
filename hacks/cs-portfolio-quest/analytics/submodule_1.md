@@ -228,16 +228,16 @@ date: 2025-10-22
         <span class="metric-title">Total Study Time</span>
         <div class="metric-icon" style="background: rgba(234, 140, 51, 0.2);">⏱️</div>
       </div>
-      <div class="metric-value">127.5h</div>
-      <div class="metric-subtitle">+8h this week</div>
+      <div class="metric-value" id="total-studytime">0h</div>
+      <div class="metric-subtitle">Well done!</div>
     </div>
     <div class="metric-card">
       <div class="metric-header">
         <span class="metric-title">Modules Completed</span>
         <div class="metric-icon" style="background: rgba(147, 51, 234, 0.2);">📚</div>
       </div>
-      <div class="metric-value">24</div>
-      <div class="metric-subtitle">3 in progress</div>
+      <div class="metric-value" id="modules-complete">0</div>
+      <div class="metric-subtitle" id="modules-incomplete">0 in progress</div>
     </div>
     <div class="metric-card">
       <div class="metric-header">
@@ -372,8 +372,10 @@ date: 2025-10-22
 
           const totalTime = filtered.reduce((sum, item) => sum + (item.time || 0), 0);
           console.log(`Total time spent:`, totalTime);
-          console.log(`Modules Completed:`, filtered.filter(i => i.finished).length);
-          console.log(`Modules Incomplete:`, 25 - filtered.filter(i => i.finished).length);
+          const modulesComplete = filtered.length
+          console.log(`Modules Completed:`, modulesComplete);
+          const modulesIncomplete = 25 - filtered.length
+          console.log(`Modules Incomplete:`, modulesIncomplete);
 
           // Define modules and total submodules
           const modules = {
@@ -414,13 +416,43 @@ date: 2025-10-22
 
           console.log(`Module stats for ${username}:`, moduleStats);
 
+          return {
+            totalTime,
+            modulesComplete,
+            modulesIncomplete,
+            moduleStats,
+            filteredData: filtered
+          };
       } catch (err) {
           console.log(`Error: ${err}`);
       }
   }
 
+  // getLessonData();
+  async function updateAnalytics() {
+    const lessonData = await getLessonData();
+    if (!lessonData) return;
 
-  getLessonData();
+    // Update total study time
+    const totalTimeEl = document.getElementById("total-studytime");
+    if (totalTimeEl) {
+        totalTimeEl.innerText = `${lessonData.totalTime.toFixed(1)}h`; // rounds to 1 decimal place
+    }
+
+    // Update modules complete
+    const modulesCompleteEl = document.getElementById("modules-complete");
+    if (modulesCompleteEl) {
+        modulesCompleteEl.innerText = lessonData.modulesComplete;
+    }
+
+    // Update modules incomplete
+    const modulesIncompleteEl = document.getElementById("modules-incomplete");
+    if (modulesIncompleteEl) {
+        modulesIncompleteEl.innerText = `${lessonData.modulesIncomplete} in progress`;
+    }
+  }
+
+  updateAnalytics();
 
   // Weekly Study Time Chart
   const weeklyCtx = document.getElementById('weeklyChart').getContext('2d');
