@@ -90,7 +90,29 @@ footer:
   border-radius: 8px;
   margin-top: 10px;
 }
+.progress-bar-container {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  height: 20px;
+  margin-bottom: 25px;
+  box-shadow: 0 0 10px rgba(0, 255, 153, 0.2);
+}
+
+.progress-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #00ff99, #00cc66);
+  box-shadow: 0 0 12px #00ff99;
+  transition: width 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 12px;
+}
+
 </style>
+
+<div class="progress-bar-container">
+  <div class="progress-bar" id="progress-bar"></div>
+</div>
 
 <div class="quiz-container">
   <h1>Cybersecurity Quiz</h1>
@@ -221,6 +243,9 @@ function showQuestion() {
 
   document.getElementById("feedback").innerHTML = "";
   document.getElementById("next-btn").style.display = "none";
+  
+  updateProgressBar();
+
 }
 
 function checkAnswer(selected) {
@@ -257,6 +282,12 @@ document.getElementById("next-btn").onclick = () => {
     finishQuiz();
   }
 };
+
+function updateProgressBar() {
+  const percent = ((currentQuestion + 1) / shuffledQuestions.length) * 100;
+  document.getElementById("progress-bar").style.width = `${percent}%`;
+}
+
 
 function finishQuiz() {
   const percent = (score / (questions.length * 5)) * 100;
