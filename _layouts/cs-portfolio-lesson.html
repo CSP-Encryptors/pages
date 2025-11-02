@@ -311,7 +311,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
   }
 
-  async function markLessonComplete() {
+  async function markLessonComplete(timeOnLesson) {
         const username = await getCredentials();
         const module = "{{ page.parent | escape }}";
         const submodule = "{{ page.submodule | escape }}";
@@ -327,7 +327,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     "module": module,
                     "submodule": submodule,
                     "finished": true,
-                    "time": 25
+                    "time": timeOnLesson/60
                 }),
             });
 
@@ -339,6 +339,10 @@ document.addEventListener("DOMContentLoaded", function () {
         console.error(`Error sending lesson complete status to backend`, err);
         }
   }
+
+  // log time spent on lessons
+  let startTime = Date.now();
+  let timeSpentSec = 0;
 
   const activateOnScroll = () => {
     // If already completed, don't trigger again
@@ -358,7 +362,9 @@ document.addEventListener("DOMContentLoaded", function () {
       enableNextButton();
 
       // Lesson complete
-      markLessonComplete(); // for lesson complete API - curators
+      let timeSpentSec = Math.round((Date.now() - startTime) / 1000);
+      console.log(`User spent ${timeSpentSec} seconds to finish the lesson.`);
+      markLessonComplete(timeSpentSec); // for lesson complete API - curators
       
       // Remove listener - no longer needed
       window.removeEventListener("scroll", activateOnScroll);
