@@ -106,6 +106,7 @@ footer:
   box-shadow: 0 0 12px #00ff99;
   transition: width 0.3s ease, box-shadow 0.3s ease;
   border-radius: 12px;
+  background: linear-gradient(90deg, #00ff99, #00cc66);
 }
 
 </style>
