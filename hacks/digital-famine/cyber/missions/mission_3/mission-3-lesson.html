@@ -822,7 +822,7 @@ admin2024"></textarea>
 
             <div class="download-card">
                 <div class="download-info">
-                    <h4>mission3_hashing_lab.py</h4>
+                    <h4>project/lab/hashing_lab.py</h4>
                     <p>Interactive demonstrations of SHA-256 properties</p>
                     <span class="badge badge-beginner">BEGINNER</span>
                     <p style="margin-top: 10px; font-size: 0.9em; color: #aaa;">
@@ -834,7 +834,7 @@ admin2024"></textarea>
 
             <div class="download-card">
                 <div class="download-info">
-                    <h4>mission3_launch_codes.py</h4>
+                    <h4>project/database/launch_codes.py</h4>
                     <p>Create and manage the LaunchCodes table in your database</p>
                     <span class="badge badge-intermediate">INTERMEDIATE</span>
                     <p style="margin-top: 10px; font-size: 0.9em; color: #aaa;">
@@ -846,7 +846,7 @@ admin2024"></textarea>
 
             <div class="download-card">
                 <div class="download-info">
-                    <h4>mission3_secure_database.py</h4>
+                    <h4>project/database/secure_database.py</h4>
                     <p>Hash all existing data in your earth_base.db</p>
                     <span class="badge badge-advanced">ADVANCED</span>
                     <p style="margin-top: 10px; font-size: 0.9em; color: #aaa;">
@@ -858,7 +858,7 @@ admin2024"></textarea>
 
             <div class="download-card">
                 <div class="download-info">
-                    <h4>mission3_complete_solution.py</h4>
+                    <h4>project/solution/complete_solution.py</h4>
                     <p>Full solution with all challenges completed</p>
                     <span class="badge badge-advanced">ADVANCED</span>
                     <p style="margin-top: 10px; font-size: 0.9em; color: #aaa;">
@@ -868,24 +868,39 @@ admin2024"></textarea>
                 <button onclick="downloadFile('complete_solution')">Download</button>
             </div>
 
-            <h3 style="margin-top: 40px;">Mission Workflow</h3>
+            <h3 style="margin-top: 40px;">Project Structure</h3>
+            <div class="code-block">
+                <pre>mission3/
+├── project/
+│   ├── lab/
+│   │   └── hashing_lab.py
+│   ├── database/
+│   │   ├── launch_codes.py
+│   │   └── secure_database.py
+│   └── solution/
+│       └── complete_solution.py
+└── resources/
+    └── earth_base.db</pre>
+            </div>
+
+            <h3>Mission Workflow</h3>
             <div class="challenge-steps">
                 <div class="challenge-step">
-                    Run <code>mission3_hashing_lab.py</code> to understand the concepts
+                    Run <code>project/lab/hashing_lab.py</code> to understand the concepts
                 </div>
                 <div class="challenge-step">
-                    Run <code>mission3_launch_codes.py</code> to create the table and add codes
+                    Run <code>project/database/launch_codes.py</code> to create the table and add codes
                 </div>
                 <div class="challenge-step">
-                    Run <code>mission3_secure_database.py</code> to hash all existing database records
+                    Run <code>project/database/secure_database.py</code> to hash all existing database records
                 </div>
                 <div class="challenge-step">
-                    Compare with <code>mission3_complete_solution.py</code> to verify your implementation
+                    Compare with <code>project/solution/complete_solution.py</code> to verify your implementation
                 </div>
             </div>
 
             <div class="hint-box">
-                💡 <strong>Pro Tip:</strong> Make sure you have completed Mission 1 and have the <code>earth_base.db</code> file in the same directory before running these scripts!
+                💡 <strong>Pro Tip:</strong> All project files work with the <code>resources/earth_base.db</code> file from Mission 1. The scripts will automatically look for it in the correct location!
             </div>
         </div>
 
