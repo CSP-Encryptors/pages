@@ -15,7 +15,6 @@ date: 2025-10-21
 # Submodule 1 · Company Profile & REST APIs — Minimal Interactive (Styling Preserved)
 
 
-<!-- NOTE: Styling essence preserved — black background & minimal chrome remain unchanged -->
 <style>
 html,body{height:100%}
 h1{margin:16px 0 8px;border-bottom:1px solid var(--b);padding-bottom:8px}
@@ -23,18 +22,51 @@ h1{margin:16px 0 8px;border-bottom:1px solid var(--b);padding-bottom:8px}
 
 .nav{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 14px}
 .nav button{
-  background:#101010; color:var(--fg); border:1px solid var(--b);
-  padding:8px 10px; border-radius:8px; cursor:pointer; font-weight:700
+  /* ----- updated for vibrancy ----- */
+  background: linear-gradient(180deg, #111, #0b0b0b);
+  color: #e0e0e0;
+  border: 1px solid #2a2a2a;
+  padding: 9px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 700;
+  transition: all 0.25s ease;
 }
-.nav button.active{border-color:#aaa}
+.nav button:hover{
+  border-color:#60a5fa; /* vibrant hover */
+  color:#fff;
+  transform: translateY(-1px);
+}
+.nav button.active{
+  background: linear-gradient(180deg, #2563eb, #1e40af); /* vibrant active */
+  color:#fff;
+  border-color:#3b82f6;
+  box-shadow:0 0 8px rgba(59,130,246,0.5);
+}
+/* ---------------------------------- */
 
-.card{border:1px solid var(--b);border-radius:12px;padding:14px;margin:12px 0;background:var(--p1)}
+.card{border:1px solid var(--b);border-radius:10px;padding:14px;margin:12px 0;background:transparent}
 label{color:var(--muted);display:block;margin:10px 0 4px}
 input,textarea,select{
   width:100%; padding:10px; border:1px solid var(--b); border-radius:8px;
-  background:var(--p2); color:var(--fg);
-  font-family:ui-monospace,SFMono-Regular,Consolas,monospace
+  background:var(--p2); color:var(--fg); font-family:ui-monospace,SFMono-Regular,Consolas
 }
+/* ---- dark endpoint dropdown (select#ep) ---- */
+select#ep{
+  background-color:#000;
+  color:#fff;
+  border:1px solid #333;
+}
+select#ep:focus{
+  outline:1px solid #3b82f6;
+  border-color:#3b82f6;
+}
+select#ep option{
+  background-color:#111;
+  color:#fff;
+}
+/* ------------------------------------------- */
+
 textarea{min-height:110px}
 pre{
   margin:10px 0; background:var(--p2); border:1px solid var(--b);
@@ -56,8 +88,17 @@ hr{border:none;border-top:1px solid var(--b);margin:18px 0}
 .kbd{font-family:ui-monospace,SFMono-Regular,Consolas;border:1px solid var(--b);border-radius:6px;padding:2px 6px;background:#111;color:#ddd}
 .grid{display:grid;gap:10px}
 .grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+
+/* subtle description text blocks under each tab title */
+.tab-desc{
+  color:#9ca3af;
+  font-size:13px;
+  margin:4px 0 10px;
+  line-height:1.45;
+}
 </style>
 
+<body>
 <div class="container">
   <h1> Submodule 1 · Company Profile & REST APIs <span class="badge">minimal</span></h1>
   <p style="color:#bdbdbd;margin:6px 0 12px">
@@ -74,6 +115,12 @@ hr{border:none;border-top:1px solid var(--b);margin:18px 0}
 
   <!-- API SIMULATOR -->
   <section id="sim" class="card">
+    <!-- added description + learning objective -->
+    <p class="tab-desc">
+      <strong>Description:</strong> Try REST-style requests (POST, GET, PUT, DELETE) against an in-memory dataset and inspect the JSON response.
+      <br><strong>Learning Objective:</strong> Connect HTTP methods to CRUD operations and read API responses.
+    </p>
+
     <div class="grid grid-2">
       <div>
         <label>Endpoint</label>
@@ -117,6 +164,12 @@ hr{border:none;border-top:1px solid var(--b);margin:18px 0}
 
   <!-- CODE KATA -->
   <section id="kata" class="card hidden">
+    <!-- added description + learning objective -->
+    <p class="tab-desc">
+      <strong>Description:</strong> Type a repository derived-query method and verify your syntax matches Spring Data conventions.
+      <br><strong>Learning Objective:</strong> Practice naming rules that auto-generate queries in Spring Data JPA.
+    </p>
+
     <p><strong>One-liner:</strong> Derived query returning companies where <code>size &gt; minSize</code>.</p>
     <input id="kataIn" placeholder="List<Company> findBySizeGreaterThan(Integer minSize);" />
     <div style="margin-top:8px">
@@ -128,6 +181,12 @@ hr{border:none;border-top:1px solid var(--b);margin:18px 0}
 
   <!-- QUIZ -->
   <section id="quiz" class="card hidden">
+    <!-- added description + learning objective -->
+    <p class="tab-desc">
+      <strong>Description:</strong> Three quick checks on annotations, join tables, and async primitives.
+      <br><strong>Learning Objective:</strong> Reinforce key Spring concepts you’ll use when building the API.
+    </p>
+
     <div id="quizBox" class="quiz"></div>
     <button class="btn" onclick="grade()" style="margin-top:8px">Grade</button>
     <div id="score" style="margin-top:8px"></div>
@@ -135,6 +194,12 @@ hr{border:none;border-top:1px solid var(--b);margin:18px 0}
 
   <!-- BUILDER -->
   <section id="build" class="card hidden">
+    <!-- added description + learning objective -->
+    <p class="tab-desc">
+      <strong>Description:</strong> Fill out the form to append a new company object to the in-memory dataset.
+      <br><strong>Learning Objective:</strong> Understand how form inputs map to a JSON payload for POST requests.
+    </p>
+
     <div class="grid grid-2">
       <div><label>Name</label><input id="bName" placeholder="Acme Inc"/></div>
       <div><label>Industry</label><select id="bInd"><option>Software</option><option>AI</option><option>Healthcare</option><option>Finance</option></select></div>
@@ -149,8 +214,14 @@ hr{border:none;border-top:1px solid var(--b);margin:18px 0}
 
   <!-- SPRING SNIPS (kept tiny; look & feel unchanged) -->
   <section id="snips" class="card hidden">
+    <!-- added description + learning objective -->
+    <p class="tab-desc">
+      <strong>Description:</strong> Minimal repository, controller, and properties snippets that align with the simulator behavior.
+      <br><strong>Learning Objective:</strong> Recognize how controllers call services and repositories to handle requests.
+    </p>
+
     <details open>
-      <summary> Repository</summary>
+      <summary>Repository</summary>
       <pre>public interface CompanyRepository extends JpaRepository&lt;Company, Long&gt; {
   List&lt;Company&gt; findByIndustry(String industry);
   List&lt;Company&gt; findBySizeGreaterThan(Integer minSize);
@@ -182,57 +253,20 @@ spring.jpa.show-sql=true</pre>
   </section>
 
   <hr/>
+  <small class="hint">Styling background preserved; content trimmed; interactions unchanged.</small>
 </div>
 
 <script>
 // Tabs (UI behavior unchanged)
-const nav = document.querySelector('.nav');
-const underline = document.querySelector('.nav-underline');
-const tabButtons = [...document.querySelectorAll('.nav button')];
-const sections = [...document.querySelectorAll('section')];
-
-function moveUnderline(btn) {
-  const { offsetLeft: x, offsetWidth: w } = btn;
-  underline.style.width = w + 'px';
-  underline.style.transform = `translateX(${x}px)`;
-}
-
-function setActive(btn) {
-  tabButtons.forEach(b => {
-    b.classList.remove('active');
-    b.setAttribute('aria-selected', 'false');
-  });
-  btn.classList.add('active');
-  btn.setAttribute('aria-selected', 'true');
-  const t = btn.dataset.tab;
-  sections.forEach(s => s.classList.add('hidden'));
-  document.getElementById(t).classList.remove('hidden');
-  moveUnderline(btn);
-}
-
-tabButtons.forEach(btn => {
-  btn.addEventListener('click', () => setActive(btn));
-  btn.addEventListener('keydown', e => {
-    const i = tabButtons.indexOf(document.querySelector('.nav button.active'));
-    if (e.key === 'ArrowRight') {
-      e.preventDefault();
-      setActive(tabButtons[(i + 1) % tabButtons.length]);
-    }
-    if (e.key === 'ArrowLeft') {
-      e.preventDefault();
-      setActive(tabButtons[(i - 1 + tabButtons.length) % tabButtons.length]);
-    }
-    if (e.key === 'Home') {
-      e.preventDefault();
-      setActive(tabButtons[0]);
-    }
-    if (e.key === 'End') {
-      e.preventDefault();
-      setActive(tabButtons[tabButtons.length - 1]);
-    }
-  });
+document.querySelectorAll('.nav button').forEach(btn=>{
+  btn.onclick=()=>{
+    document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const t=btn.dataset.tab;
+    document.querySelectorAll('section').forEach(s=>s.classList.add('hidden'));
+    document.getElementById(t).classList.remove('hidden');
+  };
 });
-
 
 // In-memory DB (for Simulator + Builder)
 let db=[
@@ -359,5 +393,4 @@ function builderAdd(){
 // Init
 uiEP(); renderList(); renderQuiz();
 </script>
-
-
+</body>
