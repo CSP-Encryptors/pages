@@ -9,10 +9,9 @@ submodule: 1
 categories: [CSP, Submodule, Analytics/Admin]
 tags: [analytics, submodule, curators]
 author: "Curators Team: Nikhil, Rohan, Pranav, Shriya, Samhita, Adi"
-date: 2025-10-21
+date: 2025-10-22
 ---
 
-{%- include tailwind/cs-portfolio-quest-lessons_info.html -%}
 
 # Submodule 1: Overall Analytics & Grades
 
@@ -229,16 +228,16 @@ date: 2025-10-21
         <span class="metric-title">Total Study Time</span>
         <div class="metric-icon" style="background: rgba(234, 140, 51, 0.2);">⏱️</div>
       </div>
-      <div class="metric-value">127.5h</div>
-      <div class="metric-subtitle">+8h this week</div>
+      <div class="metric-value" id="total-studytime">0h</div>
+      <div class="metric-subtitle">Well done!</div>
     </div>
     <div class="metric-card">
       <div class="metric-header">
         <span class="metric-title">Modules Completed</span>
         <div class="metric-icon" style="background: rgba(147, 51, 234, 0.2);">📚</div>
       </div>
-      <div class="metric-value">24</div>
-      <div class="metric-subtitle">3 in progress</div>
+      <div class="metric-value" id="modules-complete">0</div>
+      <div class="metric-subtitle" id="modules-incomplete">0 in progress</div>
     </div>
     <div class="metric-card">
       <div class="metric-header">
@@ -287,18 +286,18 @@ date: 2025-10-21
 
   <!-- Weekly Study Time Chart -->
   <div class="chart-card">
-    <div class="chart-title">Weekly Study Time</div>
+    <div class="chart-title">Study Time by Module</div>
     <div class="chart-container">
-      <canvas id="weeklyChart"></canvas>
+      <canvas id="timeChart"></canvas>
     </div>
   </div>
 
   <!-- Bottom Charts Grid -->
   <div class="bottom-grid">
     <div class="chart-card">
-      <div class="chart-title">Accuracy Per Module</div>
+      <div class="chart-title">Completion Per Module</div>
       <div class="chart-container">
-        <canvas id="accuracyChart"></canvas>
+        <canvas id="completionChart"></canvas>
       </div>
     </div>
     <div class="chart-card">
@@ -321,89 +320,201 @@ date: 2025-10-21
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<script>
-  // Weekly Study Time Chart
-  const weeklyCtx = document.getElementById('weeklyChart').getContext('2d');
-  new Chart(weeklyCtx, {
-    type: 'line',
-    data: {
-      labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-      datasets: [{
-        label: 'Study Hours',
-        data: [3.5, 4.2, 2.7, 5, 4.5, 6.5, 6],
-        borderColor: '#ea8c33',
-        backgroundColor: 'rgba(234, 140, 51, 0.1)',
-        tension: 0.4,
-        pointRadius: 6,
-        pointBackgroundColor: '#ea8c33',
-        pointBorderColor: '#fff',
-        pointBorderWidth: 2
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          backgroundColor: '#ea8c33',
-          titleColor: '#fff',
-          bodyColor: '#fff',
-          padding: 12,
-          cornerRadius: 8
+
+<script type="module">
+  import { javaURI, fetchOptions } from '{{ site.baseurl }}/assets/js/api/config.js';
+  import { pythonURI } from '{{ site.baseurl }}/assets/js/api/config.js';
+
+  async function getCredentials() {
+        try {
+            const res = await fetch(`${pythonURI}/api/id`, {
+                ...fetchOptions,
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+            });
+
+            if (res.ok) {
+                const data = await res.json();
+                const username = data.uid;
+                console.log(username);
+                return username;
+            } else {
+                console.log(`Request failed for with status ${res.status}`);
+            }
+        } catch (err) {
+            console.log(`Error: ${err}`);
         }
+  }
+
+  async function getLessonData() {
+      const username = await getCredentials();
+      try {
+          const res = await fetch(`${javaURI}/api/stats`, {
+              ...fetchOptions,
+              method: "GET",
+              headers: {
+                  "Content-Type": "application/json"
+              },
+          });
+
+          if (!res.ok) {
+              console.log(`Request failed with status ${res.status}`);
+              return;
+          }
+
+          const data = await res.json();
+          console.log("All data", data);
+
+          const filtered = data.filter(item => item.username === username);
+          console.log(`Data for ${username}:`, filtered);
+
+          const totalTime = filtered.reduce((sum, item) => sum + (item.time || 0), 0);
+          console.log(`Total time spent:`, totalTime);
+          const modulesComplete = filtered.length
+          console.log(`Modules Completed:`, modulesComplete);
+          const modulesIncomplete = 25 - filtered.length
+          console.log(`Modules Incomplete:`, modulesIncomplete);
+
+          // Define modules and total submodules
+          const modules = {
+              'AI Usage': 4,
+              'Backend Development': 6,
+              'Data Visualization': 3,
+              'Frontend Development': 6,
+              'Resume Building': 6
+          };
+
+          // Initialize result object
+          const moduleStats = {};
+          Object.keys(modules).forEach(m => {
+              moduleStats[m] = { time: 0, percentComplete: 0 };
+          });
+
+          // Sum time and count finished submodules per module
+          const finishedCounts = {};
+          Object.keys(modules).forEach(m => finishedCounts[m] = 0);
+
+          filtered.forEach(item => {
+              const mod = item.module;
+              if (modules[mod] !== undefined) {
+                  // Sum time
+                  moduleStats[mod].time += item.time || 0;
+
+                  // Count finished submodules
+                  if (item.finished) finishedCounts[mod] += 1;
+              }
+          });
+
+          // Compute percent completion per module
+          Object.keys(modules).forEach(m => {
+              const totalSubmodules = modules[m];
+              const finished = finishedCounts[m];
+              moduleStats[m].percentComplete = (finished / totalSubmodules) * 100;
+          });
+
+          console.log(`Module stats for ${username}:`, moduleStats);
+
+          return {
+            totalTime,
+            modulesComplete,
+            modulesIncomplete,
+            moduleStats,
+            filteredData: filtered
+          };
+      } catch (err) {
+          console.log(`Error: ${err}`);
+      }
+  }
+
+  function createCharts(timeData, completionData) {
+    console.log("In create charts function")
+    const maxTime = Math.max(...timeData);
+    const weeklyCtx = document.getElementById('timeChart').getContext('2d');
+    new Chart(weeklyCtx, {
+      type: 'line',
+      data: {
+        labels: ['Frontend Dev.', 'Backend Dev.', 'Data Viz.', 'Resume', 'AI Usage'],
+        datasets: [{
+          label: 'Time (minutes)',
+          data: timeData,
+          borderColor: '#ea8c33',
+          backgroundColor: 'rgba(234, 140, 51, 0.1)',
+          tension: 0.4,
+          pointRadius: 6,
+          pointBackgroundColor: '#ea8c33',
+          pointBorderColor: '#fff',
+          pointBorderWidth: 2
+        }]
       },
-      scales: {
-        y: {
-          beginAtZero: true,
-          max: 8,
-          grid: { color: 'rgba(255, 255, 255, 0.1)' },
-          ticks: { color: '#b0b0b0' }
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: '#ea8c33',
+            titleColor: '#fff',
+            bodyColor: '#fff',
+            padding: 12,
+            cornerRadius: 8
+          }
         },
-        x: {
-          grid: { display: false },
-          ticks: { color: '#b0b0b0' }
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: maxTime * 1.1,
+            grid: { color: 'rgba(255, 255, 255, 0.1)' },
+            ticks: { color: '#b0b0b0' }
+          },
+          x: {
+            grid: { display: false },
+            ticks: { color: '#b0b0b0' }
+          }
         }
       }
-    }
-  });
-  // Accuracy Per Module Chart
-  const accuracyCtx = document.getElementById('accuracyChart').getContext('2d');
-  new Chart(accuracyCtx, {
-    type: 'bar',
-    data: {
-      labels: ['Python', 'Data Analysis', 'Web Dev', 'ML Basics', 'Algorithms'],
-      datasets: [{
-        data: [92, 88, 89, 78, 91],
-        backgroundColor: '#ea8c33',
-        borderRadius: 8
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-        tooltip: {
+    });
+
+    // Completion Per Module Chart
+    const accuracyCtx = document.getElementById('completionChart').getContext('2d');
+    new Chart(accuracyCtx, {
+      type: 'bar',
+      data: {
+        labels: ['Frontend Dev.', 'Backend Dev.', 'Data Viz.', 'Resume', 'AI Usage'],
+        datasets: [{
+          data: completionData,
           backgroundColor: '#ea8c33',
-          padding: 12,
-          cornerRadius: 8
-        }
+          borderRadius: 8
+        }]
       },
-      scales: {
-        y: {
-          beginAtZero: true,
-          max: 100,
-          grid: { color: 'rgba(255, 255, 255, 0.1)' },
-          ticks: { color: '#b0b0b0' }
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: '#ea8c33',
+            padding: 12,
+            cornerRadius: 8
+          }
         },
-        x: {
-          grid: { display: false },
-          ticks: { color: '#b0b0b0' }
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 100,
+            grid: { color: 'rgba(255, 255, 255, 0.1)' },
+            ticks: { color: '#b0b0b0' }
+          },
+          x: {
+            grid: { display: false },
+            ticks: { color: '#b0b0b0' }
+          }
         }
       }
-    }
-  });
+    });
+  }
+
   // Question Categories Chart
   const categoriesCtx = document.getElementById('categoriesChart').getContext('2d');
   new Chart(categoriesCtx, {
@@ -434,6 +545,46 @@ date: 2025-10-21
       }
     }
   });
+
+  // getLessonData();
+  async function updateAnalytics() {
+    const lessonData = await getLessonData();
+    if (!lessonData) return;
+
+    // Update total study time
+    const totalTimeEl = document.getElementById("total-studytime");
+    if (totalTimeEl) {
+        totalTimeEl.innerText = `${lessonData.totalTime.toFixed(1)}h`; // rounds to 1 decimal place
+    }
+
+    // Update modules complete
+    const modulesCompleteEl = document.getElementById("modules-complete");
+    if (modulesCompleteEl) {
+        modulesCompleteEl.innerText = lessonData.modulesComplete;
+    }
+
+    // Update modules incomplete
+    const modulesIncompleteEl = document.getElementById("modules-incomplete");
+    if (modulesIncompleteEl) {
+        modulesIncompleteEl.innerText = `${lessonData.modulesIncomplete} in progress`;
+    }
+
+    // update charts data
+    const moduleStats = lessonData.moduleStats
+    const frontendTime = moduleStats["Frontend Development"].time, frontendCompletion = moduleStats["Frontend Development"].percentComplete
+    const backendTime = moduleStats["Backend Development"].time, backendCompletion = moduleStats["Backend Development"].percentComplete
+    const datavizTime = moduleStats["Data Visualization"].time, datavizCompletion = moduleStats["Data Visualization"].percentComplete
+    const resumeTime = moduleStats["Resume Building"].time, resumeCompletion = moduleStats["Resume Building"].percentComplete
+    const aiTime = moduleStats["AI Usage"].time, aiCompletion = moduleStats["AI Usage"].percentComplete
+    const timeData = [frontendTime, backendTime, datavizTime, resumeTime, aiTime]
+    const completionData = [frontendCompletion, backendCompletion, datavizCompletion, resumeCompletion, aiCompletion]
+    console.log("Time data", timeData)
+    console.log("Completion Data", completionData)
+    createCharts(timeData, completionData);
+  }
+
+  updateAnalytics();
+
   // PDF Download functionality
   const downloadBtn = document.getElementById('downloadBtn');
   downloadBtn.addEventListener('click', async function() {

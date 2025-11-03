@@ -25,10 +25,10 @@ class MansionLevel1 {
     const objective_sprite_data = {
         id: 'ObjectiveIcon',
         greeting: "Objective Icon: Find ingredients!",
-        src: path + "/images/gamify/Objective.png",
+        src: path + "/images/gamify/objective.png",
         
         // Npc/Sprite required properties
-        SCALE_FACTOR: 2.5, 
+        SCALE_FACTOR: 2, 
         STEP_FACTOR: 0, 
         ANIMATION_RATE: 0, 
     
@@ -36,7 +36,7 @@ class MansionLevel1 {
         INIT_POSITION: { x: 300, y: 50 }, 
     
         // Image info
-        pixels: {height: 315, width: 363}, 
+        pixels: {height: 606, width: 671}, 
         orientation: {rows: 1, columns: 1}, 
         down: {row: 0, start: 0, columns: 1}, // Required for Npc/Sprite animation initialization
         hitbox: {widthPercentage: 1.0, heightPercentage: 1.0}, // Basic hitbox

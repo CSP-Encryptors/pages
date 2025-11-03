@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: cs-portfolio-lesson
 title: "Submodule 3"
 description: "Submodule 3 of Analytics/Admin Mini-Quest"
 permalink: /cs-portfolio-quest/analytics/submodule_3/
@@ -9,14 +9,11 @@ submodule: 3
 categories: [CSP, Submodule, Analytics/Admin]
 tags: [analytics, submodule, curators]
 author: "Curators Team"
-date: 2025-10-21
 ---
 
-{%- include tailwind/cs-portfolio-quest-lessons_info.html -%}
 
 # Submodule 3: User Management System and User Analytics
 
-[Return to Analytics and Mastery Certificate Quest]({{ site.baseurl }}/cs-portfolio-quest/analytics/)
 <style>
   .analytics-container {
     background-color: #121212;
@@ -550,8 +547,8 @@ date: 2025-10-21
 
   async function fetchPeople() {
     const students = [];
-    
-    for (let id = 1; id <= 100; id++) {
+
+    for (let id = 1; id <= 200; id++) {
       try {
         const res = await fetch(`${javaURI}/api/person/${id}`, {
           ...fetchOptions,
@@ -561,16 +558,13 @@ date: 2025-10-21
           },
         });
 
-        console.log(`Request for ID ${id} → Status: ${res.status}`);
-
+        // silently skip 404s and continue
         if (res.status === 404) {
-          console.log(`ID ${id} not found. Terminating loop.`);
-          break;
+          continue;
         }
 
         if (res.ok) {
           const data = await res.json();
-          console.log(`Fetched person:`, data);
 
           // Create random lesson and module data
           const randomLessons = () =>
@@ -593,21 +587,21 @@ date: 2025-10-21
           });
 
         } else {
+          // log non-404 failures for visibility
           console.warn(`Request failed for ID ${id} with status ${res.status}`);
         }
 
       } catch (err) {
-        console.error(`Error fetching ID ${id}:`, err);
-        break;
+        // suppress 404-like errors; log others
+        const errText = String(err || '');
+        if (!/404/.test(errText)) {
+          console.error(`Error fetching ID ${id}:`, err);
+        }
       }
     }
-
     console.log("✅ Final students array:", students);
     return students;
   }
-
-  fetchPeople();
-
   async function main() {
     const students = await fetchPeople();
     console.log("Students array:", students);

@@ -254,11 +254,46 @@ summary {
 details[open] > summary {
     list-style-type: '▼ ';
 }
+
+/* Itinerary Info Box */
+.itinerary-info {
+  background: linear-gradient(135deg, rgba(139,92,246,0.08), rgba(59,130,246,0.06));
+  border: 2px solid rgba(78,204,163,0.2);
+  padding: 1rem;
+  border-radius: 0.75rem;
+  margin: 1rem 0;
+}
+
+.itinerary-info h3 {
+  color: #4ecca3;
+  margin: 0 0 0.5rem 0;
+}
+
+.selected-foods {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.food-item {
+  padding: 0.5rem;
+  background: rgba(78,204,163,0.1);
+  border-left: 3px solid #4ecca3;
+  border-radius: 0.35rem;
+}
 </style>
 
 <!-- Dark mode toggle -->
 <div style="display:flex; justify-content:flex-end; gap:0.5rem; margin-bottom:0.75rem;">
   <button id="themeToggleBtn" class="sq-btn" title="Toggle dark / light">🌙 Dark</button>
+</div>
+
+<!-- Itinerary Info Display -->
+<div id="itineraryInfo" class="itinerary-info" style="display:none;">
+  <h3>🍽️ Your Selected San Diego Foods</h3>
+  <div class="selected-foods" id="selectedFoodsList"></div>
+  <p class="small" style="margin-top: 0.75rem; opacity: 0.8;">These are the foods from your West Coast trip itinerary. Complete the tasks below to learn about them!</p>
 </div>
 
 <!-- Progress Tracker -->
@@ -326,6 +361,41 @@ details[open] > summary {
     seed: false,
     view: false
   };
+
+  // Load and display itinerary foods
+  function loadItineraryFoods() {
+    try {
+      const itineraryData = localStorage.getItem('westCoastItinerary');
+      if (itineraryData) {
+        const itinerary = JSON.parse(itineraryData);
+        if (itinerary.cities && itinerary.cities['San Diego']) {
+          const sdFoods = itinerary.cities['San Diego'].foods;
+          if (sdFoods && sdFoods.length > 0) {
+            displayItineraryFoods(sdFoods);
+            window.userSelectedFoods = sdFoods;
+            return sdFoods;
+          }
+        }
+      }
+    } catch (e) {
+      console.error('Error loading itinerary:', e);
+    }
+    return null;
+  }
+
+  function displayItineraryFoods(foods) {
+    const infoBox = document.getElementById('itineraryInfo');
+    const foodsList = document.getElementById('selectedFoodsList');
+    
+    if (foods && foods.length > 0) {
+      foodsList.innerHTML = foods.map(food => 
+        `<div class="food-item">🍽️ ${food}</div>`
+      ).join('');
+      infoBox.style.display = 'block';
+    } else {
+      infoBox.style.display = 'none';
+    }
+  }
 
   // Load progress from localStorage
   function loadTaskProgress() {
@@ -479,7 +549,19 @@ details[open] > summary {
     }
     async getDishes(query={}) {
       const city = (query.city||'sd').toLowerCase();
-      return this.db.dishes.filter(d => (d.city||'sd').toLowerCase()===city);
+      let dishes = this.db.dishes.filter(d => (d.city||'sd').toLowerCase()===city);
+      
+      // Filter by user's selected foods if available
+      if (window.userSelectedFoods && window.userSelectedFoods.length > 0) {
+        dishes = dishes.filter(d => {
+          return window.userSelectedFoods.some(selectedFood => 
+            d.name.toLowerCase().includes(selectedFood.toLowerCase()) ||
+            selectedFood.toLowerCase().includes(d.name.toLowerCase())
+          );
+        });
+      }
+      
+      return dishes;
     }
     reset() { this.db.reset(); }
   }
@@ -506,6 +588,8 @@ details[open] > summary {
     window.logTo('terminal-init','[MockAPI] DB loaded from localStorage.');
   }
 
+  // Load itinerary foods on page load
+  loadItineraryFoods();
   loadTaskProgress();
 })();
 </script>
@@ -522,26 +606,28 @@ details[open] > summary {
     - GET /api/dishes?city=sd  
   <br>
   - Data is stored in **localStorage**, so progress **persists** across refreshes.  
-  - When creating the **Baja Bowl**, a toast appears showing “+50 XP 🎉”.
+  - When creating the **Baja Bowl**, a toast appears showing "+50 XP 🎉".
+  - **NEW:** The page now reads your itinerary from localStorage and displays only your selected San Diego foods!
 
 <br>
 
 <!-- Task 1 -->
 <details open>
-  <summary>Task 1: Fish Taco Class</summary>
+  <summary>Task 1: Your Selected Food Class</summary>
   <div class="sq-card">
-    <div class="sq-label">Describe & implement the <strong>FishTaco</strong> class (id, fishType, toppings[], sauce, price, spiceLevel) and method <code>calculateTotalPrice()</code> (<em>8% tax</em>). Throw error if fishType missing.</div>
+    <div class="sq-label">Create a class for your first selected food! Implement the <strong>SelectedDish</strong> class with properties (id, name, ingredients[], category, price, calories) and method <code>calculateTotalPrice()</code> (<em>8% tax</em>). Throw error if name is missing.</div>
     <textarea id="code-fishtaco" class="code-editor">
-// class FishTaco { ... } - edit or run the example
-class FishTaco {
-  constructor(id, fishType, toppings = [], sauce, price = 0, spiceLevel = "Mild") {
-    if (!fishType) throw new Error("Fish type required");
+// Create a class for your selected San Diego food!
+// Check the Itinerary Info box above to see your selected foods
+class SelectedDish {
+  constructor(id, name, ingredients = [], category, price = 0, calories = 0) {
+    if (!name) throw new Error("Dish name required");
     this.id = id;
-    this.fishType = fishType;
-    this.toppings = Array.isArray(toppings) ? toppings : [];
-    this.sauce = sauce || null;
+    this.name = name;
+    this.ingredients = Array.isArray(ingredients) ? ingredients : [];
+    this.category = category || "San Diego";
     this.price = Number(price) || 0;
-    this.spiceLevel = spiceLevel;
+    this.calories = Number(calories) || 0;
   }
 
   calculateTotalPrice() {
@@ -550,10 +636,15 @@ class FishTaco {
   }
 }
 
-// sample usage:
-const taco = new FishTaco("t1", "Mahi-Mahi", ["cabbage","lime","pico"], "chipotle", 5.99, "Medium");
-console.log("Created:", taco);
-console.log("Total price:", taco.calculateTotalPrice().toFixed(2));
+// Example with your selected food - customize this with your actual selection!
+const selectedFood = window.userSelectedFoods && window.userSelectedFoods[0] 
+  ? window.userSelectedFoods[0] 
+  : "Fish Tacos (Baja-style)";
+
+const dish = new SelectedDish("d1", selectedFood, ["fresh ingredients","local produce"], "San Diego Favorite", 12.99, 450);
+console.log("Created your selected dish:", dish);
+console.log("Total price with tax:", dish.calculateTotalPrice().toFixed(2));
+console.log("Calories:", dish.calories);
 
 // Mark task as complete when run successfully
 completeTask('fishtaco');
@@ -568,34 +659,44 @@ completeTask('fishtaco');
 
 <!-- Task 2 -->
 <details>
-  <summary>Task 2: BurritoCart</summary>
+  <summary>Task 2: Food Collection Cart</summary>
   <div class="sq-card">
-    <div class="sq-label">Implement <strong>BurritoCart</strong> with methods <code>addBurrito()</code>, <code>removeBurrito()</code>, <code>getTotalPrice()</code>, <code>getBurritosByFilling()</code>.</div>
+    <div class="sq-label">Implement <strong>FoodCart</strong> to manage your selected San Diego foods with methods <code>addDish()</code>, <code>removeDish()</code>, <code>getTotalPrice()</code>, <code>getDishesByCategory()</code>.</div>
     <textarea id="code-burritocart" class="code-editor">
-// BurritoCart implementation
-class BurritoCart {
+// FoodCart implementation for your selected San Diego foods
+class FoodCart {
   constructor() {
-    this.burritos = [];
+    this.dishes = [];
   }
-  addBurrito(burrito) {
-    if (!burrito || typeof burrito !== 'object') throw new Error('Invalid burrito');
-    this.burritos.push(burrito);
+  addDish(dish) {
+    if (!dish || typeof dish !== 'object') throw new Error('Invalid dish');
+    this.dishes.push(dish);
   }
-  removeBurrito(index) {
-    if (index < 0 || index >= this.burritos.length) return;
-    this.burritos.splice(index,1);
+  removeDish(index) {
+    if (index < 0 || index >= this.dishes.length) return;
+    this.dishes.splice(index,1);
   }
-  getTotalPrice() { return this.burritos.reduce((s,b)=>s+(Number(b.price)||0),0); }
-  getBurritosByFilling(filling) { return this.burritos.filter(b => b.filling === filling); }
+  getTotalPrice() { return this.dishes.reduce((s,d)=>s+(Number(d.price)||0),0); }
+  getDishesByCategory(category) { return this.dishes.filter(d => d.category === category); }
 }
 
-// example
-const cart = new BurritoCart();
-cart.addBurrito({ name: "California Burrito", filling: "Carne Asada", price: 8.5 });
-cart.addBurrito({ name: "Veggie Burrito", filling: "Beans", price: 7.0 });
-console.log("Cart:", cart.burritos);
-console.log("Total:", cart.getTotalPrice());
-console.log("Carne Asada burritos:", cart.getBurritosByFilling("Carne Asada"));
+// Example using your selected foods from the itinerary
+const cart = new FoodCart();
+
+// Get your selected foods
+const food1 = window.userSelectedFoods && window.userSelectedFoods[0] 
+  ? window.userSelectedFoods[0] 
+  : "Fish Tacos (Baja-style)";
+const food2 = window.userSelectedFoods && window.userSelectedFoods[1] 
+  ? window.userSelectedFoods[1] 
+  : "California Burrito";
+
+cart.addDish({ name: food1, category: "San Diego Favorite", price: 12.99 });
+cart.addDish({ name: food2, category: "San Diego Favorite", price: 10.50 });
+
+console.log("Your food cart:", cart.dishes);
+console.log("Total price:", cart.getTotalPrice());
+console.log("San Diego Favorites:", cart.getDishesByCategory("San Diego Favorite"));
 
 // Mark task as complete when run successfully
 completeTask('burritocart');
@@ -610,15 +711,15 @@ completeTask('burritocart');
 
 <!-- Task 3 -->
 <details>
-  <summary>Task 3: Build the Baja Bowl</summary>
+  <summary>Task 3: Create Your Selected Dish</summary>
   <div class="sq-card">
-    <div class="sq-label">Use the form to build a <strong>Baja Bowl</strong>. Required fields: <em>name, category, ingredients (name, qty, unit), calories</em>. Photo may be a URL or uploaded file (stored as data URL).</div>
+    <div class="sq-label">Use the form to create one of your selected San Diego foods! Required fields: <em>name (choose from your selections above), category, ingredients (name, qty, unit), calories</em>. Photo may be a URL or uploaded file (stored as data URL).</div>
     <div style="display:grid; grid-template-columns: 1fr; gap:0.5rem;">
-      <label class="sq-label">Dish name</label>
-      <input id="dish-name" class="sq-field" placeholder="Baja Bowl" value="Baja Bowl" />
+      <label class="sq-label">Dish name (use one of your selected foods above!)</label>
+      <input id="dish-name" class="sq-field" placeholder="Your selected food..." value="" />
 
       <label class="sq-label">Category</label>
-      <input id="dish-category" class="sq-field" placeholder="Healthy" value="Healthy" />
+      <input id="dish-category" class="sq-field" placeholder="San Diego Favorite" value="San Diego Favorite" />
 
       <label class="sq-label">Calories</label>
       <input id="dish-calories" type="number" class="sq-field" placeholder="600" value="600" />
@@ -628,9 +729,9 @@ completeTask('burritocart');
 
       <label class="sq-label">Add Ingredients (name, qty, unit)</label>
       <div style="display:flex; gap:0.5rem;">
-        <input id="ing-name" class="sq-field" placeholder="avocado" />
+        <input id="ing-name" class="sq-field" placeholder="fresh fish" />
         <input id="ing-qty" class="sq-field" placeholder="1" />
-        <input id="ing-unit" class="sq-field" placeholder="cup" />
+        <input id="ing-unit" class="sq-field" placeholder="serving" />
         <button class="sq-btn" onclick="addIngredient()">Add</button>
       </div>
 
@@ -639,6 +740,7 @@ completeTask('burritocart');
       <div style="display:flex; gap:0.5rem; margin-top:0.75rem;">
         <button class="sq-btn sq-run" onclick="runCreateForm()">Create Dish (POST)</button>
         <button class="sq-btn" onclick="clearForm()">Clear</button>
+        <button class="sq-btn" onclick="autofillSelectedFood()">Auto-fill Selected Food</button>
       </div>
 
       <div style="margin-top:0.5rem">
@@ -651,6 +753,23 @@ completeTask('burritocart');
 <script>
 (function(){
   window._localIngredientBuffer = [];
+  
+  window.autofillSelectedFood = function() {
+    const food1 = window.userSelectedFoods && window.userSelectedFoods[0] 
+      ? window.userSelectedFoods[0] 
+      : "Baja Bowl";
+    document.getElementById('dish-name').value = food1;
+    document.getElementById('dish-category').value = "San Diego Favorite";
+    document.getElementById('dish-calories').value = "450";
+    
+    // Clear and add sample ingredients
+    window._localIngredientBuffer = [
+      { name: "fresh ingredients", qty: "1", unit: "serving" },
+      { name: "local produce", qty: "1", unit: "cup" }
+    ];
+    renderIngredientList();
+  };
+  
   window.addIngredient = function() {
     const name = document.getElementById('ing-name').value.trim();
     const qty = document.getElementById('ing-qty').value.trim();
@@ -808,7 +927,7 @@ window.seedPantry = async function() {
 <details>
   <summary>Task 6: View Pantry</summary>
   <div class="sq-card">
-    <div class="sq-label">View the San Diego pantry (GET /api/dishes?city=sd)</div>
+    <div class="sq-label">View the San Diego pantry (GET /api/dishes?city=sd) - <strong>Now filtered to show only your selected foods from the itinerary!</strong></div>
     <div style="display:flex; gap:0.5rem;">
       <button class="sq-btn sq-run" onclick="viewPantry()">View Pantry</button>
       <button class="sq-btn" onclick="clearTerm('terminal-pantry')">Clear</button>
@@ -825,7 +944,7 @@ window.viewPantry = async function() {
     logTo('terminal-pantry','[Server] 200 OK — No dishes found for city=sd. Try seeding.');
     return;
   }
-  logTo('terminal-pantry','[Server] 200 OK — Dishes for city=sd:');
+  logTo('terminal-pantry','[Server] 200 OK — Dishes for city=sd (filtered by your itinerary):');
   dishes.forEach(d => logTo('terminal-pantry', JSON.stringify(d, null, 2)));
   completeTask('view'); // Mark task as complete
 };
@@ -903,4 +1022,4 @@ function clearTerm(id) { const el = document.getElementById(id); if (el) el.text
     }
   }
 })();
-</script>f
+</script>
